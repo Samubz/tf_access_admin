@@ -94,7 +94,7 @@ gem "pg", "~> 1.6"
 gem "aws-sdk-s3", "~> 1.216", require: false
 
 gem "active_model_serializers", "~> 0.10.16"
-gem "rack-cors", "~> 2.0"
+gem "rack-cors", "~> 3.0"
 
 gem "mailgun-ruby", "~> 1.4"
 gem "resend", "~> 1.0"
