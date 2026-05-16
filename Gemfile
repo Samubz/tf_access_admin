@@ -91,7 +91,7 @@ gem "ransack", "~> 4.4"
 
 gem "pg", "~> 1.6"
 
-gem "aws-sdk-s3", "~> 1.216", require: false
+gem "aws-sdk-s3", "~> 1.222", require: false
 
 gem "active_model_serializers", "~> 0.10.16"
 gem "rack-cors", "~> 2.0"
