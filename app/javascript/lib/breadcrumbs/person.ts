@@ -14,3 +14,15 @@ export function getPeopleBreadcrumbs(t: ReturnType<typeof useI18n>['t']): Breadc
     },
   ]
 }
+
+export function getPersonShowBreadcrumbs(
+  t: ReturnType<typeof useI18n>['t'],
+  displayName: string,
+): BreadcrumbItem[] {
+  return [
+    ...getPeopleBreadcrumbs(t),
+    {
+      label: displayName,
+    },
+  ]
+}

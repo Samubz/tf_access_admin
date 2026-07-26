@@ -16,4 +16,17 @@ module InertiaTestHelper
   def inertia_props
     JSON.parse(response.body)["props"]
   end
+
+  def inertia_component
+    JSON.parse(response.body)["component"]
+  end
+
+  def inertia_field_error(model_class, attribute, message)
+    label = model_class.human_attribute_name(attribute)
+    { attribute => [ "#{label} #{message}" ] }
+  end
+
+  def expected_inertia_errors(record)
+    record.errors.to_hash(true).transform_values { |messages| Array(messages) }
+  end
 end

@@ -28,9 +28,47 @@
 #       enabled: "ON"
 
 en:
+  onboarding:
+    accept:
+      success: "Invitation accepted. Sign in to continue."
+  onboarding_mailer:
+    invitation:
+      subject: "%{organization} invites you"
+      greeting: "Hello"
+      body: "%{organization} has invited you. Confirm your access with the link below."
+      cta: "Accept invitation"
+      expiration: "This link is single-use and expires in 14 days."
   frontend:
     name: "Admin Base"
     description: "welcome again"
+    onboarding:
+      accept:
+        title: "You've been invited"
+        subtitle: "{organization} has invited you to join."
+        needs_account_description: "Set a password to create your account and accept the invitation."
+        no_account_description: "Sign in to accept this invitation."
+        email_label: "Email"
+        submit: "Accept invitation"
+        sign_in: "Sign in"
+        input:
+          password:
+            label: "Password"
+            placeholder: "Choose a password"
+          password_confirmation:
+            label: "Confirm password"
+            placeholder: "Repeat your password"
+          name:
+            label: "Full name"
+            placeholder: "Your full name"
+          dni:
+            label: "Document"
+            placeholder: "Your document number"
+        errors:
+          accept_failed: "Could not accept the invitation. Check the fields and try again."
+      invalid:
+        title: "Invitation not available"
+        description: "This link is invalid, has expired, or has already been used."
+        sign_in: "Go to sign in"
     common:
       yes: "Yes"
       no: "No"
@@ -38,6 +76,11 @@ en:
       back: "Back"
       clear: "Clear"
       back: "Back"
+      searchable_select:
+        loading: "Loading options…"
+        empty: "No results found"
+        error: "Could not load options. Try again."
+        clear: "Clear selection"
       multi_file_upload:
         browse: "Browse"
         browse_aria: "Choose files (up to {max})"
@@ -54,6 +97,11 @@ en:
         confirm: "Confirm"
         cancel: "Cancel"
         back: "Back"
+      capability: "Capability"
+      capabilities: "Capabilities"
+      status:
+        active: "Active"
+        inactive: "Inactive"
       table:
         pagination:
           rows_per_page: "Rows per page"
@@ -95,6 +143,118 @@ en:
       need_help: "Need help?"
       contact_support: "Contact support"
       go_to_home: "Go to home"
+    concierge:
+      visits:
+        actions:
+          open_menu: "Open visit actions"
+          view: "View detail"
+          check_in: "Register entry"
+          check_out: "Register exit"
+        denial:
+          cancelled: "Visit cancelled. Entry cannot be registered."
+          expired: "Authorization expired. Request a new authorization."
+          not_operable: "Visit not operable. Entry cannot be registered."
+        instructions:
+          request_new_authorization: "Request a new authorization"
+        index:
+          title: "Gatehouse visits"
+          description: "Operational visits for your assigned property. Search by document, visitor name or unit."
+          assigned_property: "Assigned property"
+          search:
+            placeholder: "Search by document, visitor name or unit..."
+          tabs:
+            expected_today: "Expected today"
+            currently_inside: "Currently inside"
+          empty:
+            expected_today: "No visits expected today."
+            currently_inside: "No visitors currently inside."
+            search: "No visits match your search."
+          table:
+            headers:
+              visitor: "Visitor"
+              unit: "Unit"
+              authorizers: "Authorizers"
+              status: "Status"
+              scheduled_at: "Scheduled time"
+              checked_in_at: "Entry time"
+              duration: "Duration"
+        summary:
+          unit: "Unit"
+          authorizers: "Authorizers"
+          authorized_at: "Authorized visit"
+          authorized_visit: "Authorized visit"
+          checked_in_at: "Registered entry"
+          checked_in_by: "Registered by"
+        access_points:
+          main_entrance: "Main entrance"
+          side_entrance: "Side entrance"
+          garage: "Garage"
+        access_types:
+          pedestrian: "Pedestrian"
+          vehicle: "Vehicle"
+          delivery: "Delivery"
+          other: "Other"
+        incident_types:
+          none: "No incident"
+          noise: "Noise"
+          damage: "Damage"
+          security: "Security"
+          other: "Other"
+        timeline:
+          events:
+            authorized: "Visit authorized"
+            checked_in: "Entry registered"
+            checked_out: "Exit registered"
+        check_in:
+          title: "Register entry (Check-in)"
+          description: "Confirm visitor entry with operational metadata."
+          confirm: "Confirm entry"
+          info_banner: "The visit will be marked as checked in."
+          fields:
+            entry_time: "Entry date and time"
+            access_point: "Access / gatehouse"
+            select_access_point: "Select access point"
+            access_type: "Access type"
+            select_access_type: "Select access type"
+            vehicle_plate: "License plate or vehicle (optional)"
+            vehicle_plate_placeholder: "e.g. ABCD12"
+            notes: "Notes (optional)"
+        check_out:
+          title: "Register exit (Check-out)"
+          description: "Confirm visitor exit with operational metadata."
+          confirm: "Confirm exit"
+          fields:
+            exit_time: "Exit date and time"
+            access_point: "Access / gatehouse"
+            select_access_point: "Select access point"
+            notes: "Notes (optional)"
+            incident_type: "Incident (optional)"
+            no_incident: "No incident"
+          timeline:
+            title: "Timeline"
+            empty: "No operational events yet."
+        show:
+          title: "Visit detail"
+          back_to_list: "Back to list"
+          sections:
+            details: "Visit details"
+            timeline: "Timeline"
+          fields:
+            unit: "Unit"
+            scheduled_at: "Scheduled at"
+            valid_until: "Valid until"
+            authorized_at: "Authorized at"
+            authorized_by: "Authorized by"
+            checked_in_at: "Checked in at"
+            checked_in_by: "Entry registered by"
+            checked_out_at: "Checked out at"
+            checked_out_by: "Exit registered by"
+            duration: "Time inside"
+            current_duration: "Current duration"
+    notifications:
+      visit_request:
+        title: "New visit"
+        body: "%{visitor_name} will arrive at unit %{unit_identifier}"
     admin:
       validations:
         alphanumeric_hyphen_code_invalid: "Only letters, numbers, and hyphens are allowed"
@@ -255,7 +415,9 @@ en:
           language_required: "Language is required"
           password_lowercase: "Must include at least 1 lowercase letter"
           password_uppercase: "Must include at least 1 uppercase letter"
+          password_number: "Must include at least 1 number"
           password_symbol: "Must include at least 1 symbol: $ % {'@'} . - _"
+          password_complexity: "Password must be at least 8 characters and include lowercase, uppercase, a number and a symbol ($ % {'@'} . - _)"
           email_taken: "Email has already been taken"
           language_invalid: "Invalid language"
           role_invalid: "Invalid role"
@@ -322,6 +484,95 @@ en:
         updated_successfully: "Person updated successfully"
         update_failed: "Failed to update person"
         not_found: "Person not found"
+        errors:
+          already_invited: "This person already has an account or a pending invitation."
+          missing_email: "This person has no email on file — add one before sending an invitation."
+        profile:
+          change_history:
+            actor_fallback: "System"
+            events:
+              person_created: "%{actor} registered the person profile"
+              person_updated: "%{actor} updated the person profile"
+              person_status_changed: "%{actor} changed the person status to \"%{to}\""
+              person_removed: "%{actor} removed the person profile"
+          tabs:
+            aria_label: "Person profile sections"
+            summary: "Summary"
+            properties: "Properties"
+            residences: "Residences"
+            staff: "Staff"
+            visits: "Visits"
+            history: "History"
+          header:
+            edit: "Edit person"
+            document: "Document"
+            email: "Email"
+            phone: "Phone"
+          contextual_roles:
+            owner: "Owner"
+            resident: "Resident"
+            visitor: "Visitor"
+            concierge: "Concierge"
+            property_admin: "Property admin"
+            cleaning_staff: "Cleaning staff"
+            system_user: "System user"
+          metrics:
+            active_ownerships: "Active properties"
+            active_occupancies: "Active residences"
+            visits: "Visits"
+            staff: "Staff"
+          summary:
+            personal_info: "Personal information"
+            linked_user: "Linked user"
+            user_name: "Name"
+            user_email: "Email"
+            no_linked_user: "No linked user"
+            contextual_roles: "Contextual roles"
+            no_contextual_roles: "No active contextual roles"
+            tenant_access: "Platform access"
+          ownerships:
+            title: "Properties"
+            description: "Units where this person is an owner."
+            empty: "No properties registered for this person."
+            table:
+              property: "Property"
+              section: "Section"
+              unit: "Unit"
+              percentage: "Percentage"
+              validity: "Validity"
+              status: "Status"
+          occupancies:
+            title: "Residences"
+            description: "Units where this person resides."
+            empty: "No residences registered for this person."
+            table:
+              property: "Property"
+              section: "Section"
+              unit: "Unit"
+              type: "Type"
+              validity: "Validity"
+              status: "Status"
+          staff:
+            title: "Staff"
+            description: "Staff assignments across properties."
+            empty: "No staff assignments for this person."
+            table:
+              property: "Property"
+              role: "Role"
+              status: "Status"
+          visits:
+            title: "Visits"
+            description: "Registered visit history."
+            empty: "No visits registered for this person."
+            table:
+              occurred_at: "Date"
+              property: "Property"
+              unit: "Unit"
+              status: "Status"
+          history:
+            title: "History"
+            description: "Recent changes to the profile and related records."
+            empty: "No history events yet."
         validations:
           display_name_required: "Enter a first name, last name, or display name"
           person_type_required: "Person type is required"
@@ -347,14 +598,220 @@ en:
               display_name: "Name"
               document_number: "Document"
               email: "Email"
+              contextual_roles: "Roles"
               unit_ownerships_count: "Properties"
               status: "Status"
+              invitation_status: "Invitation"
+          invitation_statuses:
+            linked: "Account linked"
+            pending: "Invitation sent"
+            not_invited: "Not invited"
+            no_email_hint: "Add an email to invite"
           actions:
             create: "Create person"
+            bulk_import: "Import people"
+            view_profile: "View profile"
             delete: "Delete person"
             delete_description: "Are you sure you want to delete {name}?"
             delete_success: "Person deleted successfully"
             delete_error: "Failed to delete person"
+            invite: "Send invitation"
+            invite_description: "Send an account-creation invitation to {name}?"
+            invite_error: "Could not send the invitation"
+            revoke_invite: "Revoke invitation"
+            revoke_invite_description: "Are you sure you want to revoke the pending invitation for {name}?"
+            revoke_invite_success: "Invitation revoked"
+            revoke_invite_error: "Could not revoke the invitation"
+        bulk_import:
+          title: "Import people"
+          steps_nav: "Import steps"
+          placeholder_step: "This step will be available soon."
+          steps:
+            method: "Method"
+            configure: "Configure"
+            preview: "Preview"
+            import: "Import"
+          actions:
+            close: "Close"
+            back: "Back"
+            next: "Next"
+            uploading: "Uploading…"
+            validating: "Validating…"
+            refreshing_sheet: "Refreshing sheet…"
+            continue_to_import: "Continue to import"
+          errors:
+            upload_failed: "Could not upload the file. Check the file and try again."
+            sheet_refresh_failed: "Could not refresh the selected sheet."
+            configure_save_failed: "Could not save the import configuration."
+            validation_failed: "Could not validate the file. Check the configuration and try again."
+            wizard_locked: "The import is already in progress or finished; earlier steps cannot be changed."
+          upload:
+            uploaded_success: "File uploaded successfully"
+            replaced_success: "File updated successfully"
+            title: "Bulk people import (Excel / CSV)"
+            subtitle: "Download the template, fill it with your data, and upload it to continue."
+            step_download: "1. Download the template"
+            step_download_description: "Use our template to make sure your data is formatted correctly."
+            step_upload: "2. Upload your file"
+            formats: "Allowed formats: .xlsx, .xls, .csv"
+            download_button: "Download template"
+            template_coming_soon: "Template download will be available soon."
+            dropzone_title: "Drag your file here"
+            dropzone_subtitle: "or click to browse"
+            dropzone_aria: "Select an Excel or CSV file"
+            remove_file: "Remove file"
+            invalid_type: "The file must be Excel (.xlsx, .xls) or CSV."
+          requirements:
+            title: "Important requirements"
+            items:
+              - "Required columns: first name, last name, document, phone, email, and birthdate."
+              - "Birthdate must use the DD/MM/YYYY format."
+              - "The first row must contain headers."
+          configure:
+            title: "Configure the import"
+            subtitle: "Review the uploaded file, column mapping, and options before continuing."
+            uploaded_file: "Uploaded file"
+            uploaded_badge: "Uploaded successfully"
+            change_file: "Change file"
+            mapping_options: "Mapping and options"
+            sheet_label: "Sheet"
+            sheet_placeholder: "Select a sheet"
+            import_mode_label: "Import mode"
+            detected_columns: "Detected columns"
+            required_badge: "Required"
+            missing_badge: "Missing"
+            matched_badge: "Detected"
+            validations:
+              selected_sheet_required: "Select a sheet from the file"
+              import_mode_required: "Select an import mode"
+              required_columns_missing: "Required columns are not mapped"
+            import_modes:
+              create_skip_duplicates: "Create and skip duplicates"
+              create_only: "Create only (duplicates as error)"
+            fields:
+              first_name: "First name"
+              last_name: "Last name"
+              document_number: "Document"
+              phone: "Phone"
+              email: "Email"
+              birthdate: "Birthdate"
+            table:
+              excel_column: "File column"
+              system_field: "System field"
+            validation_rules:
+              title: "Validation rules"
+              items:
+                - "All fields are required."
+                - "Birthdate must use the DD/MM/YYYY format."
+                - "Email must be a valid format."
+                - "Duplicate documents and emails will be detected."
+          preview:
+            title: "Preview"
+            subtitle: "Review the validation results before confirming the import."
+            search_placeholder: "Search by name, document, email, or phone"
+            attention_alert: "There are rows with warnings, duplicates, or errors. Review the preview before continuing."
+            filters:
+              all: "All"
+              valid: "Valid"
+              warnings: "Warnings"
+              errors: "Errors"
+            cards:
+              total: "Total"
+              valid: "Valid"
+              warnings: "Warnings"
+              errors: "Errors"
+            table:
+              row: "Row"
+              name: "Name"
+              document: "Document"
+              email: "Email"
+              status: "Status"
+              result: "Result"
+            validation_statuses:
+              pending: "Pending"
+              valid: "Valid"
+              warning: "Warning"
+              error: "Error"
+              duplicate: "Duplicate"
+            results:
+              valid: "Ready to import"
+              warning: "Review warning"
+              error: "Fix error"
+              duplicate: "Will be skipped as duplicate"
+            empty:
+              no_rows: "No rows to show."
+              no_matches: "No rows match the filter or search."
+            summary:
+              title: "Summary"
+              will_create: "{count} people will be created"
+              will_skip_duplicates: "{count} duplicate rows will be skipped"
+              needs_correction: "{count} rows need correction"
+              tip_title: "Tip"
+              tip_default: "You can download the report after importing to review each row in detail."
+          import:
+            actions:
+              confirm: "Confirm import"
+              importing: "Importing…"
+              retry: "Retry"
+              close: "Close"
+              view_people: "View people"
+              download_report: "Download report"
+            errors:
+              confirm_failed: "Could not confirm the import."
+            ready:
+              title: "Ready to import"
+              description: "Review the summary before confirming the creation of people."
+              errors_pending: "There are rows with errors that will not be imported."
+              valid_rows_only: "Import valid rows only (skip warnings and duplicates)"
+              stats:
+                new_people: "New people"
+                duplicates: "Duplicates"
+                errors: "Errors"
+            progress:
+              title: "Import progress"
+              counter: "{processed} of {total}"
+              log_line: "Row {row}: {message}"
+              waiting:
+                title: "Waiting to confirm"
+                description: "The import will start once confirmed."
+              processing:
+                title: "Importing people…"
+                description: "This may take a few seconds."
+              completed:
+                title: "Import completed"
+                description: "{created} created, {skipped} skipped, {failed} failed."
+              failed:
+                title: "Import failed"
+                description: "An error occurred while processing. Please try again."
+            logs:
+              person_created: "Person %{name} created"
+              duplicate_skipped: "Skipped as duplicate"
+              skipped: "Row skipped"
+              failed: "Failed to import"
+            row_states:
+              title: "Row states"
+              subtitle: "Classification of each row so you can decide the next action."
+              classification: "Classification"
+              empty: "No rows to show."
+              triggered_label: "Sent"
+              classifications:
+                ready_to_create_person: "Person created"
+                requires_invitation: "Requires invitation"
+                requires_incorporation: "Requires incorporation"
+                review: "Needs review"
+                conflict: "Conflict — not applied"
+                duplicate: "Duplicate"
+                invalid: "Invalid"
+              actions:
+                invite: "Invite"
+                incorporate: "Incorporate"
+                invite_all: "Invite all pending"
+                confirm_one_title: "Send invitation?"
+                confirm_one_description: "This creates an onboarding request and emails a single-use invitation link to this person."
+                confirm_all_title: "Invite all pending rows?"
+                confirm_all_description: "This creates onboarding requests and emails invitation links for every row awaiting invitation or incorporation."
+                trigger_success: "{triggered} sent, {conflicted} conflicts, {skipped} skipped, {failed} failed"
+                trigger_error: "Could not process the invitations. Try again."
         new:
           title: "New person"
           description: "Register a person in the organization"
@@ -394,8 +851,40 @@ en:
             none: "No user"
           role:
             label: "Role"
+          send_invitation:
+            label: "Send an account-creation invitation by email"
+      onboarding_requests:
+        errors:
+          not_found: "Onboarding request not found"
+          not_authorized: "You are not authorized to perform this action"
       units:
         not_found: "Unit not found"
+        validations:
+          identifier_taken: "A unit with this identifier already exists in this context"
+          code_taken: "A unit with this code already exists in this context"
+          section_invalid: "The selected section is not valid"
+          section_same_property: "The section must belong to the same property"
+          section_not_operative: "Units cannot be assigned to a non-operative section or property"
+          section_not_eligible: "The section is not eligible to contain units"
+          unit_type_invalid: "The unit type is not valid"
+          residential_property_immutable: "The unit's property cannot be changed"
+          code_conflict: "This identifier would collide with an existing unit's code"
+        unit_types:
+          apartment: "Apartment"
+          house: "House"
+          office: "Office"
+          commercial_unit: "Commercial unit"
+          parking_space: "Parking space"
+          storage_room: "Storage room"
+          common_area: "Common area"
+          other: "Other"
+          studio: "Studio"
+          duplex: "Duplex"
+          penthouse: "Penthouse"
+          parking: "Parking"
+          storage: "Storage"
+          commercial: "Commercial"
+          warehouse: "Warehouse"
         show:
           unit_title: "Unit %{identifier}"
           actions:
@@ -655,6 +1144,18 @@ en:
               finished: "Ended"
               pending: "Pending"
               inactive: "Inactive"
+          visits:
+            title: "Visits"
+            description: "View and manage visits scheduled for this unit."
+            actions:
+              create: "Create visit"
+            table:
+              visitor: "Visitor"
+              authorizers: "Authorizers"
+              reason: "Reason"
+              scheduled_at: "Scheduled"
+              status: "Status"
+              empty: "No visits registered for this unit."
           change_history:
             title: "Change history"
             empty_title: "No changes recorded"
@@ -727,6 +1228,237 @@ en:
           invalid_occupancy_type: "Occupancy type is not valid"
           invalid_status: "Status is not valid"
           existing_person_match: "A person with this document or email already exists (%{display_name}). Search and reuse them."
+      visits:
+        event_types:
+          created: "Created"
+          authorized: "Authorized"
+          checked_in: "Checked in"
+          checked_out: "Checked out"
+          cancelled: "Cancelled"
+        statuses:
+          pending: "Pending"
+          authorized: "Authorized"
+          checked_in: "Checked in"
+          checked_out: "Checked out"
+          cancelled: "Cancelled"
+          rejected: "Rejected"
+          expired: "Expired"
+        notification_statuses:
+          pending: "Sending notification"
+          delivered: "Notification delivered"
+          failed: "Notification failed"
+          no_recipients: "No recipients"
+        validations:
+          invalid_access_type: "Access type is not valid"
+          invalid_incident_type: "Incident type is not valid"
+        visit_types:
+          guest: "Guest"
+          delivery: "Delivery"
+          service: "Service"
+          other: "Other"
+        errors:
+          not_found: "Visit not found"
+          not_authorized: "You are not authorized to perform this action"
+          not_editable: "Visit cannot be edited in its current state"
+          invalid_transition: "State transition is not valid for this visit"
+          unit_not_found: "The specified unit does not exist or is not available"
+          notification_not_failed: "The notification can only be resent when delivery failed"
+        index:
+          title: "Visit management"
+          description: "Review and manage all visits registered in the organization. Use filters to find specific visits or create a new one."
+          search:
+            placeholder: "Search visitor or unit..."
+          scope:
+            organization: "Full organization"
+            assigned: "Assigned properties"
+          filters:
+            property: "Property"
+            unit: "Unit"
+            status: "Status"
+            date_range: "Date range"
+            all_properties: "All properties"
+            all_units: "All units"
+            all_statuses: "All statuses"
+            clear: "Clear"
+            apply: "Apply filters"
+          table:
+            headers:
+              visitor: "Visitor"
+              unit: "Unit"
+              property: "Property"
+              authorizers: "Authorizers"
+              status: "Status"
+              date: "Date"
+              check_in: "Check-in"
+              check_out: "Check-out"
+          actions:
+            create: "New visit"
+        new:
+          title: "New visit"
+          description: "Register a visit using the guided form. Property and unit fields are linked; the final status is resolved by the backend."
+          steps_nav: "Visit creation steps"
+          steps:
+            general: "General info"
+            visitor: "Visitor"
+            schedule: "Date & time"
+            additional: "Additional"
+            confirm: "Notes & confirm"
+          actions:
+            cancel: "Cancel"
+            continue: "Continue"
+            submit: "Create visit"
+          errors:
+            visitor_required: "Select or create a visitor"
+          validations:
+            property_required: "Select a property"
+            unit_required: "Select a unit"
+            visitor_required: "Select or create a visitor"
+            document_required: "Document is required"
+            first_name_required: "First name is required"
+            last_name_required: "Last name is required"
+            date_required: "Date is required"
+            start_time_required: "Start time is required"
+            end_time_before_start: "End time must be after start time"
+            visit_type_required: "Select a visit reason"
+          general:
+            title: "General information"
+            description: "Select the property and unit for this visit."
+            fields:
+              property: "Property"
+              unit: "Unit"
+            placeholders:
+              property: "Select a property"
+              unit: "Select a unit"
+            loading:
+              units: "Loading units..."
+            empty:
+              units: "No units available for this property."
+          visitor:
+            title: "Visitor details"
+            description: "Search for an existing person or create a new visitor."
+            modes:
+              search: "Search person"
+              create: "Create visitor"
+            search:
+              placeholder: "Search by document, name or email..."
+              loading: "Searching..."
+              empty: "No people found."
+            create:
+              fields:
+                document: "Document"
+                phone: "Phone"
+          schedule:
+            title: "Date and time"
+            description: "Define when the visit is scheduled and its optional validity window."
+            fields:
+              date: "Date"
+              start_time: "Start time"
+              end_time: "End time (optional)"
+            end_time_hint: "If provided, the visit validity ends at this time."
+          additional:
+            title: "Additional information"
+            description: "Specify the visit reason and optional vehicle details."
+            fields:
+              reason: "Reason"
+              vehicle_plate: "License plate"
+              vehicle_model: "Brand / model"
+              vehicle_color: "Color"
+            placeholders:
+              reason: "Select a reason"
+              vehicle_plate: "e.g. ABCD12"
+              vehicle_model: "e.g. Honda Civic"
+              vehicle_color: "e.g. Gray"
+          confirm:
+            title: "Notes and confirmation"
+            description: "Add optional notes and review the summary before creating the visit."
+            fields:
+              notes: "Notes"
+            placeholders:
+              notes: "Additional information for staff..."
+          summary:
+            title: "Authorization summary"
+            description: "Live preview of the visit data. Does not persist or decide the final status."
+            empty: "—"
+            estimated_status: "Estimated initial status"
+            status_loading: "Calculating estimated status..."
+            fields:
+              property: "Property"
+              unit: "Unit"
+              visitor: "Visitor"
+              reason: "Reason"
+              schedule: "Schedule"
+              vehicle: "Vehicle"
+            initial_status:
+              pending: "The visit will be created as pending and will require authorization."
+              authorized: "The visit will be created as authorized because you can authorize directly."
+        actions:
+          open_menu: "Open visit actions"
+          view: "View detail"
+          edit: "Edit"
+          authorize: "Authorize"
+          cancel: "Cancel"
+          check_in: "Register entry"
+          check_out: "Register exit"
+          authorize_confirm_title: "Authorize visit"
+          authorize_confirm_description: "The visit will move to authorized status."
+          cancel_confirm_title: "Cancel visit"
+          cancel_confirm_description: "The visit will be cancelled and removed from operational flows."
+          resend_notification: "Resend notification"
+          resend_notification_confirm_title: "Resend notification"
+          resend_notification_confirm_description: "Push notification delivery will be retried for the same residents."
+          more_actions: "More actions"
+        show:
+          title: "Visit detail"
+          header:
+            document: "Document"
+          tabs:
+            aria_label: "Visit detail sections"
+            info: "Information"
+            documents: "Documents"
+            history: "History"
+          sections:
+            visit:
+              title: "Visit information"
+            visitor:
+              title: "Visitor"
+            location:
+              title: "Location"
+            vehicle:
+              title: "Vehicle"
+            notes:
+              title: "Notes"
+            actors:
+              title: "Actors"
+          fields:
+            status: "Status"
+            reason: "Reason"
+            scheduled_at: "Scheduled date"
+            valid_from: "Valid from"
+            valid_until: "Valid until"
+            authorized_at: "Authorized at"
+            checked_in_at: "Checked in at"
+            checked_out_at: "Checked out at"
+            name: "Name"
+            document: "Document"
+            phone: "Phone"
+            email: "Email"
+            property: "Property"
+            unit: "Unit"
+            authorizers: "Authorizers"
+            vehicle_plate: "License plate"
+            vehicle_model: "Brand / model"
+            vehicle_color: "Color"
+            created_by: "Created by"
+            authorized_by: "Authorized by"
+            checked_in_by: "Checked in by"
+            checked_out_by: "Checked out by"
+          documents:
+            title: "Documents"
+            description: "Document management will be available in a future release."
+          history:
+            title: "Functional history"
+            description: "Chronological record of visit lifecycle events."
+            empty: "No history events recorded yet."
       residential_properties:
         title: "Properties"
         created_successfully: "Property created successfully"
@@ -750,8 +1482,12 @@ en:
           sector: "Sector"
           other: "Other"
         statuses:
+          draft: "Draft"
+          created: "Editable setup"
+          configured: "Configured"
           active: "Active"
           inactive: "Inactive"
+          archived: "Archived"
         index:
           title: "Residential properties"
           input:
@@ -766,11 +1502,13 @@ en:
               status: "Status"
           actions:
             create: "New property"
+            view_detail: "View detail"
+            setup_wizard: "Setup"
             structure: "Manage structure"
-            delete: "Delete property"
-            delete_description: "Delete property {name}?"
-            delete_success: "Property deleted successfully"
-            delete_error: "Could not delete property"
+            archive: "Archive property"
+            archive_description: "Archive property {name}? It will be preserved for history and consultation."
+            archive_success: "Property archived successfully"
+            archive_error: "Could not archive property"
         new:
           title: "New residential property"
           description: "Register a property for your organization"
@@ -779,6 +1517,40 @@ en:
           title: "Edit residential property"
           description: "Update property details"
           submit: "Save changes"
+          archived_banner: "This property is archived. Details are read-only and cannot be changed."
+          archive_section:
+            title: "Archive property"
+            description: "Archiving preserves history and dependencies. The property will no longer accept new operational activity."
+        form:
+          saving: "Saving…"
+        states:
+          forbidden: "You do not have permission to edit this property."
+          read_only: "This property is read-only."
+        show:
+          breadcrumb: "Detail"
+          actions:
+            edit: "Edit setup"
+          summary:
+            property: "Property"
+            structure: "Structure"
+            structure_value: "{towers} towers · {floors} floors"
+            units: "Units"
+            units_value: "{count} units"
+            status: "Status"
+          general_info:
+            title: "General information"
+            fields:
+              property_type: "Property type"
+              address_line: "Address"
+              city: "City"
+              region: "Region"
+              country: "Country"
+              organization: "Organization"
+              created_at: "Created"
+              updated_at: "Updated"
+              empty: "—"
+          structure:
+            title: "Property structure"
         input:
           name:
             label: "Name"
@@ -1059,6 +1831,30 @@ en:
             expand: "Expand section"
             collapse: "Collapse section"
             manage_unit: "Manage unit"
+            persisted_status: "stored as {status}"
+          move:
+            action: "Move section"
+            title: "Move section"
+            description: "Choose a new location for {name} within this property."
+            parent_label: "New parent"
+            root_option: "Root level (no parent)"
+            nested_root_hint: "Sections with subsections cannot be nested under another section."
+            submit: "Move section"
+            success: "Section moved successfully"
+            error: "Could not move section"
+          archive:
+            action: "Archive section"
+            title: "Archive section"
+            description: "Archive section {name}? The subsections, units and history will be preserved."
+            success: "Section archived successfully"
+            error: "Could not archive section"
+          states:
+            forbidden: "You do not have permission to manage sections for this property."
+            read_only: "This property structure is read-only."
+            property_archived: "This property is archived. Sections cannot be modified."
+            section_archived: "This section is archived and read-only."
+            section_not_operative: "This section is not operational due to its status or an ancestor."
+            empty_read_only: "No sections have been created for this property yet."
           form:
             new_title: "New section"
             new_description: "Create a new section within the current structure"
@@ -1076,6 +1872,392 @@ en:
             preview_title: "Preview"
             submit_create: "Create section"
             submit_edit: "Save changes"
+            saving: "Saving…"
+      property_setup:
+        wizard:
+          title: "Configure property"
+          description: "Complete the steps to set up your new residential property."
+          breadcrumb: "Configure property"
+          steps:
+            1: "Property data"
+            2: "Structure"
+            3: "Units"
+            4: "Summary"
+            5: "Confirm"
+          actions:
+            back: "Back"
+            cancel: "Cancel"
+            continue: "Continue"
+            continue_to_confirm: "Continue to confirmation"
+            confirm: "Confirm setup"
+            save_created: "Save as editable"
+            save: "Save"
+          cancel:
+            draft_confirm: "Delete the property draft? All entered data will be lost. You can also keep it and come back later."
+          reset_confirm:
+            title: "This will delete the existing structure"
+            description: "Changing the property type or structure mode will delete the sections and units already created. Already-configured properties will archive instead of delete anything with operational history."
+            cancel: "Cancel"
+            confirm: "Yes, continue"
+        errors:
+          invalid_step: "Invalid step"
+          not_editable: "This property cannot be edited from the setup wizard."
+          confirmation_required: "This section or unit has operational history. Confirm to archive it instead of deleting it."
+          reset_confirmation_required: "This change will delete the existing structure and units. Confirm to continue."
+        step1:
+          title: "Property data"
+          fields:
+            name: "Name"
+            property_type: "Property type"
+            address: "Address"
+            city: "City"
+          validations:
+            name_required: "Name is required"
+            property_type_required: "Property type is required"
+            address_required: "Address is required"
+          summary:
+            title: "Initial summary"
+            type: "Type"
+            location: "Location"
+            flow_status: "Flow status"
+            flow_status_pending: "Pending structure"
+        step2:
+          title: "Structure / sections"
+          description: "Define how the property is internally organized."
+          property_type_changed_notice: "The property type changed. The structure configuration has been reset."
+          modes:
+            none:
+              title: "No sections"
+              description: "Units are placed directly under the property."
+            manual:
+              title: "Manual"
+              description: "Add towers, floors, and sections one by one."
+            quick:
+              title: "Quick"
+              description: "Generate the hierarchy automatically with parameters."
+          manual:
+            title: "Structure builder"
+            rule_hint: "Create and organize your property sections. Maximum 2 levels: root section and child section."
+            add: "Add section"
+            add_root: "Add root section"
+            empty: "No sections added yet."
+            name: "Name"
+            parent: "Parent section"
+            root: "Root"
+            type: "Section type"
+            format_warning: "The recommended format for this property type uses: {types}."
+            hints:
+              actions: "Use each section's options menu to edit, add child sections, or delete."
+            level:
+              root: "Root"
+              child: "Child"
+            summary:
+              total: "Total sections: {count}"
+              leaf: "Leaf sections for units: {count}"
+              combined: "{total} sections in total · {leaf} final sections for units"
+            actions:
+              menu: "Section actions"
+              edit: "Edit section"
+              add_child: "Add child section"
+              move: "Move section"
+              delete: "Delete section"
+            move:
+              title: "Move section"
+              description: "Choose a new parent for \"{name}\"."
+              parent_label: "New parent"
+              root_option: "No parent (root)"
+              cancel: "Cancel"
+              submit: "Move"
+            create:
+              title_root: "Add root section"
+              title_child: "Add child sections"
+              parent_label: "These sections will belong to {name}."
+              child_no_children: "Child sections cannot have their own sub-sections."
+              tab_individual: "Individual"
+              tab_multiple: "Multiple"
+              prefix: "Prefix"
+              count: "Quantity"
+              format: "Name format"
+              format_letter: "Letters (A, B, C…)"
+              format_number: "Numeric (1, 2, 3…)"
+              code: "Internal code / prefix (optional)"
+              code_placeholder: "E.g. TOR, BLQ, EDIF"
+              preview: "Will create:"
+              preview_will_create: "Will create:"
+              preview_skipped: "{names} already exist at this level and will be skipped."
+              insufficient_available_names: "Not enough available names to create {count} sections at this level. Try a different prefix or reduce the quantity."
+              info_root: "Root sections can have child sections."
+              info_child: "Units can be assigned to these sections if they have no further children."
+              cancel: "Cancel"
+              submit: "Create sections"
+            edit:
+              title: "Edit section"
+              description: "Update the name, type, or prefix of this section."
+              current: "Current section"
+              parent: "Parent"
+              warning_has_children: "A section with children cannot receive units directly."
+              submit: "Save changes"
+            delete:
+              title: "Delete {name}?"
+              guards: "A section with units cannot be deleted and child sections must be removed first."
+              cancel: "Cancel"
+              confirm: "Delete"
+            validations:
+              prefix_required: "Prefix is required"
+              count_min: "Quantity must be at least 1"
+          quick:
+            title: "Quick structure configuration"
+            count: "{section} count"
+            prefix: "{section} prefix (optional)"
+            has_towers: "Does the building have towers?"
+            info: "The structure will be generated automatically from the values you define. You can edit it before continuing."
+          errors:
+            manual_empty: "Add at least one section to continue with manual structure."
+            quick_not_confirmed: "Confirm the quick structure preview before continuing."
+            mode_required: "Select a structure mode."
+          validations:
+            level_count_min: "There must be at least 1"
+            level_prefix_required: "Prefix is required"
+          preview:
+            title: "Structure preview"
+            subtitle: "This is how your property will be generated"
+            towers: "Towers"
+            floors: "Floors"
+            sections: "Sections"
+            estimated_units: "estimated units"
+            placeholder: "Configure the parameters to see the preview."
+            none: "No sections will be created for this property."
+            auto_update: "The preview updates automatically."
+            stats:
+              towers: "towers"
+              floors: "floors"
+              sections: "sections"
+              estimated_units: "estimated units"
+              level_1: "Level 1"
+              level_2: "Level 2"
+              units: "units"
+        step3:
+          title: "Units"
+          description: "Choose how to create units."
+          errors:
+            mode_required: "Select a units creation mode."
+            no_units: "Create at least one unit before continuing."
+            no_leaf_sections: "The structure has no sections of the required type to generate units automatically."
+          validations:
+            unit_type_required: "Unit type is required"
+            identifier_format_required: "Identifier format is required"
+            quantity_per_floor_min: "There must be at least 1 unit per floor"
+          context:
+            towers: "{count} towers"
+            floors: "{count} floors"
+            structure_count: "{count} sections"
+          automatic:
+            title: "Automatic generation settings"
+            unit_type: "Unit type"
+            identifier_format: "Identifier format"
+            example: "Example"
+            units_per_floor: "Quantity per floor"
+            units_per_block: "Quantity per block"
+            formats:
+              floor_sequential: "Floor + sequential"
+              block_sequential: "Block + sequential"
+              sequential: "Simple sequential"
+            parking:
+              title: "Also create parking spaces"
+              hint: "This option will be enabled in a later step."
+          modes:
+            manual:
+              title: "Manual"
+              description: "Add units directly from each eligible section."
+            automatic:
+              title: "Generate automatically from structure"
+              description: "Create units per floor and tower based on your configuration."
+            import:
+              title: "Bulk import"
+              description: "Import units from an Excel or CSV file."
+          individual:
+            add: "Add unit"
+            identifier: "Identifier"
+            type: "Type"
+          manual:
+            hint: "Add units to eligible sections. Each row exposes only the actions available for that context."
+            no_eligible_sections: "This property has no sections that can contain units yet. Create sections in step 2 to add units manually."
+            add_unit: "Add unit"
+            identifier: "Identifier"
+            display_name: "Display name"
+            unit_type: "Unit type"
+            area_m2: "Area (m²)"
+            unit_count: "{count} units"
+            actions:
+              menu: "Actions"
+              edit: "Edit"
+              manage_unit: "Manage unit"
+              delete: "Delete"
+            create:
+              title: "Add unit"
+              section_label: "Section: {name}"
+              tab_individual: "Individual"
+              tab_multiple: "Multiple"
+              count: "Quantity"
+              prefix: "Prefix"
+              format: "Identifier format"
+              format_letter: "Letters (A, B, C…)"
+              format_number: "Numeric (1, 2, 3…)"
+              preview_will_create: "Will create:"
+              insufficient_available_identifiers: "Not enough available identifiers to create {count} units. Try a different prefix or reduce the quantity."
+              info: "The new unit(s) will be created under {name}."
+              cancel: "Cancel"
+              submit: "Create"
+            edit:
+              title: "Edit unit"
+              submit: "Save changes"
+            delete:
+              title: "Delete unit {name}?"
+              warning: "Soft-deleting preserves existing related records such as ownerships, occupancies, leases, visits and audit history. The unit will disappear from this preview after confirmation."
+              cancel: "Cancel"
+              confirm: "Delete"
+            validations:
+              unit_type_required: "Unit type is required"
+              identifier_required: "Identifier is required"
+              prefix_required: "Prefix is required"
+              count_min: "There must be at least 1 unit"
+              area_m2_positive: "Area must be greater than 0"
+          import:
+            open: "Open importer"
+            description: "Upload an Excel file to create units in bulk. You can review and fix rows before importing."
+          preview:
+            title: "Units preview"
+            total_will_create: "{count} units will be created"
+            explanation_with_structure: "{count} units will be created across {towers} towers with {floors} floors and {per_floor} units per floor."
+            explanation_flat: "{count} units will be created based on the current configuration."
+            loading: "Loading preview…"
+            empty: "Configure the parameters to see the preview."
+            table:
+              tower_floor: "Tower - Floor"
+              units: "Units"
+            pagination: "Showing {shown} of {total} combinations"
+            prev: "Previous"
+            next: "Next"
+            import_mode: "Units preview is available in automatic mode."
+        step4:
+          title: "Summary"
+          cards:
+            property: "Property"
+            address: "Address"
+            structure: "Structure"
+            units: "Units"
+            structure_value: "{towers} towers / {floors} floors"
+            sections_value: "{count} sections"
+            units_value: "{count} {type}"
+          sections:
+            property: "Property data"
+            structure: "Structure"
+            units: "Units"
+          structure:
+            tower_with_floors: "{name} ({count} floors)"
+            floors_list: "Floors {floors}"
+          table:
+            code: "Code"
+            tower: "Tower"
+            floor: "Floor"
+            unit: "Unit"
+            type: "Type"
+            orientation: "Orientation"
+            area: "Area"
+            bedrooms: "Bedrooms"
+            area_value: "{value} m²"
+            empty: "No units to display."
+          units_total: "... {count} units in total"
+          notice: "You will be able to adjust sections and units after confirming."
+        step5:
+          title: "Confirmation"
+          acknowledge: "I confirm the information is correct"
+          ready:
+            title: "Everything is ready to create the property"
+            description: "When you confirm, the property will be configured with the defined structure and units."
+          success:
+            title: "Property configured!"
+            description: "The property was configured successfully. You can continue with the next actions."
+          checklist:
+            property: "Property configured"
+            structure: "Structure ready"
+            units: "{count} units prepared"
+          final_summary:
+            title: "Final summary"
+            property: "property"
+            towers: "towers"
+            floors: "floors"
+            units: "units"
+          consequences:
+            title: "What will happen when you confirm"
+            create_property: "The property will be configured"
+            create_structure: "The defined structure will be kept"
+            create_units: "{count} units will be kept"
+            edit_after: "You can edit the configuration afterwards"
+            duration_note: "The process may take a few seconds."
+          actions:
+            property_detail: "View property detail"
+            manage_units: "Manage units"
+            import_owners: "Import owners"
+            configure_residents: "Configure residents"
+          completed:
+            subtitle: "The property setup was completed successfully."
+            success:
+              title: "Property configured successfully!"
+              description: "The property, its structure, and units were created successfully."
+            summary:
+              property: "Property"
+              structure: "Structure"
+              units: "Units"
+              status: "Status"
+              status_value: "Setup completed"
+              structure_value: "{towers} towers / {floors} floors"
+              units_value: "{count} units"
+            next_steps:
+              title: "Recommended next steps"
+              recommended_badge: "Recommended"
+              property_detail:
+                title: "View property detail"
+                description: "Review the full profile of the newly configured property."
+                action: "View detail"
+              reopen_setup:
+                title: "Reopen setup"
+                description: "Go back to the wizard to keep editing property data, structure, or units."
+                action: "Reopen setup"
+              manage_units:
+                title: "Manage units"
+                description: "Edit identifiers, types, and sections for the created units."
+                action: "Manage units"
+              import_owners:
+                title: "Import owners"
+                description: "Bulk-load owners and assign them to units."
+                action: "Import owners"
+              configure_residents:
+                title: "Configure residents"
+                description: "Assign occupants and residents to property units."
+                action: "Configure residents"
+            whats_next:
+              title: "What happens next"
+              review_structure:
+                title: "Review the created structure"
+                description: "Verify towers, floors, and sections as defined in the wizard."
+              manage_units:
+                title: "Manage units"
+                description: "Adjust identifiers and types before going operational."
+              load_owners:
+                title: "Load owners"
+                description: "Import or register owners for each unit."
+              configure_residents:
+                title: "Configure residents"
+                description: "Define occupants and residents when the property is operational."
+            checklist:
+              property_created: "Property created"
+              structure_created: "Structure created"
+              units_generated: "Units generated"
+            footer:
+              back_to_summary: "Back to summary"
+              close: "Close"
+              go_to_property: "Go to property detail"
       bulk_imports:
         property_section_required: "Section is required to start the import"
         not_found: "Import not found"
@@ -1102,14 +2284,35 @@ en:
           duplicate_in_file: "Duplicate row in file"
           duplicate_in_database: "Unit already exists and will be skipped"
           unit_not_found_for_update: "Unit does not exist in this section and cannot be updated"
+          unit_ambiguous_for_update: "Multiple units match this identifier and cannot be updated"
           owner_document_email_conflict: "The same owner document appears with different emails in the file"
           owner_email_document_conflict: "The same owner email appears with different documents in the file"
+          first_name_missing: "First name is missing"
+          last_name_missing: "Last name is missing"
+          document_number_missing: "Document is missing"
+          phone_missing: "Phone is missing"
+          email_invalid: "Email is not valid"
+          birthdate_invalid_format: "Birthdate must use DD/MM/YYYY or DD-MM-YYYY format"
+          birthdate_impossible: "Birthdate is not a real date"
+          birthdate_future: "Birthdate cannot be in the future"
+          document_number_duplicate_in_file: "Duplicate document in file"
+          email_duplicate_in_file: "Duplicate email in file"
+          document_number_duplicate_in_organization: "A person with this document already exists in the organization"
+          email_duplicate_in_organization: "A person with this email already exists in the organization"
         import:
           logs:
             unit_created: "Unit %{identifier} created"
+            person_created: "Person %{name} created"
             duplicate_skipped: "Skipped as duplicate"
+            not_authorized: "Import not authorized"
             skipped: "Row skipped"
             failed: "Import failed"
+            requires_invitation: "Requires invitation — pending manager action"
+            requires_incorporation: "Requires incorporation — pending manager action"
+            conflict: "Identity conflict — not applied"
+            invalid: "Invalid row — rejected"
+            already_pending: "Another invitation is already in flight for this person"
+            reclassified_skipped: "Row state changed since import (%{classification}); skipped"
       property_sections:
         title: "Sections"
         created_successfully: "Section created successfully"
@@ -1124,6 +2327,8 @@ en:
           parent_required: "Parent section is required"
           parent_invalid: "Parent section is invalid"
           parent_same_property: "Parent section must belong to the same property"
+          parent_same_organization: "Parent section must belong to the same organization"
+          parent_not_operative: "Sections cannot be added or moved under a non-operational section or property"
           parent_circular: "Parent section cannot be a descendant of this section"
           parent_must_be_root: "Only a root section can be selected as parent (maximum one nesting level)"
           child_cannot_have_children: "A child section cannot contain other sections, only units"
@@ -1132,10 +2337,20 @@ en:
           container_cannot_have_units: "A section with subsections cannot have units; assign units to child sections"
           section_cannot_accept_units: "Units can only be assigned to child sections or sections without subsections"
           position_min: "Position must be at least 1"
+          status_required: "Status is required"
+        statuses:
+          active: "Active"
+          inactive: "Inactive"
+          archived: "Archived"
         section_types:
+          building: "Building"
           block: "Block"
           tower: "Tower"
           floor: "Floor"
+          stage: "Stage"
+          sector: "Sector"
+          parking_area: "Parking area"
+          storage_area: "Storage area"
           parking: "Parking"
           storage: "Storage"
           commercial: "Commercial"
@@ -1181,6 +2396,8 @@ en:
             placeholder: "Internal code (optional)"
           section_type:
             label: "Section type"
+          status:
+            label: "Status"
           residential_property_id:
             label: "Residential property"
             placeholder: "Select a property"
@@ -1192,6 +2409,7 @@ en:
             placeholder: "Display order (optional)"
       sidebar:
         platform: "Platform"
+        operations: "Operations"
         home: "Home"
         users: "Users"
         people: "People"
@@ -1200,6 +2418,11 @@ en:
         organizations: "Organizations"
         organization_settings: "Organization Settings"
         settings: "Settings"
+        operational_roles: "Operational Roles"
+        concierge: "Concierge"
+        authorized_visits: "Authorized visits"
+        visits: "Visits"
+        manage_visits: "Visit management"
         categories: "Categories"
         components: "Components"
         products: "Products"
@@ -1210,6 +2433,116 @@ en:
           profile: Profile
           logout_success: "Logged out successfully"
           logout_error: "Failed to log out"
+      operational_roles:
+        roles:
+          tenant_admin: "Org Admin"
+          content_manager: "Content Manager"
+          property_admin: "Prop Admin"
+          concierge: "Concierge"
+          cleaning_staff: "Cleaning"
+          internal_staff: "Internal"
+        index:
+          title: "Operational Roles"
+          subtitle: "Define who can do what within the system."
+          summary_defined_roles: "Defined roles"
+          summary_total_capabilities: "Total permissions"
+          summary_active_assignments: "Active assignments"
+          summary_assigned_users: "Assigned users"
+          summary_properties_with_staff: "Properties with staff"
+          defined_roles_heading: "Defined roles"
+          assign_role_button: "Assign role"
+          table_headers:
+            role: "Role"
+            description: "Description"
+            scope: "Scope"
+            active_users: "Active users"
+            status: "Status"
+            last_updated: "Last updated"
+            actions: ""
+          role_scope_organization: "Organization"
+          role_scope_property: "Property"
+          role_scope_unit: "Unit"
+          role_scope_none: "N/A"
+          role_status_active: "Active"
+          view_detail: "View detail"
+          assign_persons: "Assign persons"
+          users_by_role_heading: "Users by role"
+        show:
+          permissions_tab: "Permissions"
+          users_tab: "Users"
+          scope_tab: "Scope"
+          permissions_heading: "Permissions"
+          users_heading: "User"
+          users_heading_plural: "Users"
+          scope_heading: "Scope"
+          scope_description_property: "This role applies per assigned residential property."
+          scope_description_organization: "This role applies organization-wide."
+          assign_persons_button: "Assign persons"
+          no_assigned_users: "No persons assigned to this role."
+          table_headers:
+            person: "Person"
+            user: "User"
+            property: "Property"
+            scope: "Scope"
+            status: "Status"
+            from: "From"
+            to: "Until"
+          permission_status_allowed: "Allowed"
+          permission_status_restricted: "Restricted"
+          permission_status_denied: "Denied"
+          permission_columns:
+            permission: "Permission"
+            description: "Description"
+            access: "Access"
+        permissions_matrix:
+          title: "Permissions Matrix"
+          subtitle: "Capabilities by operational and organizational role."
+          legend_allowed: "Allowed"
+          legend_denied: "Denied"
+        assignments:
+          title: "Operational Role Assignments"
+          subtitle: "Assign operational roles to users within a property."
+          filters:
+            search_person: "Search user or person..."
+            all_roles: "All roles"
+            all_properties: "All properties"
+          new_assignment_button: "Assign role"
+          table_headers:
+            user: "User"
+            person: "Linked person"
+            role: "Role"
+            scope: "Scope"
+            status: "Status"
+            property: "Property"
+            from: "Start"
+            to: "End"
+            actions: ""
+          empty_message: "No active assignments."
+          revoke_action: "Revoke assignment"
+          revoke_confirmation_title: "Revoke assignment"
+          revoke_confirmation_description: "Are you sure you want to revoke the role {role} from {person}? This action cannot be undone."
+          revoke_cancel: "Cancel"
+          revoke_confirm: "Revoke"
+        assignment_drawer:
+          title: "New assignment"
+          description: "Assign an operational role to a person at a property."
+          label_user: "User / Person"
+          label_user_placeholder: "Select a person..."
+          label_user_no_account: "No linked user"
+          label_operational_role: "Operational role"
+          label_operational_role_placeholder: "Select a role..."
+          label_scope: "Scope"
+          label_property: "Property"
+          label_property_placeholder: "Select a property..."
+          label_starts_at: "Start date"
+          label_ends_at: "End date (optional)"
+          label_status: "Status"
+          label_status_active: "Active"
+          label_status_inactive: "Inactive"
+          errors_heading: "Errors"
+          button_cancel: "Cancel"
+          button_submit: "Save assignment"
+          button_saving: "Saving..."
       profile:
         title: "Profile"
         updated_successfully: "Profile updated successfully"
@@ -1229,9 +2562,77 @@ en:
       unconfirmed_account: "Account not confirmed"
       token_expired: "Token expired"
       token_invalid: "Token invalid"
+    visits:
+      unit_not_found: "Unit not found or not accessible"
+      no_active_relationship: "You do not have an active relationship with this unit"
+      authorization_denied: "You are not authorized to create authorized visits for this unit"
+      invalid_visitor: "Visitor data is invalid"
+      invalid_scheduled_at: "Visit date/time is invalid"
   activerecord:
     errors:
       models:
+        residential_property:
+          attributes:
+            name:
+              taken: "A property with this name already exists in the organization"
+              code_collision: "This change would generate a code already used by another property. Change the property name."
+            code:
+              taken: "A property with this code already exists in the organization"
+            status:
+              inclusion: "is not a valid status"
+              archive_requires_service: "archiving must use the archive action, not an ordinary edit"
+            timezone:
+              invalid_timezone: "is not a valid time zone"
+            organization_id:
+              immutable: "cannot be changed"
+            base:
+              automatic_generation_unavailable: "Automatic unit generation is not available for this property's structure"
+              structure_regeneration_blocked_by_units: "Clear the generated units before changing the structure"
+        property_section:
+          attributes:
+            name:
+              taken: "A section with this name already exists at the same level"
+            code:
+              taken: "A section with this code already exists in the same context"
+            status:
+              inclusion: "is not a valid status"
+              archive_requires_service: "archiving must use the archive action, not an ordinary edit"
+            section_type:
+              inclusion: "is not a valid section type"
+            organization_id:
+              mismatch_property: "must match the property's organization"
+            residential_property_id:
+              immutable: "cannot be changed"
+            parent_id:
+              move_requires_service: "parent changes must use the move action, not an ordinary edit"
+            base:
+              empty_batch: "Provide at least one section to create"
+              insufficient_available_names: "Not enough available names to create %{count} sections at this level. Try a different prefix or reduce the quantity."
+              property_not_operative: "cannot modify sections while the property is not active"
+        unit:
+          attributes:
+            status:
+              archive_requires_service: "archiving must use the archive action, not an ordinary edit"
+              transition_not_allowed: "is not an allowed operational status transition"
+              reactivate_requires_archived: "reactivation requires an archived unit"
+            base:
+              property_not_operative: "cannot modify units while the property is not active"
+              not_deleted: "the unit is not soft-deleted"
+              already_deleted: "the unit is already soft-deleted"
+              destroy_requires_service: "soft delete must use the soft-delete action, not destroy directly"
+              insufficient_available_identifiers: "Not enough available identifiers to create %{count} units in this section. Try a different prefix or reduce the quantity."
+        visit:
+          attributes:
+            residential_property:
+              incoherent_with_unit: "must match the unit property"
+            property_section:
+              incoherent_with_unit: "must match the unit section"
+            valid_until:
+              after_valid_from: "must be on or after valid from"
+        visit_status_history:
+          attributes:
+            organization:
+              incoherent_with_visit: "must match the visit organization"
         bulk_import:
           attributes:
             status:

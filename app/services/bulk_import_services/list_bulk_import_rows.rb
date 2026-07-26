@@ -17,9 +17,9 @@ module BulkImportServices
       @page = [ page.to_i, 1 ].max
       @per_page = if per_page.present?
                     per_page.to_i.clamp(1, MAX_PER_PAGE)
-                  else
+      else
                     PREVIEW_PER_PAGE
-                  end
+      end
       @filter = FILTERS.include?(filter.to_s) ? filter.to_s : "all"
       @search = search.to_s.strip
     end
@@ -62,14 +62,26 @@ module BulkImportServices
       return scope if @search.blank?
 
       pattern = "%#{ActiveRecord::Base.sanitize_sql_like(@search)}%"
-      scope.where(
-        <<~SQL.squish,
+      scope.where(search_sql, pattern: pattern)
+    end
+
+    def search_sql
+      if @bulk_import.import_type == BulkImport::IMPORT_TYPES[:users]
+        <<~SQL.squish
+          row_number::text ILIKE :pattern
+          OR normalized_payload->>'first_name' ILIKE :pattern
+          OR normalized_payload->>'last_name' ILIKE :pattern
+          OR normalized_payload->>'document_number' ILIKE :pattern
+          OR normalized_payload->>'email' ILIKE :pattern
+          OR normalized_payload->>'phone' ILIKE :pattern
+        SQL
+      else
+        <<~SQL.squish
           row_number::text ILIKE :pattern
           OR normalized_payload->>'unit_identifier' ILIKE :pattern
           OR normalized_payload->>'owner_document' ILIKE :pattern
         SQL
-        pattern: pattern
-      )
+      end
     end
 
     def pagination_for(collection)
@@ -90,6 +102,14 @@ module BulkImportServices
         skipped_rows: bulk_import.skipped_rows,
         duplicate_rows: bulk_import.rows.where(
           validation_status: BulkImportRow::VALIDATION_STATUSES[:duplicate]
+        ).count,
+        pending_invitation_rows: bulk_import.rows.where(
+          onboarding_classification: BulkImportRow::ONBOARDING_CLASSIFICATIONS[:requires_invitation],
+          target_record_id: nil
+        ).count,
+        pending_incorporation_rows: bulk_import.rows.where(
+          onboarding_classification: BulkImportRow::ONBOARDING_CLASSIFICATIONS[:requires_incorporation],
+          target_record_id: nil
         ).count
       }
     end

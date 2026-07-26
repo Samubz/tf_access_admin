@@ -1,3 +1,10 @@
+export type ResidentialPropertyPermissions = {
+  update: boolean
+  activate: boolean
+  deactivate: boolean
+  archive: boolean
+}
+
 export type ResidentialProperty = {
   id?: string
   name: string
@@ -13,4 +20,6 @@ export type ResidentialProperty = {
   organization_id?: string
   created_at?: string
   updated_at?: string
+  permissions?: ResidentialPropertyPermissions
+  actions?: string[]
 }

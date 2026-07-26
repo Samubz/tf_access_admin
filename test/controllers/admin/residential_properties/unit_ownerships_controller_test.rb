@@ -136,7 +136,7 @@ class Admin::ResidentialProperties::UnitOwnershipsControllerTest < ActionDispatc
 
     assert_redirected_to @unit_show_path
     assert_equal(
-      { ownership_percentage: [ validation_key("percentage_sum_exceeded") ] },
+      inertia_field_error(UnitOwnership, :ownership_percentage, validation_key("percentage_sum_exceeded")),
       session[:inertia_errors]
     )
   end
@@ -164,7 +164,7 @@ class Admin::ResidentialProperties::UnitOwnershipsControllerTest < ActionDispatc
 
     assert_redirected_to @unit_show_path
     assert_equal(
-      { ends_at: [ validation_key("ends_at_before_starts_at") ] },
+      inertia_field_error(UnitOwnership, :ends_at, validation_key("ends_at_before_starts_at")),
       session[:inertia_errors]
     )
     assert_nil @ownership.reload.ends_at
@@ -285,7 +285,7 @@ class Admin::ResidentialProperties::UnitOwnershipsControllerTest < ActionDispatc
 
     assert_redirected_to @unit_show_path
     assert_equal(
-      { ownership_percentage: [ validation_key("percentage_sum_exceeded") ] },
+      inertia_field_error(UnitOwnership, :ownership_percentage, validation_key("percentage_sum_exceeded")),
       session[:inertia_errors]
     )
     assert_equal 40, other_ownership.reload.ownership_percentage.to_i
@@ -296,7 +296,7 @@ class Admin::ResidentialProperties::UnitOwnershipsControllerTest < ActionDispatc
   def sign_in_as(user)
     host! "#{@organization.subdomain}.example.com"
     post user_session_path, params: {
-      user: { email: user.email, password: "password1" }
+      user: { email: user.email, password: "Password1@" }
     }
   end
 

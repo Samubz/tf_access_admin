@@ -59,7 +59,16 @@ module BulkImportServices
         next unless column_number
 
         value = sheet.cell(row_number, column_number)
-        payload[target] = value.present? ? value.to_s.strip : nil
+        if value.present?
+          # Convert Date/Time objects to DD/MM/YYYY format for birthdate
+          if (value.is_a?(Date) || value.is_a?(Time)) && target == "birthdate"
+            payload[target] = value.strftime("%d/%m/%Y")
+          else
+            payload[target] = value.to_s.strip
+          end
+        else
+          payload[target] = nil
+        end
       end
     end
 

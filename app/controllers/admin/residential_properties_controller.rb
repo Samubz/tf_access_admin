@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Admin::ResidentialPropertiesController < AdminController
-  before_action :set_residential_property, only: [ :create ]
-  before_action :get_residential_property, only: [ :edit, :update, :destroy ]
+  include RespondsToPropertyResult
+
+  before_action :get_residential_property, only: %i[show archive]
 
   def index
     authorize ResidentialProperty
@@ -14,69 +15,59 @@ class Admin::ResidentialPropertiesController < AdminController
 
     pagination = pagination_info(residential_properties)
     render inertia: "admin/residential_properties/index", props: {
-      residential_properties: residential_properties.map { |p| Admin::ResidentialPropertySerializer.new(p).as_json },
+      residential_properties: serialize_properties(residential_properties),
       pagination: pagination
     }, status: :ok
   end
 
   def new
     authorize ResidentialProperty
-    render inertia: "admin/residential_properties/new", props: {
-      residential_property: Admin::ResidentialPropertySerializer.new(ResidentialProperty.new).as_json,
-      property_types: PropertyTypes::ALL
-    }, status: :ok
+    redirect_to admin_property_setup_new_wizard_path
   end
 
   def create
     authorize ResidentialProperty
-
-    unless @residential_property.save
-      redirect_to new_admin_residential_property_path, inertia: { errors: @residential_property.errors }
-    else
-      redirect_to admin_residential_properties_path
-    end
+    redirect_to admin_property_setup_new_wizard_path
   end
 
-  def edit
+  def show
     authorize @residential_property
 
-    render inertia: "admin/residential_properties/edit", props: {
-      residential_property: Admin::ResidentialPropertySerializer.new(@residential_property).as_json,
-      property_types: PropertyTypes::ALL
+    render inertia: "admin/residential_properties/show", props: {
+      residential_property: Admin::ResidentialPropertyDetailSerializer.new(
+        property: @residential_property, current_user: current_user
+      ).as_json
     }, status: :ok
   end
 
-  def update
-    authorize @residential_property
+  def archive
+    authorize @residential_property, :archive?
 
-    unless @residential_property.update(residential_property_params)
-      redirect_to edit_admin_residential_property_path(@residential_property), inertia: { errors: @residential_property.errors }
-    else
-      redirect_to edit_admin_residential_property_path(@residential_property)
-    end
-  end
-
-  def destroy
-    authorize @residential_property
-    @residential_property.destroy
-    redirect_to admin_residential_properties_path
+    result = Properties::Archive.call(
+      actor: current_user,
+      property: @residential_property
+    )
+    respond_to_property_result(
+      result,
+      success_path: admin_residential_properties_path,
+      error_path: admin_residential_properties_path
+    )
   end
 
   private
 
-  def residential_property_params
-    params.require(:residential_property).permit(
-      :name, :code, :property_type, :address_line, :city, :region, :country, :timezone, :status
-    )
-  end
-
-  def set_residential_property
-    @residential_property = ResidentialProperty.new(residential_property_params)
-  end
-
   def get_residential_property
     @residential_property = policy_scope(ResidentialProperty).find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to admin_residential_properties_path, inertia: { errors: [ I18n.t("frontend.admin.residential_properties.not_found") ] }
+    redirect_to admin_residential_properties_path,
+                inertia: { errors: { base: [ I18n.t("frontend.admin.residential_properties.not_found") ] } }
+  end
+
+  def serialize_property(property)
+    Admin::ResidentialPropertySerializer.new(property, current_user: current_user).as_json
+  end
+
+  def serialize_properties(properties)
+    properties.map { |property| serialize_property(property) }
   end
 end

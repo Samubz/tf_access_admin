@@ -2,45 +2,44 @@
 
 class UserPolicy < ApplicationPolicy
   def index?
-    admin?
+    allowed?(:manage_users)
   end
 
   def show?
-    admin?
+    allowed?(:manage_users) && same_organization?
   end
 
   def new?
-    admin?
+    create?
   end
 
   def create?
-    admin?
+    allowed?(:manage_users)
   end
 
   def edit?
-    admin? && same_organization?
+    update?
   end
 
   def update?
-    admin? && same_organization?
+    allowed?(:manage_users) && same_organization?
   end
 
   def destroy?
-    admin? && same_organization?
+    allowed?(:manage_users) && same_organization?
   end
 
   class Scope < ApplicationPolicy::Scope
+    include PolicyScopeAuthorization
+
     def resolve
       return scope.none unless user.present?
 
-      tenant = ActsAsTenant.current_tenant
-      return scope.none unless tenant
+      org = current_organization
+      return scope.none unless org
+      return scope.none unless authorization_resolver&.allowed?(:manage_users)
 
-      if user.super_admin? || user.tenant_admin?(tenant)
-        scope.joins(:people).where(people: { organization_id: tenant.id }).distinct
-      else
-        scope.none
-      end
+      scope.joins(:people).where(people: { organization_id: org.id }).distinct
     end
   end
 end

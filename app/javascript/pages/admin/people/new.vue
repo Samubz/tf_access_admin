@@ -8,7 +8,6 @@
       :roles="props.roles"
       :person-types="props.person_types"
       :statuses="props.statuses"
-      :linkable-users="props.linkable_users"
       :server-errors="props.errors"
       @submit="onSubmit"
     />
@@ -25,7 +24,6 @@ import { ref, computed } from 'vue'
 import { getPeopleBreadcrumbs } from '@/lib/breadcrumbs/person'
 import Header from '@/components/admin/layout/Header.vue'
 import { applyErrorsToFormRef } from '@/lib/composables/forms/apply_errors_to_form_ref'
-import type { LinkableUser } from '@/types/person'
 
 const { t } = useI18n()
 
@@ -33,7 +31,6 @@ const props = defineProps<{
   roles: string[]
   person_types: string[]
   statuses: string[]
-  linkable_users: LinkableUser[]
   errors?: Record<string, string[]>
 }>()
 
@@ -51,6 +48,7 @@ function onSubmit(data: PersonSchema) {
         email: data.email,
         phone: data.phone,
         birthdate: data.birthdate,
+        send_invitation: data.send_invitation,
       },
     },
     {

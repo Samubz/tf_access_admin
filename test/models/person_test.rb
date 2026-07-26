@@ -1,5 +1,45 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: people
+#
+#  id                         :uuid             not null, primary key
+#  birthdate                  :date
+#  deleted_at                 :datetime
+#  display_name               :string           not null
+#  document_number_ciphertext :text
+#  document_number_digest     :string
+#  document_type              :string
+#  email_ciphertext           :text
+#  first_name                 :string
+#  last_name                  :string
+#  metadata                   :jsonb            not null
+#  person_type                :string           default("natural"), not null
+#  phone_ciphertext           :text
+#  status                     :string           default("active"), not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  organization_id            :uuid             not null
+#  user_id                    :uuid
+#
+# Indexes
+#
+#  idx_people_unique_document_per_org_when_present   (organization_id,document_type,document_number_digest) UNIQUE WHERE ((document_number_digest IS NOT NULL) AND (deleted_at IS NULL))
+#  idx_people_unique_user_per_org_when_present       (organization_id,user_id) UNIQUE WHERE ((user_id IS NOT NULL) AND (deleted_at IS NULL))
+#  index_people_on_deleted_at                        (deleted_at)
+#  index_people_on_metadata                          (metadata) USING gin
+#  index_people_on_organization_id                   (organization_id)
+#  index_people_on_organization_id_and_display_name  (organization_id,display_name)
+#  index_people_on_organization_id_and_status        (organization_id,status)
+#  index_people_on_organization_id_and_user_id       (organization_id,user_id)
+#  index_people_on_user_id                           (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (organization_id => organizations.id)
+#  fk_rails_...  (user_id => users.id)
+#
 require "test_helper"
 
 class PersonTest < ActiveSupport::TestCase
@@ -80,8 +120,8 @@ class PersonTest < ActiveSupport::TestCase
     user = ActsAsTenant.without_tenant do
       User.create!(
         email: "linked-duplicate@example.test",
-        password: "password1",
-        password_confirmation: "password1",
+        password: "Password1@",
+        password_confirmation: "Password1@",
         name: "Linked Duplicate",
         dni: SecureRandom.hex(4),
         language: Languages::ES,

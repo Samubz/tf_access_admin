@@ -29,9 +29,9 @@ module BulkImportServices
       processed = @bulk_import.imported_rows + @bulk_import.skipped_rows + @bulk_import.failed_rows
       percentage = if target.positive?
                      ((processed.to_f / target) * 100).round
-                   else
+      else
                      @bulk_import.progress_percentage
-                   end
+      end
 
       {
         total: target,
@@ -48,10 +48,14 @@ module BulkImportServices
       return stored.to_i if stored.present?
 
       import_valid_rows_only = @bulk_import.metadata.dig("import_execution", "import_valid_rows_only")
-      ProcessUnitsImport.importable_scope(
+      process_service.importable_scope(
         bulk_import: @bulk_import,
         import_valid_rows_only: ActiveModel::Type::Boolean.new.cast(import_valid_rows_only != false)
       ).count
+    end
+
+    def process_service
+      @bulk_import.import_type == BulkImport::IMPORT_TYPES[:users] ? ProcessPeopleImport : ProcessUnitsImport
     end
 
     def summary_payload
@@ -109,6 +113,8 @@ module BulkImportServices
 
     def log_message_for(row)
       if row.import_status == BulkImportRow::IMPORT_STATUSES[:imported]
+        return person_created_message(row) if @bulk_import.import_type == BulkImport::IMPORT_TYPES[:users]
+
         identifier = row.normalized_payload&.dig("unit_identifier").presence
         return I18n.t(
           "frontend.admin.bulk_imports.import.logs.unit_created",
@@ -119,6 +125,12 @@ module BulkImportServices
       row.failure_message.presence ||
         row.validation_errors.first&.dig("message") ||
         I18n.t("frontend.admin.bulk_imports.import.logs.failed")
+    end
+
+    def person_created_message(row)
+      payload = row.normalized_payload || {}
+      name = [ payload["first_name"], payload["last_name"] ].compact_blank.join(" ").presence
+      I18n.t("frontend.admin.bulk_imports.import.logs.person_created", name: name || "—")
     end
   end
 end

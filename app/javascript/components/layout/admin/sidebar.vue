@@ -15,15 +15,17 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import { Home, GalleryVerticalEnd, Users, UserRound, Settings, Building, Building2 } from 'lucide-vue-next';
+import { Home, GalleryVerticalEnd, Users, UserRound, Settings, Building, Building2, ClipboardList, CalendarDays } from 'lucide-vue-next';
 import { Link } from '@inertiajs/vue3';
 import NavUser from '@/components/admin/user/nav/NavUser.vue'
 import { useI18n } from 'vue-i18n'
 import { usePage } from '@inertiajs/vue3'
 import { FeatureItem } from '@/types/auth'
+import type { OperationalCapabilities } from '@/types/capabilities'
 const { t } = useI18n()
 const page = usePage()
 const features = page.props.auth.features as FeatureItem[]
+const capabilities = page.props.capabilities as OperationalCapabilities
 
 const getFeatureIcon = (key: string) => {
   switch (key) {
@@ -75,6 +77,57 @@ const getFeatureIcon = (key: string) => {
                   <Link :href="feature.url">
                     <component :is="getFeatureIcon(feature.key)" />
                     <span>{{ t(`admin.sidebar.${feature.key}`) }}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <!-- Operational Roles Management — shown only if user has manage_staff_assignments capability -->
+        <SidebarGroup v-if="capabilities?.manage_staff_assignments">
+          <SidebarGroupLabel>{{ t('admin.sidebar.operations') }}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton as-child>
+                  <Link href="/admin/operational_roles">
+                    <Users class="h-4 w-4" />
+                    <span>{{ t('admin.sidebar.operational_roles') }}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <!-- Concierge operational visits — view_authorized_visits capability -->
+        <SidebarGroup v-if="capabilities?.view_authorized_visits">
+          <SidebarGroupLabel>{{ t('admin.sidebar.concierge') }}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton as-child>
+                  <Link href="/concierge/visits">
+                    <ClipboardList class="h-4 w-4" />
+                    <span>{{ t('admin.sidebar.authorized_visits') }}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <!-- Admin visit management — manage_visits / view_visits capability -->
+        <SidebarGroup v-if="capabilities?.manage_visits || capabilities?.view_visits">
+          <SidebarGroupLabel>{{ t('admin.sidebar.visits') }}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton as-child>
+                  <Link href="/admin/visits">
+                    <CalendarDays class="h-4 w-4" />
+                    <span>{{ t('admin.sidebar.manage_visits') }}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

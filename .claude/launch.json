@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/samugomez/Documents/Development/projects/rails/tf_access_admin && exec bin/dev"
+      ],
+      "port": 3000
+    }
+  ]
+}

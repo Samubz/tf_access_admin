@@ -21,12 +21,12 @@
           </TableRow>
           <TableRow v-for="ownership in ownerships" :key="ownership.id">
             <TableCell>
-              <div class="flex items-center gap-3">
+              <PersonProfileLink :person-id="ownership.person_id">
                 <Avatar class="size-9">
                   <AvatarFallback>{{ personInitials(ownership.person_display_name) }}</AvatarFallback>
                 </Avatar>
-                <span class="font-medium">{{ ownership.person_display_name }}</span>
-              </div>
+                <span>{{ ownership.person_display_name }}</span>
+              </PersonProfileLink>
             </TableCell>
             <TableCell class="text-muted-foreground">
               {{ documentLabel(ownership) }}
@@ -108,6 +108,7 @@ import { router } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-vue-next'
 import DataTablePagination from '@/components/admin/table/DataTablePagination.vue'
+import PersonProfileLink from '@/components/admin/person/PersonProfileLink.vue'
 import OwnershipProgress from '@/components/admin/shared/OwnershipProgress.vue'
 import StatusDotBadge from '@/components/admin/shared/StatusDotBadge.vue'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'

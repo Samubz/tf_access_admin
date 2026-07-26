@@ -201,7 +201,7 @@ module UnitOwnerships
       end
     end
 
-    test "rejects duplicate person by document number digest" do
+    test "reuses existing person by document number digest" do
       existing = Person.create!(
         organization: @organization,
         display_name: "Existing Doc Owner",
@@ -211,31 +211,29 @@ module UnitOwnerships
       )
 
       assert_no_difference -> { Person.count } do
-        assert_no_difference -> { UnitOwnership.count } do
-          error = assert_raises(ActiveRecord::RecordInvalid) do
-            CreateWithPerson.call(
-              unit: @unit,
-              ownership_params: { ownership_percentage: 100, starts_at: Date.current },
-              person_params: {
-                display_name: "Duplicate Doc",
-                document_number: "22222222-2",
-                email: "duplicate-doc@example.test"
-              },
-              actor: nil
-            )
-          end
+        assert_difference -> { UnitOwnership.count }, 1 do
+          ownership = CreateWithPerson.call(
+            unit: @unit,
+            ownership_params: { ownership_percentage: 100, starts_at: Date.current },
+            person_params: {
+              display_name: "Duplicate Doc",
+              document_number: "22222222-2",
+              email: "duplicate-doc@example.test"
+            },
+            actor: nil
+          )
 
-          assert_equal existing_person_match_message(existing.display_name), error.record.errors[:base].first
+          assert_equal existing, ownership.person
         end
       end
     end
 
-    test "rejects duplicate person by normalized email linked to user" do
+    test "reuses existing person by normalized email linked to user" do
       user = ActsAsTenant.without_tenant do
         User.create!(
           email: "linked-owner@example.test",
-          password: "password1",
-          password_confirmation: "password1",
+          password: "Password1@",
+          password_confirmation: "Password1@",
           name: "Linked Owner",
           dni: SecureRandom.hex(4),
           language: Languages::ES,
@@ -252,8 +250,8 @@ module UnitOwnerships
       OrganizationMembership.create!(organization: @organization, person: existing).accept!
 
       assert_no_difference -> { Person.count } do
-        error = assert_raises(ActiveRecord::RecordInvalid) do
-          CreateWithPerson.call(
+        assert_difference -> { UnitOwnership.count }, 1 do
+          ownership = CreateWithPerson.call(
             unit: @unit,
             ownership_params: { ownership_percentage: 100, starts_at: Date.current },
             person_params: {
@@ -263,9 +261,9 @@ module UnitOwnerships
             },
             actor: nil
           )
-        end
 
-        assert_equal existing_person_match_message(existing.display_name), error.record.errors[:base].first
+          assert_equal existing, ownership.person
+        end
       end
     end
 
@@ -482,7 +480,7 @@ module UnitOwnerships
 
       @property = ResidentialProperty.create!(
         organization: @organization,
-        name: "Concurrency Service Property",
+        name: "Concurrency Service Property #{SecureRandom.hex(4)}",
         property_type: PropertyTypes::BUILDING,
         status: "active",
         country: "Chile",
@@ -511,9 +509,10 @@ module UnitOwnerships
 
     teardown do
       ActsAsTenant.current_tenant = @organization
+      # Clean up relationships to avoid FK violations
+      # Tests run in transactions, so units will be cleaned up automatically
       UnitOwnership.unscoped.where(unit_id: @unit.id).delete_all if @unit
-      @unit&.destroy
-      @property&.destroy
+      UnitOccupancy.unscoped.where(unit_id: @unit.id).delete_all if @unit
       @person_a&.destroy
       @person_b&.destroy
       ActsAsTenant.current_tenant = nil

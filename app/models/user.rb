@@ -40,20 +40,31 @@ class User < ApplicationRecord
   acts_as_paranoid
   include Users::Features
 
-  attr_accessor :pending_tenant_role
-
   has_many :people, dependent: :destroy
   has_many :organization_memberships, through: :people
   has_many :organizations, through: :people
+  has_many :created_visits, class_name: "Visit", foreign_key: :created_by_id, dependent: :nullify
+  has_many :authorized_visits, class_name: "Visit", foreign_key: :authorized_by_id, dependent: :nullify
+  has_many :checked_in_visits, class_name: "Visit", foreign_key: :checked_in_by_id, dependent: :nullify
+  has_many :checked_out_visits, class_name: "Visit", foreign_key: :checked_out_by_id, dependent: :nullify
+  has_one :device_token, dependent: :destroy
   has_one_attached :avatar
 
-  after_create :provision_tenant_identity
-  after_create :apply_pending_tenant_role_if_any
+  # Identity provisioning is explicit (Accounts::ProvisionTenantIdentity), invoked
+  # by admin account creation. Creating a User no longer auto-creates a Person:
+  # a bare User (e.g. self-registration) is a valid, org-less account.
+
+  # Server-side password policy (mirrors the frontend Zod rule, plus a digit):
+  # min 8 chars with at least one lowercase, uppercase, digit and special char
+  # from the shared set. Applies to every path that sets a password (invitation
+  # acceptance, admin creation, password change).
+  PASSWORD_COMPLEXITY = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$%@.\-_]).{8,}\z/
 
   validates :name, presence: true
   validates :dni, presence: true
   validates :language, presence: true, inclusion: { in: Languages::ALL }
   validates :email, uniqueness: { message: "admin.users.validations.email_taken" }
+  validate :password_meets_complexity
 
   devise :database_authenticatable,
          :recoverable, :rememberable, :validatable,
@@ -162,28 +173,10 @@ class User < ApplicationRecord
 
   private
 
-  def provision_tenant_identity
-    org = ActsAsTenant.current_tenant
-    return unless org
-    return if people.exists?(organization_id: org.id)
+  def password_meets_complexity
+    return if password.blank?
+    return if password.match?(PASSWORD_COMPLEXITY)
 
-    person = people.create!(
-      organization: org,
-      user: self,
-      display_name: name.presence || email,
-      status: "active"
-    )
-    membership = OrganizationMembership.create!(organization: org, person: person)
-    membership.accept!
-    person.add_role(AvailableRoles::CLIENT) unless person.has_role?(AvailableRoles::CLIENT)
-  end
-
-  def apply_pending_tenant_role_if_any
-    return if pending_tenant_role.blank?
-
-    org = ActsAsTenant.current_tenant
-    person = person_for(org)
-    person&.set_tenant_role(pending_tenant_role)
-    self.pending_tenant_role = nil
+    errors.add(:password, "admin.users.validations.password_complexity")
   end
 end

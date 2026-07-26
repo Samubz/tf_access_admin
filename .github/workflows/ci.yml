@@ -107,6 +107,11 @@ jobs:
       - name: Install JS dependencies
         run: npm ci
 
+      - name: Generate JS routes
+        env:
+          RAILS_ENV: test
+        run: bin/rails js:routes
+
       - name: Run tests
         env:
           RAILS_ENV: test
@@ -114,7 +119,6 @@ jobs:
           PGPASSWORD: postgres
           PGHOST: localhost
           PGDATABASE: admin_base_test2
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test
 
@@ -160,6 +164,11 @@ jobs:
       - name: Install JS dependencies
         run: npm ci
 
+      - name: Generate JS routes
+        env:
+          RAILS_ENV: test
+        run: bin/rails js:routes
+
       - name: Run System Tests
         env:
           RAILS_ENV: test
@@ -167,7 +176,6 @@ jobs:
           PGPASSWORD: postgres
           PGHOST: localhost
           PGDATABASE: admin_base_test2
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test:system
 

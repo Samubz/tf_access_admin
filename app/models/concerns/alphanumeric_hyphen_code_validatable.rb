@@ -5,7 +5,10 @@ module AlphanumericHyphenCodeValidatable
   extend ActiveSupport::Concern
 
   STRICT_FORMAT = /\A[a-zA-Z0-9-]+\z/
-  IDENTIFIER_FORMAT = /\A[a-zA-Z0-9\s-]+\z/
+  # Human identifiers accept Unicode letters/numbers (e.g. "Área 4"); the
+  # transliterating slug (`DomainCodes::Slug`) folds them to ASCII for
+  # `normalized_identifier` and derived codes (hierarchical-code-generation).
+  IDENTIFIER_FORMAT = /\A[\p{L}\p{N}\s-]+\z/
 
   class_methods do
     def validates_alphanumeric_hyphen_code(*attributes, allow_whitespace: false)

@@ -44,7 +44,9 @@
                   <AvatarFallback>{{ personInitials(occupancy.person_display_name) }}</AvatarFallback>
                 </Avatar>
                 <div class="min-w-0">
-                  <p class="font-medium truncate">{{ occupancy.person_display_name }}</p>
+                  <PersonProfileLink :person-id="occupancy.person_id">
+                    <span class="truncate">{{ occupancy.person_display_name }}</span>
+                  </PersonProfileLink>
                   <p v-if="occupancy.person_email" class="text-xs text-muted-foreground truncate">
                     {{ occupancy.person_email }}
                   </p>
@@ -146,6 +148,7 @@ import { router } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
 import { MoreHorizontal, Pencil, Power, Trash2 } from 'lucide-vue-next'
 import DataTablePagination from '@/components/admin/table/DataTablePagination.vue'
+import PersonProfileLink from '@/components/admin/person/PersonProfileLink.vue'
 import StatusDotBadge from '@/components/admin/shared/StatusDotBadge.vue'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'

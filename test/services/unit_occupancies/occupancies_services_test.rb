@@ -192,7 +192,7 @@ module UnitOccupancies
       end
     end
 
-    test "rejects duplicate person by document number digest" do
+    test "reuses existing person by document number digest" do
       existing = Person.create!(
         organization: @organization,
         display_name: "Existing Doc Occupant",
@@ -202,56 +202,53 @@ module UnitOccupancies
       )
 
       assert_no_difference -> { Person.count } do
-        assert_no_difference -> { UnitOccupancy.count } do
-          error = assert_raises(ActiveRecord::RecordInvalid) do
-            CreateWithPerson.call(
-              unit: @unit,
-              occupancy_params: {
-                occupancy_type: OccupancyTypes::TENANT,
-                starts_at: Date.current
-              },
-              person_params: {
-                display_name: "Duplicate Doc",
-                document_number: "22222222-2",
-                email: "duplicate-doc@example.test"
-              },
-              actor: nil
-            )
-          end
+        assert_difference -> { UnitOccupancy.count }, 1 do
+          occupancy = CreateWithPerson.call(
+            unit: @unit,
+            occupancy_params: {
+              occupancy_type: OccupancyTypes::TENANT,
+              starts_at: Date.current
+            },
+            person_params: {
+              display_name: "Duplicate Doc",
+              document_number: "22222222-2",
+              email: "duplicate-doc@example.test"
+            },
+            actor: nil
+          )
 
-          assert_equal existing_person_match_message(existing.display_name), error.record.errors[:base].first
+          assert_equal existing, occupancy.person
         end
       end
     end
 
-    test "rejects duplicate person by normalized email" do
-      existing = Person.create!(
+    test "reuses existing person by normalized email" do
+      existing = Person.new(
         organization: @organization,
         display_name: "Existing Email Occupant",
         person_type: PersonTypes::NATURAL,
-        status: PersonStatuses::ACTIVE,
-        contact_email: "existing-email-occupant@example.test"
+        status: PersonStatuses::ACTIVE
       )
+      existing.contact_email = "existing-email-occupant@example.test"
+      existing.save!
 
       assert_no_difference -> { Person.count } do
-        assert_no_difference -> { UnitOccupancy.count } do
-          error = assert_raises(ActiveRecord::RecordInvalid) do
-            CreateWithPerson.call(
-              unit: @unit,
-              occupancy_params: {
-                occupancy_type: OccupancyTypes::TENANT,
-                starts_at: Date.current
-              },
-              person_params: {
-                display_name: "Duplicate Email",
-                document_number: "33.333.333-3",
-                email: "EXISTING-EMAIL-OCCUPANT@example.test"
-              },
-              actor: nil
-            )
-          end
+        assert_difference -> { UnitOccupancy.count }, 1 do
+          occupancy = CreateWithPerson.call(
+            unit: @unit,
+            occupancy_params: {
+              occupancy_type: OccupancyTypes::TENANT,
+              starts_at: Date.current
+            },
+            person_params: {
+              display_name: "Duplicate Email",
+              document_number: "33.333.333-3",
+              email: "EXISTING-EMAIL-OCCUPANT@example.test"
+            },
+            actor: nil
+          )
 
-          assert_equal existing_person_match_message(existing.display_name), error.record.errors[:base].first
+          assert_equal existing, occupancy.person
         end
       end
     end
@@ -537,7 +534,7 @@ module UnitOccupancies
 
       @property = ResidentialProperty.create!(
         organization: @organization,
-        name: "Occupancy Concurrency Property",
+        name: "Occupancy Concurrency Property #{SecureRandom.hex(4)}",
         property_type: PropertyTypes::BUILDING,
         status: "active",
         country: "Chile",
@@ -560,9 +557,10 @@ module UnitOccupancies
 
     teardown do
       ActsAsTenant.current_tenant = @organization
+      # Clean up relationships to avoid FK violations
+      # Tests run in transactions, so units will be cleaned up automatically
       UnitOccupancy.unscoped.where(unit_id: @unit.id).delete_all if @unit
-      @unit&.destroy
-      @property&.destroy
+      UnitOwnership.unscoped.where(unit_id: @unit.id).delete_all if @unit
       @person&.destroy
       ActsAsTenant.current_tenant = nil
     end

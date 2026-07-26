@@ -78,6 +78,7 @@ module BulkImportServices
 
     def normalize_payload(raw)
       normalized = raw.transform_keys(&:to_s).transform_values { |value| value.presence }
+      normalized.delete("normalized_identifier")
       split_owner_name!(normalized)
       normalized
     end
@@ -134,7 +135,7 @@ module BulkImportServices
       owner_present = owner_data_present?(normalized)
 
       if owner_present && @context.ignore_owners?
-        add_warning(["owner_email", "owner_document"].compact.join(" "), "owners_ignored", :owners_ignored)
+        add_warning([ "owner_email", "owner_document" ].compact.join(" "), "owners_ignored", :owners_ignored)
         return
       end
 
@@ -188,14 +189,26 @@ module BulkImportServices
 
     def validate_database_unit!(property_section_id, normalized)
       unit_identifier = normalized["unit_identifier"]
-      existing_unit = @context.find_existing_unit(property_section_id, unit_identifier)
+      existing_unit = if @context.update_only?
+        @context.find_unit_for_update(property_section_id, unit_identifier)
+      else
+        @context.find_existing_unit(property_section_id, unit_identifier)
+      end
 
       if @context.update_only?
+        if @context.ambiguous_unit_for_update?(property_section_id, unit_identifier)
+          add_error("unit_identifier", "unit_ambiguous_for_update", :unit_ambiguous_for_update)
+          return
+        end
+
         if existing_unit.nil?
           add_error("unit_identifier", "unit_not_found_for_update", :unit_not_found_for_update)
         else
           normalized["target_unit_id"] = existing_unit.id
           normalized["operation"] = "update"
+          if placement_change_requested?(existing_unit, property_section_id)
+            normalized["placement_change_requested"] = true
+          end
         end
         return
       end
@@ -212,11 +225,15 @@ module BulkImportServices
     def track_group_percentage!(group_key, normalized)
       return if group_key.blank?
       return unless normalized["will_import_ownership"]
-      
+
       @context.add_group_percentage(
         group_key,
         UnitsImportOwnershipRules.resolved_ownership_percentage(normalized)
       )
+    end
+
+    def placement_change_requested?(unit, target_section_id)
+      unit.property_section_id.to_s != target_section_id.to_s
     end
 
     def owner_data_present?(normalized)

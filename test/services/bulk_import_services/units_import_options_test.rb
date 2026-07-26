@@ -20,5 +20,15 @@ module BulkImportServices
     test "UnitsImportMode.resolve falls back for unknown modes" do
       assert_equal UnitsImportMode::DEFAULT, UnitsImportMode.resolve("invalid")
     end
+
+    test "allow_placement_changes is true only for update_only" do
+      importer = Object.new
+      importer.extend(UnitsImportMode)
+      importer.define_singleton_method(:import_mode) { "update_only" }
+      assert importer.allow_placement_changes?
+
+      importer.define_singleton_method(:import_mode) { "create_only" }
+      assert_not importer.allow_placement_changes?
+    end
   end
 end

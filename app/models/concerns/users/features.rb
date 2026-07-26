@@ -5,7 +5,7 @@ module Users::Features
     :home,
     :users,
     :people,
-    :residential_properties,
+    :residential_properties
     # :settings
   ].freeze
 
@@ -44,7 +44,7 @@ module Users::Features
       residential_properties: h.admin_residential_properties_path,
       # No hay ruta admin/organizations aún; mismo destino que home hasta que exista.
       organizations: h.admin_organizations_path,
-      organization_settings: h.admin_organization_path(ActsAsTenant.current_tenant),
+      organization_settings: h.admin_organization_path(ActsAsTenant.current_tenant)
       # settings: h.edit_admin_profile_path(self)
     }
   end

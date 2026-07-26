@@ -14,12 +14,9 @@ module UnitOccupancies
     end
 
     def call
-      reject_duplicate_person!
-
       Mutation.with_unit_lock(@unit) do
         ActiveRecord::Base.transaction do
-          person = build_person
-          person.save!
+          person = resolve_person!
           ensure_membership!(person)
 
           occupancy = UnitOccupancy.new(
@@ -37,23 +34,17 @@ module UnitOccupancies
 
     private
 
-    def reject_duplicate_person!
-      existing = UnitOwnerships::FindExistingPerson.call(
+    def resolve_person!
+      existing = People::FindExisting.call(
         organization: @unit.organization,
         document_number: @person_params[:document_number],
         email: normalized_email
       )
-      return unless existing
+      return existing if existing
 
-      person = Person.new(organization: @unit.organization)
-      person.errors.add(
-        :base,
-        I18n.t(
-          "frontend.admin.unit_occupancies.validations.existing_person_match",
-          display_name: existing.display_name
-        )
-      )
-      raise ActiveRecord::RecordInvalid, person
+      person = build_person
+      person.save!
+      person
     end
 
     def build_person

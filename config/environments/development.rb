@@ -31,7 +31,14 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  config.action_mailer.delivery_method = :resend
+  # Local mail capture via MailHog (see docker-compose.yml). Override host/port
+  # per-developer with MAILHOG_SMTP_ADDRESS / MAILHOG_SMTP_PORT in .env.
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch("MAILHOG_SMTP_ADDRESS", "localhost"),
+    port: ENV.fetch("MAILHOG_SMTP_PORT", 1025)
+  }
+  config.action_mailer.raise_delivery_errors = true
 
   # ## Mailer configuration for development
   # config.action_mailer.delivery_method = :mailgun
@@ -44,7 +51,6 @@ Rails.application.configure do
     host: "localhost",
     port: 5100
   }
-  # config.action_mailer.raise_delivery_errors = true
 
 
 

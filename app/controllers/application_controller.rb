@@ -115,7 +115,7 @@ class ApplicationController < ActionController::Base
   def set_filters
       @filters = {
           page: params[:page] || 1,
-          per_page: params[:per_page] || 10,
+          per_page: params[:per_page] || 10
       }
   end
 end

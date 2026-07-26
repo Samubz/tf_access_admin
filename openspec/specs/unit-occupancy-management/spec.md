@@ -202,16 +202,31 @@ The system SHALL validate that `ends_at` is on or after `starts_at` when `ends_a
 
 ### Requirement: Occupancy mutations are authorized
 
-The system SHALL enforce Pundit authorization for create, update, and destroy actions on `UnitOccupancy`, scoped to the current organization and admin role.
+The system SHALL enforce capability-based Pundit authorization for create, update, and destroy actions on `UnitOccupancy`, requiring `manage_occupancies` scoped to the unit's residential property, with organization isolation on every action.
 
-#### Scenario: Unauthorized user cannot mutate occupancies
+#### Scenario: Tenant admin can mutate occupancies
 
-- **WHEN** a user without admin privileges for the organization attempts to create, update, or destroy an occupancy
+- **WHEN** a user with `tenant_admin` role attempts to create an occupancy
+- **THEN** the action is authorized
+
+#### Scenario: Property admin can mutate occupancies for assigned property
+
+- **WHEN** a user with active `property_admin` assignment on property P attempts to update an occupancy for a unit in P
+- **THEN** the action is authorized
+
+#### Scenario: Property admin denied for unassigned property
+
+- **WHEN** a user with `property_admin` assignment only on property P attempts to mutate an occupancy for a unit in property Q
 - **THEN** the system denies the action
 
-#### Scenario: Admin from another organization cannot mutate occupancies
+#### Scenario: Concierge cannot mutate occupancies
 
-- **WHEN** an admin from organization A attempts to mutate an occupancy belonging to organization B
+- **WHEN** a user with only concierge assignment attempts to create or update an occupancy
+- **THEN** the system denies the action
+
+#### Scenario: Cross-organization access denied
+
+- **WHEN** a user from organization A attempts to mutate an occupancy belonging to organization B
 - **THEN** the system denies the action
 
 ### Requirement: Occupancy changes are audited

@@ -1,5 +1,23 @@
 # frozen_string_literal: true
 
+# Extended visitor profile associated with the canonical identity in +people+.
+#
+# +Person+ is the only identity store per organization. +VisitorProfile+ is not a
+# parallel identity table: it holds visitor-specific attributes (security notes,
+# external name, company, transitional contact fields) while the canonical identity
+# lives on +Person+ via +person_id+.
+#
+# Integration contract:
+# - New visitor flows MUST resolve or create a +Person+ first (e.g. via
+#   +People::FindExisting+) and link the profile through +person_id+.
+# - +person_id+ may be optional on legacy rows during migration; operational flows
+#   should treat an unlinked profile as transitional, not as a separate identity.
+# - The unified person profile and +People::ContextualRoles+ derive the +visitor+
+#   badge from linked +visitor_profiles+, not from this table alone.
+#
+# Do not remove or replace +visitor_profiles+ in favor of a separate visitors
+# identity table.
+#
 # == Schema Information
 #
 # Table name: visitor_profiles

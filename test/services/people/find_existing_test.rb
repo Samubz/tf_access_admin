@@ -32,8 +32,8 @@ module People
       user = ActsAsTenant.without_tenant do
         User.create!(
           email: "linked@example.test",
-          password: "password1",
-          password_confirmation: "password1",
+          password: "Password1@",
+          password_confirmation: "Password1@",
           name: "Linked Person",
           dni: SecureRandom.hex(4),
           language: Languages::ES,
@@ -101,8 +101,8 @@ module People
       user = ActsAsTenant.without_tenant do
         User.create!(
           email: "priority-user@example.test",
-          password: "password1",
-          password_confirmation: "password1",
+          password: "Password1@",
+          password_confirmation: "Password1@",
           name: "User Person",
           dni: SecureRandom.hex(4),
           language: Languages::ES,
@@ -223,8 +223,8 @@ module People
       user = ActsAsTenant.without_tenant do
         User.create!(
           email: "import-user@example.test",
-          password: "password1",
-          password_confirmation: "password1",
+          password: "Password1@",
+          password_confirmation: "Password1@",
           name: "Import User",
           dni: SecureRandom.hex(4),
           language: Languages::ES,

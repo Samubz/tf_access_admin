@@ -101,8 +101,24 @@ class UnitOwnershipPolicyTest < ActiveSupport::TestCase
     assert policy.destroy?
   end
 
+  test "tenant admin can authorize class-level ownership mutations" do
+    policy = UnitOwnershipPolicy.new(@tenant_admin, UnitOwnership)
+
+    assert policy.create?
+    assert policy.update?
+    assert policy.destroy?
+  end
+
   test "non-admin user cannot create update or destroy ownership" do
     policy = UnitOwnershipPolicy.new(@non_admin, @ownership)
+
+    assert_not policy.create?
+    assert_not policy.update?
+    assert_not policy.destroy?
+  end
+
+  test "non-admin user cannot authorize class-level ownership mutations" do
+    policy = UnitOwnershipPolicy.new(@non_admin, UnitOwnership)
 
     assert_not policy.create?
     assert_not policy.update?

@@ -30,9 +30,11 @@ createInertiaApp({
     //
     // page.default.layout = page.default.layout || Layout
 
-    if (page?.default && name.startsWith('admin/')) {
+    const usesAdminLayout = name.startsWith('admin/') || name.startsWith('concierge/')
+
+    if (page?.default && usesAdminLayout) {
       page.default.layout = page.default.layout ?? AdminLayout
-    }else{
+    } else {
       page.default.layout = page.default.layout ?? DefaultLayout
     }
 

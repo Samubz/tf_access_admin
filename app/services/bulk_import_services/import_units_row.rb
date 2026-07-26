@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module BulkImportServices
+  # Processes a validated units import row through the canonical Units::* services
+  # (improve-units-foundation §7).
   class ImportUnitsRow
     include UnitsImportMode
 
@@ -23,19 +25,21 @@ module BulkImportServices
       return skip_duplicate! if duplicate_row?
       return skip_pending! if @row.import_status == BulkImportRow::IMPORT_STATUSES[:skipped]
 
-      unit = nil
+      unit = find_or_create_unit!
+      return :failed if unit.nil?
+
       ActiveRecord::Base.transaction do
-        unit = find_or_create_unit!
         import_ownership!(unit)
       end
+
       mark_imported!(unit)
       :imported
     rescue ActiveRecord::RecordInvalid => e
       mark_failed!(localized_record_invalid_message(e.record))
       :failed
-    rescue ActiveRecord::RecordNotUnique
-      mark_skipped!(I18n.t("frontend.admin.bulk_imports.import.logs.duplicate_skipped"))
-      :skipped
+    rescue Pundit::NotAuthorizedError
+      mark_failed!(I18n.t("frontend.admin.bulk_imports.import.logs.not_authorized"))
+      :failed
     rescue StandardError => e
       mark_failed!(e.message)
       :failed
@@ -69,13 +73,19 @@ module BulkImportServices
       end
 
       ActiveRecord::Base.transaction do
-        unit.update!(unit_attributes)
+        return :failed unless apply_descriptive_update!(unit)
+        return :failed unless apply_placement_change!(unit)
+
         import_ownership!(unit)
       end
+
       mark_imported!(unit)
       :imported
     rescue ActiveRecord::RecordInvalid => e
       mark_failed!(localized_record_invalid_message(e.record))
+      :failed
+    rescue Pundit::NotAuthorizedError
+      mark_failed!(I18n.t("frontend.admin.bulk_imports.import.logs.not_authorized"))
       :failed
     rescue StandardError => e
       mark_failed!(e.message)
@@ -102,15 +112,67 @@ module BulkImportServices
     def resolve_unit_for_update
       unit_id = @payload["target_unit_id"]
       if unit_id.present?
-        return Unit.find_by(id: unit_id, organization_id: @bulk_import.organization_id)
+        return Unit.find_by(
+          id: unit_id,
+          organization_id: @bulk_import.organization_id,
+          residential_property_id: @bulk_import.residential_property_id
+        )
       end
 
       resolve_unit_by_identifier
     end
 
-    def unit_attributes
+    def find_or_create_unit!
+      resolve_unit_by_identifier || create_unit_via_service!
+    end
+
+    def create_unit_via_service!
+      result = Units::Create.call(
+        actor: import_actor,
+        property: @bulk_import.residential_property,
+        section_id: effective_section_id,
+        attributes: descriptive_attributes,
+        allow_initial_status: true
+      )
+      return result.unit if service_result_succeeded?(result)
+
+      nil
+    end
+
+    def apply_descriptive_update!(unit)
+      attrs = descriptive_attributes
+      return true if attrs.empty?
+
+      result = Units::Update.call(
+        actor: import_actor,
+        unit: unit,
+        attributes: attrs
+      )
+      service_result_succeeded?(result)
+    end
+
+    def apply_placement_change!(unit)
+      return true unless placement_change_requested?(unit)
+      return true unless allow_placement_changes?
+
+      result = Units::MoveToSection.call(
+        actor: import_actor,
+        unit: unit,
+        section_id: effective_section_id
+      )
+      service_result_succeeded?(result)
+    end
+
+    def placement_change_requested?(unit)
+      return true if ActiveModel::Type::Boolean.new.cast(@payload["placement_change_requested"])
+
+      unit.property_section_id.to_s != effective_section_id.to_s
+    end
+
+    def descriptive_attributes
       attrs = {
-        unit_type: @payload["unit_type"].to_s.downcase,
+        identifier: @payload["unit_identifier"],
+        unit_type: @payload["unit_type"].to_s.downcase.presence,
         display_name: @payload["display_name"],
         area_m2: parse_area(@payload["area_m2"]),
         status: normalized_status
@@ -118,14 +180,10 @@ module BulkImportServices
       attrs.compact
     end
 
-    def find_or_create_unit!
-      resolve_unit_by_identifier || create_unit!
-    end
-
     def resolve_unit_by_identifier
-      section_id = @payload["property_section_id"].presence || @bulk_import.property_section_id
-      normalized = AlphanumericHyphenCodeValidatable.normalize_identifier(@payload["unit_identifier"])
-      return nil if section_id.blank? || normalized.blank?
+      section_id = effective_section_id
+      normalized = normalized_identifier_for(@payload["unit_identifier"])
+      return nil if normalized.blank?
 
       Unit.find_by(
         organization_id: @bulk_import.organization_id,
@@ -135,26 +193,24 @@ module BulkImportServices
       )
     end
 
-    def create_unit!
-      section_id = @payload["property_section_id"].presence || @bulk_import.property_section_id
+    def normalized_identifier_for(identifier)
+      Units::NormalizeIdentifier.call(identifier)&.normalized_identifier
+    end
 
-      Unit.create!(
-        organization: @bulk_import.organization,
-        residential_property: @bulk_import.residential_property,
-        property_section_id: section_id,
-        identifier: @payload["unit_identifier"],
-        unit_type: @payload["unit_type"].to_s.downcase,
-        display_name: @payload["display_name"],
-        area_m2: parse_area(@payload["area_m2"]),
-        status: normalized_status
-      )
+    def effective_section_id
+      @bulk_import.property_section_id ||
+        @bulk_import.metadata.dig("options", "property_section_id")
+    end
+
+    def import_actor
+      @bulk_import.created_by
     end
 
     def normalized_status
       value = @payload["status"].to_s.strip.downcase.presence
       return value if value.present? && UnitStatuses::ALL.include?(value)
 
-      "available"
+      nil
     end
 
     def parse_area(value)
@@ -163,6 +219,13 @@ module BulkImportServices
       BigDecimal(value.to_s)
     rescue ArgumentError
       nil
+    end
+
+    def service_result_succeeded?(result)
+      return true if result.success?
+
+      mark_failed!(result.unit.errors.full_messages.join(", "))
+      false
     end
 
     def mark_imported!(unit)

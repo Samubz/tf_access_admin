@@ -70,7 +70,8 @@ class BulkImport < ApplicationRecord
     residents: "residents",
     vehicles: "vehicles",
     staff: "staff",
-    common_areas: "common_areas"
+    common_areas: "common_areas",
+    users: "users"
   }.freeze
 
   belongs_to :organization

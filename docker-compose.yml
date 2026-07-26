@@ -1,0 +1,49 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    restart: unless-stopped
+
+    environment:
+      RAILS_ENV: staging
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DATABASE_URL: ${DATABASE_URL}
+
+      SMTP_ADDRESS: mailhog
+      SMTP_PORT: "1025"
+      SMTP_AUTHENTICATION: ""
+      SMTP_ENABLE_STARTTLS_AUTO: "false"
+
+    depends_on:
+      - mailhog
+
+    expose:
+      - "80"
+
+    networks:
+      - app-private
+      - dokploy-network
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    restart: unless-stopped
+
+    expose:
+      - "1025"
+      - "8025"
+
+    networks:
+      - app-private
+      - dokploy-network
+
+networks:
+  app-private:
+    driver: bridge
+
+  dokploy-network:
+    external: true

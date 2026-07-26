@@ -67,13 +67,6 @@ module BulkImportServices
       { "import_email" => email }
     end
 
-    def document_digest
-      document = @normalized["owner_document"]&.downcase&.strip
-      return nil if document.blank?
-
-      UnitsImportValidationContext.document_digest(document)
-    end
-
     def owner_email
       @normalized["owner_email"]&.downcase&.strip.presence
     end

@@ -48,6 +48,8 @@ class Person < ApplicationRecord
   acts_as_paranoid
   rolify
 
+  audited only: %i[display_name first_name last_name status user_id document_type]
+
   attr_accessor :document_number, :contact_email, :contact_phone
 
   belongs_to :organization
@@ -55,7 +57,11 @@ class Person < ApplicationRecord
   has_one :organization_membership, dependent: :destroy
   has_many :unit_ownerships, dependent: :destroy
   has_many :unit_occupancies, dependent: :destroy
+  # Extended visitor profiles; see +VisitorProfile+ for the person_id contract.
   has_many :visitor_profiles, dependent: :destroy
+  has_many :staff_assignments, dependent: :destroy
+  has_many :visits_as_visitor, class_name: "Visit", foreign_key: :visitor_person_id, dependent: :destroy
+  has_many :onboarding_requests, dependent: :destroy
 
   validates :display_name, presence: true
   validates :person_type, presence: true, inclusion: { in: PersonTypes::ALL }

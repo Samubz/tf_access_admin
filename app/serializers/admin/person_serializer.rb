@@ -17,7 +17,9 @@ class Admin::PersonSerializer < ActiveModel::Serializer
     :user_email,
     :role,
     :tenant_role,
-    :unit_ownerships_count
+    :unit_ownerships_count,
+    :invitation_status,
+    :pending_onboarding_request_id
 
   def document_number
     object.document_number
@@ -49,5 +51,24 @@ class Admin::PersonSerializer < ActiveModel::Serializer
 
   def unit_ownerships_count
     object.unit_ownerships.count
+  end
+
+  # Uses the preloaded association (see Admin::PeopleController#index's
+  # .includes(:onboarding_requests)) — no N+1 as long as that's preloaded.
+  def invitation_status
+    return "linked" if object.user_id.present?
+    return "pending" if pending_request.present?
+
+    "not_invited"
+  end
+
+  def pending_onboarding_request_id
+    pending_request&.id
+  end
+
+  private
+
+  def pending_request
+    object.onboarding_requests.find { |request| request.status == OnboardingRequest::STATUS_PENDING }
   end
 end

@@ -1,6 +1,6 @@
 class Admin::OrganizationsController < AdminController
-    before_action :set_organization, only: [:create]
-    before_action :get_organization, only: [:show, :edit, :update, :destroy]
+    before_action :set_organization, only: [ :create ]
+    before_action :get_organization, only: [ :show, :edit, :update, :destroy ]
     before_action -> { validate_organization_subdomain(:create) }, only: :create
     before_action -> { validate_organization_subdomain(:update) }, only: :update
     before_action :validate_organization_plan, only: [ :create, :update ]

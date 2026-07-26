@@ -167,7 +167,7 @@ class Admin::ResidentialProperties::BulkImportsController < AdminController
 
   def render_validation_errors(record)
     render json: {
-      errors: record.errors.to_hash(true).transform_values { |messages| Array(messages) }
+      errors: serialize_inertia_errors(record)
     }, status: :unprocessable_entity
   end
 

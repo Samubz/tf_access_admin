@@ -28,9 +28,47 @@
 #       enabled: "ON"
 
 pt:
+  onboarding:
+    accept:
+      success: "Convite aceito. Faça login para continuar."
+  onboarding_mailer:
+    invitation:
+      subject: "%{organization} convida você"
+      greeting: "Olá"
+      body: "%{organization} convidou você. Confirme seu acesso com o link abaixo."
+      cta: "Aceitar convite"
+      expiration: "Este link é de uso único e expira em 14 dias."
   frontend:
     name: "Admin Base"
     description: "bem-vindo de volta"
+    onboarding:
+      accept:
+        title: "Você foi convidado"
+        subtitle: "{organization} convidou você para participar."
+        needs_account_description: "Defina uma senha para criar sua conta e aceitar o convite."
+        no_account_description: "Faça login para aceitar este convite."
+        email_label: "Email"
+        submit: "Aceitar convite"
+        sign_in: "Entrar"
+        input:
+          password:
+            label: "Senha"
+            placeholder: "Escolha uma senha"
+          password_confirmation:
+            label: "Confirmar senha"
+            placeholder: "Repita sua senha"
+          name:
+            label: "Nome completo"
+            placeholder: "Seu nome completo"
+          dni:
+            label: "Documento"
+            placeholder: "Seu número de documento"
+        errors:
+          accept_failed: "Não foi possível aceitar o convite. Verifique os campos e tente novamente."
+      invalid:
+        title: "Convite não disponível"
+        description: "Este link é inválido, expirou ou já foi utilizado."
+        sign_in: "Ir para login"
     common:
       yes: "Sim"
       no: "Não"
@@ -38,6 +76,11 @@ pt:
       back: "Voltar"
       clear: "Limpar"
       back: "Voltar"
+      searchable_select:
+        loading: "Carregando opções…"
+        empty: "Nenhum resultado encontrado"
+        error: "Não foi possível carregar as opções. Tente novamente."
+        clear: "Limpar seleção"
       multi_file_upload:
         browse: "Procurar"
         browse_aria: "Selecionar arquivos (até {max})"
@@ -91,6 +134,118 @@ pt:
       need_help: "Precisa de ajuda?"
       contact_support: "Contatar suporte"
       go_to_home: "Ir para a página inicial"
+    concierge:
+      visits:
+        actions:
+          open_menu: "Abrir ações da visita"
+          view: "Ver detalhe"
+          check_in: "Registrar entrada"
+          check_out: "Registrar saída"
+        denial:
+          cancelled: "Visita cancelada. Não é possível registrar a entrada."
+          expired: "Autorização expirada. Solicite uma nova autorização."
+          not_operable: "Visita não operável. Não é possível registrar a entrada."
+        instructions:
+          request_new_authorization: "Solicitar nova autorização"
+        index:
+          title: "Portaria de visitas"
+          description: "Visitas operacionais da propriedade atribuída. Busque por documento, nome do visitante ou unidade."
+          assigned_property: "Propriedade atribuída"
+          search:
+            placeholder: "Buscar por documento, nome ou unidade..."
+          tabs:
+            expected_today: "Esperadas hoje"
+            currently_inside: "Atualmente dentro"
+          empty:
+            expected_today: "Não há visitas esperadas para hoje."
+            currently_inside: "Não há visitantes atualmente dentro."
+            search: "Nenhuma visita corresponde à busca."
+          table:
+            headers:
+              visitor: "Visitante"
+              unit: "Unidade"
+              authorizers: "Autorizadores"
+              status: "Estado"
+              scheduled_at: "Horário agendado"
+              checked_in_at: "Horário de entrada"
+              duration: "Duração"
+        summary:
+          unit: "Unidade"
+          authorizers: "Autorizadores"
+          authorized_at: "Visita autorizada"
+          authorized_visit: "Visita autorizada"
+          checked_in_at: "Entrada registrada"
+          checked_in_by: "Registrado por"
+        access_points:
+          main_entrance: "Portaria principal"
+          side_entrance: "Portaria secundária"
+          garage: "Garagem"
+        access_types:
+          pedestrian: "Pedestre"
+          vehicle: "Veicular"
+          delivery: "Entrega"
+          other: "Outro"
+        incident_types:
+          none: "Sem ocorrência"
+          noise: "Ruído"
+          damage: "Dano"
+          security: "Segurança"
+          other: "Outra"
+        timeline:
+          events:
+            authorized: "Visita autorizada"
+            checked_in: "Entrada registrada"
+            checked_out: "Saída registrada"
+        check_in:
+          title: "Registrar entrada (Check-in)"
+          description: "Confirme a entrada do visitante com metadados operacionais."
+          confirm: "Confirmar entrada"
+          info_banner: "A visita será marcada como registrada."
+          fields:
+            entry_time: "Data e hora de entrada"
+            access_point: "Acesso / Portaria"
+            select_access_point: "Selecione o acesso"
+            access_type: "Tipo de acesso"
+            select_access_type: "Selecione o tipo de acesso"
+            vehicle_plate: "Placa ou veículo (opcional)"
+            vehicle_plate_placeholder: "Ex. ABCD12"
+            notes: "Observações (opcional)"
+        check_out:
+          title: "Registrar saída (Check-out)"
+          description: "Confirme a saída do visitante com metadados operacionais."
+          confirm: "Confirmar saída"
+          fields:
+            exit_time: "Data e hora de saída"
+            access_point: "Acesso / Portaria"
+            select_access_point: "Selecione o acesso"
+            notes: "Observações (opcional)"
+            incident_type: "Ocorrência (opcional)"
+            no_incident: "Sem ocorrência"
+          timeline:
+            title: "Linha do tempo"
+            empty: "Ainda não há eventos operacionais."
+        show:
+          title: "Detalhe da visita"
+          back_to_list: "Voltar à lista"
+          sections:
+            details: "Detalhes da visita"
+            timeline: "Linha do tempo"
+          fields:
+            unit: "Unidade"
+            scheduled_at: "Agendada"
+            valid_until: "Válida até"
+            authorized_at: "Autorizada"
+            authorized_by: "Autorizada por"
+            checked_in_at: "Entrada"
+            checked_in_by: "Entrada registrada por"
+            checked_out_at: "Saída"
+            checked_out_by: "Saída registrada por"
+            duration: "Tempo dentro"
+            current_duration: "Duração atual"
+    notifications:
+      visit_request:
+        title: "Nova visita"
+        body: "%{visitor_name} chegará à unidade %{unit_identifier}"
     admin:
       validations:
         alphanumeric_hyphen_code_invalid: "Apenas letras, números e hífens são permitidos"
@@ -274,7 +429,9 @@ pt:
           language_required: "O idioma é obrigatório"
           password_lowercase: "Deve incluir pelo menos 1 letra minúscula"
           password_uppercase: "Deve incluir pelo menos 1 letra maiúscula"
+          password_number: "Deve incluir pelo menos 1 número"
           password_symbol: "Deve incluir pelo menos 1 símbolo: $ % {'@'} . - _"
+          password_complexity: "A senha deve ter pelo menos 8 caracteres e incluir minúscula, maiúscula, número e um símbolo ($ % {'@'} . - _)"
           email_taken: "O email já foi tomado"
           language_invalid: "Idioma inválido"
           role_invalid: "Cargo inválido"
@@ -316,6 +473,95 @@ pt:
         updated_successfully: "Pessoa atualizada com sucesso"
         update_failed: "Falha ao atualizar a pessoa"
         not_found: "Pessoa não encontrada"
+        errors:
+          already_invited: "Esta pessoa já tem uma conta ou um convite pendente."
+          missing_email: "Esta pessoa não tem um email cadastrado — adicione um antes de enviar o convite."
+        profile:
+          change_history:
+            actor_fallback: "Sistema"
+            events:
+              person_created: "%{actor} registrou o perfil da pessoa"
+              person_updated: "%{actor} atualizou o perfil da pessoa"
+              person_status_changed: "%{actor} alterou o status da pessoa para \"%{to}\""
+              person_removed: "%{actor} removeu o perfil da pessoa"
+          tabs:
+            aria_label: "Seções do perfil da pessoa"
+            summary: "Resumo"
+            properties: "Propriedades"
+            residences: "Residências"
+            staff: "Staff"
+            visits: "Visitas"
+            history: "Histórico"
+          header:
+            edit: "Editar pessoa"
+            document: "Documento"
+            email: "Email"
+            phone: "Telefone"
+          contextual_roles:
+            owner: "Proprietário"
+            resident: "Residente"
+            visitor: "Visitante"
+            concierge: "Porteiro"
+            property_admin: "Administrador da propriedade"
+            cleaning_staff: "Equipe de limpeza"
+            system_user: "Usuário do sistema"
+          metrics:
+            active_ownerships: "Propriedades ativas"
+            active_occupancies: "Residências ativas"
+            visits: "Visitas"
+            staff: "Staff"
+          summary:
+            personal_info: "Informações pessoais"
+            linked_user: "Usuário vinculado"
+            user_name: "Nome"
+            user_email: "Email"
+            no_linked_user: "Sem usuário vinculado"
+            contextual_roles: "Papéis contextuais"
+            no_contextual_roles: "Sem papéis contextuais ativos"
+            tenant_access: "Acesso à plataforma"
+          ownerships:
+            title: "Propriedades"
+            description: "Unidades em que esta pessoa é proprietária."
+            empty: "Não há propriedades registradas para esta pessoa."
+            table:
+              property: "Propriedade"
+              section: "Seção"
+              unit: "Unidade"
+              percentage: "Percentual"
+              validity: "Vigência"
+              status: "Status"
+          occupancies:
+            title: "Residências"
+            description: "Unidades em que esta pessoa reside."
+            empty: "Não há residências registradas para esta pessoa."
+            table:
+              property: "Propriedade"
+              section: "Seção"
+              unit: "Unidade"
+              type: "Tipo"
+              validity: "Vigência"
+              status: "Status"
+          staff:
+            title: "Staff"
+            description: "Atribuições de equipe em propriedades."
+            empty: "Não há atribuições de staff para esta pessoa."
+            table:
+              property: "Propriedade"
+              role: "Papel"
+              status: "Status"
+          visits:
+            title: "Visitas"
+            description: "Histórico de visitas registradas."
+            empty: "Não há visitas registradas para esta pessoa."
+            table:
+              occurred_at: "Data"
+              property: "Propriedade"
+              unit: "Unidade"
+              status: "Status"
+          history:
+            title: "Histórico"
+            description: "Alterações recentes no perfil e relações da pessoa."
+            empty: "Não há eventos no histórico."
         validations:
           display_name_required: "Informe nome, sobrenome ou nome de exibição"
           person_type_required: "O tipo de pessoa é obrigatório"
@@ -341,14 +587,220 @@ pt:
               display_name: "Nome"
               document_number: "Documento"
               email: "Email"
+              contextual_roles: "Papéis"
               unit_ownerships_count: "Propriedades"
               status: "Status"
+              invitation_status: "Convite"
+          invitation_statuses:
+            linked: "Conta vinculada"
+            pending: "Convite enviado"
+            not_invited: "Não convidada"
+            no_email_hint: "Adicione um email para convidar"
           actions:
             create: "Criar pessoa"
+            bulk_import: "Importar pessoas"
+            view_profile: "Ver perfil"
             delete: "Excluir pessoa"
             delete_description: "Excluir {name}?"
             delete_success: "Pessoa excluída com sucesso"
             delete_error: "Erro ao excluir a pessoa"
+            invite: "Enviar convite"
+            invite_description: "Enviar um convite de criação de conta para {name}?"
+            invite_error: "Não foi possível enviar o convite"
+            revoke_invite: "Revogar convite"
+            revoke_invite_description: "Tem certeza que deseja revogar o convite pendente de {name}?"
+            revoke_invite_success: "Convite revogado"
+            revoke_invite_error: "Não foi possível revogar o convite"
+        bulk_import:
+          title: "Importar pessoas"
+          steps_nav: "Etapas de importação"
+          placeholder_step: "Esta etapa estará disponível em breve."
+          steps:
+            method: "Método"
+            configure: "Configurar"
+            preview: "Pré-visualização"
+            import: "Importar"
+          actions:
+            close: "Fechar"
+            back: "Voltar"
+            next: "Próximo"
+            uploading: "Enviando…"
+            validating: "Validando…"
+            refreshing_sheet: "Atualizando planilha…"
+            continue_to_import: "Continuar para importação"
+          errors:
+            upload_failed: "Não foi possível enviar o arquivo. Verifique o arquivo e tente novamente."
+            sheet_refresh_failed: "Não foi possível atualizar a planilha selecionada."
+            configure_save_failed: "Não foi possível salvar a configuração da importação."
+            validation_failed: "Não foi possível validar o arquivo. Verifique a configuração e tente novamente."
+            wizard_locked: "A importação já está em andamento ou concluída; etapas anteriores não podem ser alteradas."
+          upload:
+            uploaded_success: "Arquivo enviado com sucesso"
+            replaced_success: "Arquivo atualizado com sucesso"
+            title: "Importação em massa de pessoas (Excel / CSV)"
+            subtitle: "Baixe o modelo, preencha com seus dados e envie para continuar."
+            step_download: "1. Baixe o modelo"
+            step_download_description: "Use nosso modelo para garantir que seus dados estejam formatados corretamente."
+            step_upload: "2. Envie seu arquivo"
+            formats: "Formatos permitidos: .xlsx, .xls, .csv"
+            download_button: "Baixar modelo"
+            template_coming_soon: "O download do modelo estará disponível em breve."
+            dropzone_title: "Arraste seu arquivo aqui"
+            dropzone_subtitle: "ou clique para procurar"
+            dropzone_aria: "Selecionar arquivo Excel ou CSV"
+            remove_file: "Remover arquivo"
+            invalid_type: "O arquivo deve ser Excel (.xlsx, .xls) ou CSV."
+          requirements:
+            title: "Requisitos importantes"
+            items:
+              - "Colunas obrigatórias: nome, sobrenome, documento, telefone, e-mail e data de nascimento."
+              - "A data de nascimento deve estar no formato DD/MM/AAAA ou DD-MM-AAAA."
+              - "A primeira linha deve conter os cabeçalhos."
+          configure:
+            title: "Configure a importação"
+            subtitle: "Revise o arquivo enviado, o mapeamento de colunas e as opções antes de continuar."
+            uploaded_file: "Arquivo enviado"
+            uploaded_badge: "Enviado com sucesso"
+            change_file: "Trocar arquivo"
+            mapping_options: "Mapeamento e opções"
+            sheet_label: "Planilha"
+            sheet_placeholder: "Selecione uma planilha"
+            import_mode_label: "Modo de importação"
+            detected_columns: "Colunas detectadas"
+            required_badge: "Obrigatório"
+            missing_badge: "Faltando"
+            matched_badge: "Detectada"
+            validations:
+              selected_sheet_required: "Selecione uma planilha do arquivo"
+              import_mode_required: "Selecione um modo de importação"
+              required_columns_missing: "Faltam colunas obrigatórias para mapear"
+            import_modes:
+              create_skip_duplicates: "Criar e ignorar duplicados"
+              create_only: "Somente criar (duplicados como erro)"
+            fields:
+              first_name: "Nome"
+              last_name: "Sobrenome"
+              document_number: "Documento"
+              phone: "Telefone"
+              email: "E-mail"
+              birthdate: "Data de nascimento"
+            table:
+              excel_column: "Coluna do arquivo"
+              system_field: "Campo do sistema"
+            validation_rules:
+              title: "Regras de validação"
+              items:
+                - "Todos os campos são obrigatórios."
+                - "A data de nascimento deve estar no formato DD/MM/AAAA ou DD-MM-AAAA."
+                - "O e-mail deve ter um formato válido."
+                - "Documentos e e-mails duplicados serão detectados."
+          preview:
+            title: "Pré-visualização"
+            subtitle: "Revise o resultado da validação antes de confirmar a importação."
+            search_placeholder: "Buscar por nome, documento, e-mail ou telefone"
+            attention_alert: "Há linhas com avisos, duplicados ou erros. Revise a pré-visualização antes de continuar."
+            filters:
+              all: "Todas"
+              valid: "Válidas"
+              warnings: "Avisos"
+              errors: "Erros"
+            cards:
+              total: "Total"
+              valid: "Válidas"
+              warnings: "Avisos"
+              errors: "Erros"
+            table:
+              row: "Linha"
+              name: "Nome"
+              document: "Documento"
+              email: "E-mail"
+              status: "Status"
+              result: "Resultado"
+            validation_statuses:
+              pending: "Pendente"
+              valid: "Válida"
+              warning: "Aviso"
+              error: "Erro"
+              duplicate: "Duplicada"
+            results:
+              valid: "Pronta para importar"
+              warning: "Revisar aviso"
+              error: "Corrigir erro"
+              duplicate: "Será ignorada por duplicidade"
+            empty:
+              no_rows: "Nenhuma linha para exibir."
+              no_matches: "Nenhuma linha corresponde ao filtro ou busca."
+            summary:
+              title: "Resumo"
+              will_create: "{count} pessoas serão criadas"
+              will_skip_duplicates: "{count} linhas duplicadas serão ignoradas"
+              needs_correction: "{count} linhas precisam de correção"
+              tip_title: "Dica"
+              tip_default: "Você pode baixar o relatório após a importação para revisar cada linha em detalhe."
+          import:
+            actions:
+              confirm: "Confirmar importação"
+              importing: "Importando…"
+              retry: "Tentar novamente"
+              close: "Fechar"
+              view_people: "Ver pessoas"
+              download_report: "Baixar relatório"
+            errors:
+              confirm_failed: "Não foi possível confirmar a importação."
+            ready:
+              title: "Pronto para importar"
+              description: "Revise o resumo antes de confirmar a criação de pessoas."
+              errors_pending: "Há linhas com erros que não serão importadas."
+              valid_rows_only: "Importar apenas linhas válidas (ignorar avisos e duplicados)"
+              stats:
+                new_people: "Novas pessoas"
+                duplicates: "Duplicados"
+                errors: "Erros"
+            progress:
+              title: "Progresso da importação"
+              counter: "{processed} de {total}"
+              log_line: "Linha {row}: {message}"
+              waiting:
+                title: "Aguardando confirmação"
+                description: "A importação começará após a confirmação."
+              processing:
+                title: "Importando pessoas…"
+                description: "Isso pode levar alguns segundos."
+              completed:
+                title: "Importação concluída"
+                description: "{created} criadas, {skipped} ignoradas, {failed} com falha."
+              failed:
+                title: "A importação falhou"
+                description: "Ocorreu um erro durante o processamento. Tente novamente."
+            logs:
+              person_created: "Pessoa %{name} criada"
+              duplicate_skipped: "Ignorada por duplicidade"
+              skipped: "Linha ignorada"
+              failed: "Erro ao importar"
+            row_states:
+              title: "Estados das linhas"
+              subtitle: "Classificação de cada linha para você decidir a próxima ação."
+              classification: "Classificação"
+              empty: "Nenhuma linha para mostrar."
+              triggered_label: "Enviada"
+              classifications:
+                ready_to_create_person: "Pessoa criada"
+                requires_invitation: "Requer convite"
+                requires_incorporation: "Requer incorporação"
+                review: "Requer revisão"
+                conflict: "Conflito — não aplicada"
+                duplicate: "Duplicada"
+                invalid: "Inválida"
+              actions:
+                invite: "Convidar"
+                incorporate: "Incorporar"
+                invite_all: "Convidar todas as pendentes"
+                confirm_one_title: "Enviar convite?"
+                confirm_one_description: "Isso cria uma solicitação de incorporação e envia por email um link de convite de uso único para esta pessoa."
+                confirm_all_title: "Convidar todas as linhas pendentes?"
+                confirm_all_description: "Isso cria solicitações de incorporação e envia links de convite por email para cada linha que aguarda convite ou incorporação."
+                trigger_success: "{triggered} enviadas, {conflicted} conflitos, {skipped} ignoradas, {failed} falharam"
+                trigger_error: "Não foi possível processar os convites. Tente novamente."
         new:
           title: "Nova pessoa"
           description: "Registre uma pessoa na organização"
@@ -388,8 +840,40 @@ pt:
             none: "Sem usuário"
           role:
             label: "Cargo"
+          send_invitation:
+            label: "Enviar um convite de criação de conta por email"
+      onboarding_requests:
+        errors:
+          not_found: "Solicitação de incorporação não encontrada"
+          not_authorized: "Você não tem permissão para realizar esta ação"
       units:
         not_found: "Unidade não encontrada"
+        validations:
+          identifier_taken: "Já existe uma unidade com este identificador neste contexto"
+          code_taken: "Já existe uma unidade com este código neste contexto"
+          section_invalid: "A seção indicada não é válida"
+          section_same_property: "A seção deve pertencer à mesma propriedade"
+          section_not_operative: "Não é possível atribuir unidades a uma seção ou propriedade não operativa"
+          section_not_eligible: "A seção não é elegível para conter unidades"
+          unit_type_invalid: "O tipo de unidade não é válido"
+          residential_property_immutable: "A propriedade da unidade não pode ser alterada"
+          code_conflict: "Este identificador colidiria com o código de outra unidade existente"
+        unit_types:
+          apartment: "Apartamento"
+          house: "Casa"
+          office: "Escritório"
+          commercial_unit: "Unidade comercial"
+          parking_space: "Vaga de estacionamento"
+          storage_room: "Depósito"
+          common_area: "Área comum"
+          other: "Outro"
+          studio: "Estúdio"
+          duplex: "Duplex"
+          penthouse: "Penthouse"
+          parking: "Estacionamento"
+          storage: "Depósito"
+          commercial: "Comercial"
+          warehouse: "Armazém"
         show:
           unit_title: "Unidade %{identifier}"
           actions:
@@ -649,6 +1133,18 @@ pt:
               finished: "Finalizado"
               pending: "Pendente"
               inactive: "Inativo"
+          visits:
+            title: "Visitas"
+            description: "Consulte e gerencie as visitas agendadas para esta unidade."
+            actions:
+              create: "Criar visita"
+            table:
+              visitor: "Visitante"
+              authorizers: "Autorizadores"
+              reason: "Motivo"
+              scheduled_at: "Agendada"
+              status: "Estado"
+              empty: "Não há visitas registradas para esta unidade."
           change_history:
             title: "Histórico de alterações"
             empty_title: "Sem alterações registradas"
@@ -721,6 +1217,237 @@ pt:
           invalid_occupancy_type: "O tipo de ocupação não é válido"
           invalid_status: "O estado não é válido"
           existing_person_match: "Já existe uma pessoa com este documento ou email (%{display_name}). Pesquise e reutilize-a."
+      visits:
+        event_types:
+          created: "Criada"
+          authorized: "Autorizada"
+          checked_in: "Entrada registrada"
+          checked_out: "Saída registrada"
+          cancelled: "Cancelada"
+        statuses:
+          pending: "Pendente"
+          authorized: "Autorizada"
+          checked_in: "Entrada registrada"
+          checked_out: "Saída registrada"
+          cancelled: "Cancelada"
+          rejected: "Rejeitada"
+          expired: "Expirada"
+        notification_statuses:
+          pending: "Enviando notificação"
+          delivered: "Notificação entregue"
+          failed: "Falha ao notificar"
+          no_recipients: "Sem destinatários"
+        validations:
+          invalid_access_type: "O tipo de acesso não é válido"
+          invalid_incident_type: "O tipo de incidência não é válido"
+        visit_types:
+          guest: "Visita"
+          delivery: "Entrega"
+          service: "Serviço"
+          other: "Outro"
+        errors:
+          not_found: "Visita não encontrada"
+          not_authorized: "Você não tem permissão para realizar esta ação"
+          not_editable: "A visita não pode ser editada no seu estado atual"
+          invalid_transition: "A transição de estado não é válida para esta visita"
+          unit_not_found: "A unidade indicada não existe ou não está disponível"
+          notification_not_failed: "A notificação só pode ser reenviada quando o envio falhou"
+        index:
+          title: "Gestão de visitas"
+          description: "Consulte e gerencie todas as visitas registradas na organização. Use os filtros para encontrar visitas específicas ou criar uma nova visita."
+          search:
+            placeholder: "Buscar visitante ou unidade..."
+          scope:
+            organization: "Organização completa"
+            assigned: "Propriedade atribuída"
+          filters:
+            property: "Propriedade"
+            unit: "Unidade"
+            status: "Estado"
+            date_range: "Intervalo de datas"
+            all_properties: "Todas as propriedades"
+            all_units: "Todas as unidades"
+            all_statuses: "Todos os estados"
+            clear: "Limpar"
+            apply: "Aplicar filtros"
+          table:
+            headers:
+              visitor: "Visitante"
+              unit: "Unidade"
+              property: "Propriedade"
+              authorizers: "Autorizadores"
+              status: "Estado"
+              date: "Data"
+              check_in: "Entrada"
+              check_out: "Saída"
+          actions:
+            create: "Nova visita"
+        new:
+          title: "Nova visita"
+          description: "Registre uma visita com o formulário guiado. Propriedade e unidade são dependentes; o estado final é resolvido pelo backend."
+          steps_nav: "Passos para criar visita"
+          steps:
+            general: "Informações gerais"
+            visitor: "Visitante"
+            schedule: "Data e horário"
+            additional: "Adicional"
+            confirm: "Notas e confirmação"
+          actions:
+            cancel: "Cancelar"
+            continue: "Continuar"
+            submit: "Criar visita"
+          errors:
+            visitor_required: "Selecione ou crie um visitante"
+          validations:
+            property_required: "Selecione uma propriedade"
+            unit_required: "Selecione uma unidade"
+            visitor_required: "Selecione ou crie um visitante"
+            document_required: "O documento é obrigatório"
+            first_name_required: "O nome é obrigatório"
+            last_name_required: "O sobrenome é obrigatório"
+            date_required: "A data é obrigatória"
+            start_time_required: "A hora de início é obrigatória"
+            end_time_before_start: "A hora de fim deve ser posterior à de início"
+            visit_type_required: "Selecione um motivo de visita"
+          general:
+            title: "Informações gerais"
+            description: "Selecione a propriedade e unidade da visita."
+            fields:
+              property: "Propriedade"
+              unit: "Unidade"
+            placeholders:
+              property: "Selecione uma propriedade"
+              unit: "Selecione uma unidade"
+            loading:
+              units: "Carregando unidades..."
+            empty:
+              units: "Não há unidades disponíveis para esta propriedade."
+          visitor:
+            title: "Detalhes do visitante"
+            description: "Busque uma pessoa existente ou crie um novo visitante."
+            modes:
+              search: "Buscar pessoa"
+              create: "Criar visitante"
+            search:
+              placeholder: "Buscar por documento, nome ou email..."
+              loading: "Buscando..."
+              empty: "Nenhuma pessoa encontrada."
+            create:
+              fields:
+                document: "Documento"
+                phone: "Telefone"
+          schedule:
+            title: "Data e horário"
+            description: "Defina quando a visita está programada e a janela de validade opcional."
+            fields:
+              date: "Data"
+              start_time: "Hora início"
+              end_time: "Hora fim (opcional)"
+            end_time_hint: "Se informada, a validade da visita termina neste horário."
+          additional:
+            title: "Informações adicionais"
+            description: "Informe o motivo da visita e dados opcionais do veículo."
+            fields:
+              reason: "Motivo"
+              vehicle_plate: "Placa"
+              vehicle_model: "Marca / modelo"
+              vehicle_color: "Cor"
+            placeholders:
+              reason: "Selecione um motivo"
+              vehicle_plate: "Ex. ABCD12"
+              vehicle_model: "Ex. Honda Civic"
+              vehicle_color: "Ex. Cinza"
+          confirm:
+            title: "Notas e confirmação"
+            description: "Adicione notas opcionais e revise o resumo antes de criar a visita."
+            fields:
+              notes: "Notas"
+            placeholders:
+              notes: "Informações adicionais para a equipe..."
+          summary:
+            title: "Resumo de autorização"
+            description: "Pré-visualização em tempo real. Não persiste dados nem decide o estado final."
+            empty: "—"
+            estimated_status: "Estado inicial estimado"
+            status_loading: "Calculando estado estimado..."
+            fields:
+              property: "Propriedade"
+              unit: "Unidade"
+              visitor: "Visitante"
+              reason: "Motivo"
+              schedule: "Horário"
+              vehicle: "Veículo"
+            initial_status:
+              pending: "A visita será criada como pendente e exigirá autorização."
+              authorized: "A visita será criada como autorizada porque você pode autorizar diretamente."
+        actions:
+          open_menu: "Abrir ações da visita"
+          view: "Ver detalhe"
+          edit: "Editar"
+          authorize: "Autorizar"
+          cancel: "Cancelar"
+          check_in: "Registrar entrada"
+          check_out: "Registrar saída"
+          authorize_confirm_title: "Autorizar visita"
+          authorize_confirm_description: "A visita passará para o estado autorizada."
+          cancel_confirm_title: "Cancelar visita"
+          cancel_confirm_description: "A visita será cancelada e deixará de estar disponível operacionalmente."
+          resend_notification: "Reenviar notificação"
+          resend_notification_confirm_title: "Reenviar notificação"
+          resend_notification_confirm_description: "O envio da notificação push será tentado novamente para os mesmos residentes."
+          more_actions: "Mais ações"
+        show:
+          title: "Detalhe da visita"
+          header:
+            document: "Documento"
+          tabs:
+            aria_label: "Seções do detalhe da visita"
+            info: "Informação"
+            documents: "Documentos"
+            history: "Histórico"
+          sections:
+            visit:
+              title: "Informações da visita"
+            visitor:
+              title: "Visitante"
+            location:
+              title: "Localização"
+            vehicle:
+              title: "Veículo"
+            notes:
+              title: "Notas"
+            actors:
+              title: "Atores"
+          fields:
+            status: "Estado"
+            reason: "Motivo"
+            scheduled_at: "Data programada"
+            valid_from: "Válida desde"
+            valid_until: "Válida até"
+            authorized_at: "Autorizada em"
+            checked_in_at: "Entrada em"
+            checked_out_at: "Saída em"
+            name: "Nome"
+            document: "Documento"
+            phone: "Telefone"
+            email: "Email"
+            property: "Propriedade"
+            unit: "Unidade"
+            authorizers: "Autorizadores"
+            vehicle_plate: "Placa"
+            vehicle_model: "Marca / modelo"
+            vehicle_color: "Cor"
+            created_by: "Criada por"
+            authorized_by: "Autorizada por"
+            checked_in_by: "Entrada registrada por"
+            checked_out_by: "Saída registrada por"
+          documents:
+            title: "Documentos"
+            description: "A gestão documental estará disponível em uma versão futura."
+          history:
+            title: "Histórico funcional"
+            description: "Registro cronológico de eventos do ciclo de vida da visita."
+            empty: "Ainda não há eventos no histórico."
       residential_properties:
         title: "Propriedades"
         created_successfully: "Propriedade criada com sucesso"
@@ -744,8 +1471,12 @@ pt:
           sector: "Setor"
           other: "Outro"
         statuses:
+          draft: "Rascunho"
+          created: "Configuração editável"
+          configured: "Configurado"
           active: "Ativa"
           inactive: "Inativa"
+          archived: "Arquivada"
         index:
           title: "Propriedades residenciais"
           input:
@@ -760,11 +1491,13 @@ pt:
               status: "Estado"
           actions:
             create: "Nova propriedade"
+            view_detail: "Ver detalhe"
+            setup_wizard: "Configuração"
             structure: "Gerenciar estrutura"
-            delete: "Excluir propriedade"
-            delete_description: "Excluir a propriedade {name}?"
-            delete_success: "Propriedade excluída com sucesso"
-            delete_error: "Não foi possível excluir a propriedade"
+            archive: "Arquivar propriedade"
+            archive_description: "Arquivar a propriedade {name}? Ela será preservada para histórico e consulta."
+            archive_success: "Propriedade arquivada com sucesso"
+            archive_error: "Não foi possível arquivar a propriedade"
         new:
           title: "Nova propriedade residencial"
           description: "Registre uma propriedade na sua organização"
@@ -773,6 +1506,40 @@ pt:
           title: "Editar propriedade residencial"
           description: "Atualize os dados da propriedade"
           submit: "Salvar alterações"
+          archived_banner: "Esta propriedade está arquivada. Os dados são somente leitura e não podem ser alterados."
+          archive_section:
+            title: "Arquivar propriedade"
+            description: "O arquivamento preserva o histórico e as dependências. A propriedade deixará de aceitar nova atividade operacional."
+        form:
+          saving: "Salvando…"
+        states:
+          forbidden: "Você não tem permissão para editar esta propriedade."
+          read_only: "Esta propriedade é somente leitura."
+        show:
+          breadcrumb: "Detalhe"
+          actions:
+            edit: "Editar configuração"
+          summary:
+            property: "Propriedade"
+            structure: "Estrutura"
+            structure_value: "{towers} torres · {floors} andares"
+            units: "Unidades"
+            units_value: "{count} unidades"
+            status: "Status"
+          general_info:
+            title: "Informações gerais"
+            fields:
+              property_type: "Tipo de propriedade"
+              address_line: "Endereço"
+              city: "Cidade"
+              region: "Região"
+              country: "País"
+              organization: "Organização"
+              created_at: "Criada"
+              updated_at: "Atualizada"
+              empty: "—"
+          structure:
+            title: "Estrutura da propriedade"
         input:
           name:
             label: "Nome"
@@ -1012,6 +1779,30 @@ pt:
             expand: "Expandir seção"
             collapse: "Recolher seção"
             manage_unit: "Gerenciar unidade"
+            persisted_status: "armazenado como {status}"
+          move:
+            action: "Mover seção"
+            title: "Mover seção"
+            description: "Escolha um novo local para {name} dentro desta propriedade."
+            parent_label: "Novo pai"
+            root_option: "Nível raiz (sem pai)"
+            nested_root_hint: "Seções com subseções não podem ser aninhadas sob outra seção."
+            submit: "Mover seção"
+            success: "Seção movida com sucesso"
+            error: "Não foi possível mover a seção"
+          archive:
+            action: "Arquivar seção"
+            title: "Arquivar seção"
+            description: "Arquivar a seção {name}? Subseções, unidades e histórico serão preservados."
+            success: "Seção arquivada com sucesso"
+            error: "Não foi possível arquivar a seção"
+          states:
+            forbidden: "Você não tem permissão para gerenciar seções nesta propriedade."
+            read_only: "A estrutura desta propriedade é somente leitura."
+            property_archived: "Esta propriedade está arquivada. As seções não podem ser modificadas."
+            section_archived: "Esta seção está arquivada e é somente leitura."
+            section_not_operative: "Esta seção não está operacional devido ao seu status ou a um ancestral."
+            empty_read_only: "Nenhuma seção foi criada para esta propriedade ainda."
           form:
             new_title: "Nova seção"
             new_description: "Crie uma nova seção dentro da estrutura atual"
@@ -1029,6 +1820,392 @@ pt:
             preview_title: "Pré-visualização"
             submit_create: "Criar seção"
             submit_edit: "Salvar alterações"
+            saving: "Salvando…"
+      property_setup:
+        wizard:
+          title: "Configurar imóvel"
+          description: "Complete as etapas para configurar seu novo imóvel residencial."
+          breadcrumb: "Configurar imóvel"
+          steps:
+            1: "Dados do imóvel"
+            2: "Estrutura"
+            3: "Unidades"
+            4: "Resumo"
+            5: "Confirmar"
+          actions:
+            back: "Voltar"
+            cancel: "Cancelar"
+            continue: "Continuar"
+            continue_to_confirm: "Continuar para confirmação"
+            confirm: "Confirmar configuração"
+            save_created: "Salvar como editável"
+            save: "Salvar"
+          cancel:
+            draft_confirm: "Excluir o rascunho do imóvel? Todos os dados inseridos serão perdidos. Você também pode mantê-lo e retomar depois."
+          reset_confirm:
+            title: "Isso excluirá a estrutura existente"
+            description: "Alterar o tipo de imóvel ou o modo de estrutura excluirá as seções e unidades já criadas. Imóveis já configurados arquivarão em vez de excluir o que tiver histórico operacional."
+            cancel: "Cancelar"
+            confirm: "Sim, continuar"
+        errors:
+          invalid_step: "Etapa inválida"
+          not_editable: "Este imóvel não pode ser editado pelo assistente de configuração."
+          confirmation_required: "Esta seção ou unidade possui histórico operacional. Confirme para arquivá-la em vez de excluí-la."
+          reset_confirmation_required: "Essa alteração excluirá a estrutura e as unidades existentes. Confirme para continuar."
+        step1:
+          title: "Dados do imóvel"
+          fields:
+            name: "Nome"
+            property_type: "Tipo de imóvel"
+            address: "Endereço"
+            city: "Cidade"
+          validations:
+            name_required: "O nome é obrigatório"
+            property_type_required: "O tipo de imóvel é obrigatório"
+            address_required: "O endereço é obrigatório"
+          summary:
+            title: "Resumo inicial"
+            type: "Tipo"
+            location: "Localização"
+            flow_status: "Status do fluxo"
+            flow_status_pending: "Pendente de estrutura"
+        step2:
+          title: "Estrutura / seções"
+          description: "Defina como o imóvel é organizado internamente."
+          property_type_changed_notice: "O tipo de imóvel foi alterado. A configuração de estrutura foi redefinida."
+          modes:
+            none:
+              title: "Sem seções"
+              description: "As unidades ficam diretamente sob o imóvel."
+            manual:
+              title: "Manual"
+              description: "Adicione torres, andares e seções um a um."
+            quick:
+              title: "Rápida"
+              description: "Gere a hierarquia automaticamente com parâmetros."
+          manual:
+            title: "Construtor de estrutura"
+            rule_hint: "Crie e organize as seções do seu imóvel. Máximo de 2 níveis: seção raiz e seção filha."
+            add: "Adicionar seção"
+            add_root: "Adicionar seção raiz"
+            empty: "Nenhuma seção adicionada ainda."
+            name: "Nome"
+            parent: "Seção pai"
+            root: "Raiz"
+            type: "Tipo de seção"
+            format_warning: "O formato recomendado para este tipo de imóvel usa: {types}."
+            hints:
+              actions: "Use o menu de opções de cada seção para editar, adicionar seções filhas ou excluir."
+            level:
+              root: "Raiz"
+              child: "Filha"
+            summary:
+              total: "Total de seções: {count}"
+              leaf: "Seções folha para unidades: {count}"
+              combined: "{total} seções no total · {leaf} seções finais para unidades"
+            actions:
+              menu: "Ações da seção"
+              edit: "Editar seção"
+              add_child: "Adicionar seção filha"
+              move: "Mover seção"
+              delete: "Excluir seção"
+            move:
+              title: "Mover seção"
+              description: "Escolha o novo pai para \"{name}\"."
+              parent_label: "Novo pai"
+              root_option: "Sem pai (raiz)"
+              cancel: "Cancelar"
+              submit: "Mover"
+            create:
+              title_root: "Adicionar seção raiz"
+              title_child: "Adicionar seções filhas"
+              parent_label: "Estas seções pertencerão a {name}."
+              child_no_children: "Seções filhas não podem ter sub-seções."
+              tab_individual: "Individual"
+              tab_multiple: "Múltiplo"
+              prefix: "Prefixo"
+              count: "Quantidade"
+              format: "Formato de nomes"
+              format_letter: "Letras (A, B, C…)"
+              format_number: "Numérico (1, 2, 3…)"
+              code: "Código / prefixo interno (opcional)"
+              code_placeholder: "Ex. TOR, BLQ, EDIF"
+              preview: "Será criado:"
+              preview_will_create: "Serão criadas:"
+              preview_skipped: "{names} já existem neste nível e serão omitidas."
+              insufficient_available_names: "Não há nomes disponíveis suficientes para criar {count} seções neste nível. Tente outro prefixo ou reduza a quantidade."
+              info_root: "As seções raiz podem ter seções filhas."
+              info_child: "As unidades poderão ser atribuídas a estas seções se não tiverem mais filhos."
+              cancel: "Cancelar"
+              submit: "Criar seções"
+            edit:
+              title: "Editar seção"
+              description: "Atualize o nome, tipo ou prefixo desta seção."
+              current: "Seção atual"
+              parent: "Pai"
+              warning_has_children: "Uma seção com filhos não pode receber unidades diretamente."
+              submit: "Salvar alterações"
+            delete:
+              title: "Excluir {name}?"
+              guards: "Uma seção com unidades não pode ser excluída e as seções filhas devem ser removidas primeiro."
+              cancel: "Cancelar"
+              confirm: "Excluir"
+            validations:
+              prefix_required: "O prefixo é obrigatório"
+              count_min: "A quantidade deve ser no mínimo 1"
+          quick:
+            title: "Configuração de estrutura rápida"
+            count: "Quantidade de {section}"
+            prefix: "Prefixo {section} (opcional)"
+            has_towers: "O edifício tem torres?"
+            info: "A estrutura será gerada automaticamente com base nos valores definidos. Você poderá editá-la antes de continuar."
+          errors:
+            manual_empty: "Adicione pelo menos uma seção para continuar com estrutura manual."
+            quick_not_confirmed: "Confirme a pré-visualização da estrutura rápida antes de continuar."
+            mode_required: "Selecione um modo de estrutura."
+          validations:
+            level_count_min: "Deve haver pelo menos 1"
+            level_prefix_required: "O prefixo é obrigatório"
+          preview:
+            title: "Pré-visualização de estrutura"
+            subtitle: "Assim será gerado o seu imóvel"
+            towers: "Torres"
+            floors: "Andares"
+            sections: "Seções"
+            estimated_units: "unidades estimadas"
+            placeholder: "Configure os parâmetros para ver a pré-visualização."
+            none: "Nenhuma seção será criada para este imóvel."
+            auto_update: "A pré-visualização é atualizada automaticamente."
+            stats:
+              towers: "torres"
+              floors: "andares"
+              sections: "seções"
+              estimated_units: "unidades estimadas"
+              level_1: "Nível 1"
+              level_2: "Nível 2"
+              units: "unidades"
+        step3:
+          title: "Unidades"
+          description: "Escolha o método para criar unidades."
+          errors:
+            mode_required: "Selecione um modo para criar unidades."
+            no_units: "Crie pelo menos uma unidade antes de continuar."
+            no_leaf_sections: "A estrutura não possui seções do tipo necessário para gerar unidades automaticamente."
+          validations:
+            unit_type_required: "O tipo de unidade é obrigatório"
+            identifier_format_required: "O formato do identificador é obrigatório"
+            quantity_per_floor_min: "Deve haver pelo menos 1 unidade por andar"
+          context:
+            towers: "{count} torres"
+            floors: "{count} andares"
+            structure_count: "{count} seções"
+          automatic:
+            title: "Configuração de geração automática"
+            unit_type: "Tipo de unidade"
+            identifier_format: "Formato do identificador"
+            example: "Exemplo"
+            units_per_floor: "Quantidade por andar"
+            units_per_block: "Quantidade por bloco"
+            formats:
+              floor_sequential: "Andar + sequencial"
+              block_sequential: "Bloco + sequencial"
+              sequential: "Sequencial simples"
+            parking:
+              title: "Criar também vagas de estacionamento"
+              hint: "Esta opção será habilitada em uma etapa posterior."
+          modes:
+            manual:
+              title: "Manual"
+              description: "Adicione unidades diretamente a partir de cada seção elegível."
+            automatic:
+              title: "Gerar automaticamente a partir da estrutura"
+              description: "Crie unidades por andar e torre conforme a configuração."
+            import:
+              title: "Importação em massa"
+              description: "Importe unidades de um arquivo Excel ou CSV."
+          individual:
+            add: "Adicionar unidade"
+            identifier: "Identificador"
+            type: "Tipo"
+          manual:
+            hint: "Adicione unidades às seções elegíveis. Cada linha expõe apenas as ações disponíveis para esse contexto."
+            no_eligible_sections: "Esta propriedade ainda não possui seções que possam conter unidades. Crie seções na etapa 2 para adicionar unidades manualmente."
+            add_unit: "Adicionar unidade"
+            identifier: "Identificador"
+            display_name: "Nome de exibição"
+            unit_type: "Tipo de unidade"
+            area_m2: "Área (m²)"
+            unit_count: "{count} unidades"
+            actions:
+              menu: "Ações"
+              edit: "Editar"
+              manage_unit: "Gerenciar unidade"
+              delete: "Excluir"
+            create:
+              title: "Adicionar unidade"
+              section_label: "Seção: {name}"
+              tab_individual: "Individual"
+              tab_multiple: "Múltiplo"
+              count: "Quantidade"
+              prefix: "Prefixo"
+              format: "Formato do identificador"
+              format_letter: "Letras (A, B, C…)"
+              format_number: "Numérico (1, 2, 3…)"
+              preview_will_create: "Será criado:"
+              insufficient_available_identifiers: "Não há identificadores disponíveis suficientes para criar {count} unidades. Tente outro prefixo ou reduza a quantidade."
+              info: "A(s) unidade(s) será(ão) criada(s) em {name}."
+              cancel: "Cancelar"
+              submit: "Criar"
+            edit:
+              title: "Editar unidade"
+              submit: "Salvar alterações"
+            delete:
+              title: "Excluir a unidade {name}?"
+              warning: "A exclusão reversível preserva os registros relacionados existentes, como propriedades, ocupações, contratos de locação, visitas e histórico de auditoria. A unidade desaparecerá desta pré-visualização após a confirmação."
+              cancel: "Cancelar"
+              confirm: "Excluir"
+            validations:
+              unit_type_required: "O tipo de unidade é obrigatório"
+              identifier_required: "O identificador é obrigatório"
+              prefix_required: "O prefixo é obrigatório"
+              count_min: "Deve haver pelo menos 1 unidade"
+              area_m2_positive: "A área deve ser maior que 0"
+          import:
+            open: "Abrir importador"
+            description: "Envie um arquivo Excel para criar unidades em lote. Você poderá revisar e corrigir antes de importar."
+          preview:
+            title: "Pré-visualização de unidades"
+            total_will_create: "{count} unidades serão criadas"
+            explanation_with_structure: "Serão criadas {count} unidades em {towers} torres com {floors} andares e {per_floor} unidades por andar."
+            explanation_flat: "Serão criadas {count} unidades com base na configuração atual."
+            loading: "Carregando pré-visualização…"
+            empty: "Configure os parâmetros para ver a pré-visualização."
+            table:
+              tower_floor: "Torre - Andar"
+              units: "Unidades"
+            pagination: "Mostrando {shown} de {total} combinações"
+            prev: "Anterior"
+            next: "Próximo"
+            import_mode: "A pré-visualização de unidades está disponível no modo automático."
+        step4:
+          title: "Resumo"
+          cards:
+            property: "Imóvel"
+            address: "Endereço"
+            structure: "Estrutura"
+            units: "Unidades"
+            structure_value: "{towers} torres / {floors} andares"
+            sections_value: "{count} seções"
+            units_value: "{count} {type}"
+          sections:
+            property: "Dados do imóvel"
+            structure: "Estrutura"
+            units: "Unidades"
+          structure:
+            tower_with_floors: "{name} ({count} andares)"
+            floors_list: "Andares {floors}"
+          table:
+            code: "Código"
+            tower: "Torre"
+            floor: "Andar"
+            unit: "Unidade"
+            type: "Tipo"
+            orientation: "Orientação"
+            area: "Área"
+            bedrooms: "Dormitórios"
+            area_value: "{value} m²"
+            empty: "Não há unidades para exibir."
+          units_total: "... {count} unidades no total"
+          notice: "Você poderá ajustar seções e unidades após confirmar."
+        step5:
+          title: "Confirmação"
+          acknowledge: "Confirmo que as informações estão corretas"
+          ready:
+            title: "Tudo pronto para criar o imóvel"
+            description: "Ao confirmar, o imóvel ficará configurado com a estrutura e unidades definidas."
+          success:
+            title: "Imóvel configurado!"
+            description: "O imóvel foi configurado com sucesso. Você pode continuar com as próximas ações."
+          checklist:
+            property: "Imóvel configurado"
+            structure: "Estrutura pronta"
+            units: "{count} unidades preparadas"
+          final_summary:
+            title: "Resumo final"
+            property: "imóvel"
+            towers: "torres"
+            floors: "andares"
+            units: "unidades"
+          consequences:
+            title: "O que acontecerá ao confirmar"
+            create_property: "O imóvel será configurado"
+            create_structure: "A estrutura definida será mantida"
+            create_units: "{count} unidades serão mantidas"
+            edit_after: "Você poderá editar a configuração depois"
+            duration_note: "O processo pode levar alguns segundos."
+          actions:
+            property_detail: "Ver detalhes do imóvel"
+            manage_units: "Gerenciar unidades"
+            import_owners: "Importar proprietários"
+            configure_residents: "Configurar residentes"
+          completed:
+            subtitle: "A configuração do imóvel foi concluída com sucesso."
+            success:
+              title: "Imóvel configurado com sucesso!"
+              description: "O imóvel, sua estrutura e as unidades foram criados com sucesso."
+            summary:
+              property: "Imóvel"
+              structure: "Estrutura"
+              units: "Unidades"
+              status: "Status"
+              status_value: "Configuração concluída"
+              structure_value: "{towers} torres / {floors} andares"
+              units_value: "{count} unidades"
+            next_steps:
+              title: "Próximos passos recomendados"
+              recommended_badge: "Recomendado"
+              property_detail:
+                title: "Ver detalhe do imóvel"
+                description: "Revise a ficha completa do imóvel recém-configurado."
+                action: "Ver detalhe"
+              reopen_setup:
+                title: "Reabrir configuração"
+                description: "Volte ao assistente para continuar editando dados, estrutura ou unidades."
+                action: "Reabrir configuração"
+              manage_units:
+                title: "Administrar unidades"
+                description: "Edite identificadores, tipos e seções das unidades criadas."
+                action: "Administrar unidades"
+              import_owners:
+                title: "Importar proprietários"
+                description: "Carregue proprietários em lote para atribuí-los às unidades."
+                action: "Importar proprietários"
+              configure_residents:
+                title: "Configurar residentes"
+                description: "Atribua ocupantes e residentes às unidades do imóvel."
+                action: "Configurar residentes"
+            whats_next:
+              title: "O que vem a seguir"
+              review_structure:
+                title: "Revise a estrutura criada"
+                description: "Verifique torres, andares e seções conforme definido no assistente."
+              manage_units:
+                title: "Gerencie as unidades"
+                description: "Ajuste identificadores e tipos antes de operar."
+              load_owners:
+                title: "Carregue os proprietários"
+                description: "Importe ou registre proprietários para cada unidade."
+              configure_residents:
+                title: "Configure os residentes"
+                description: "Defina ocupantes e residentes quando o imóvel estiver operacional."
+            checklist:
+              property_created: "Imóvel criado"
+              structure_created: "Estrutura criada"
+              units_generated: "Unidades geradas"
+            footer:
+              back_to_summary: "Voltar ao resumo"
+              close: "Fechar"
+              go_to_property: "Ir ao detalhe do imóvel"
       bulk_imports:
         property_section_required: "A seção é obrigatória para iniciar a importação"
         not_found: "Importação não encontrada"
@@ -1055,14 +2232,35 @@ pt:
           duplicate_in_file: "Linha duplicada no arquivo"
           duplicate_in_database: "A unidade já existe e será omitida"
           unit_not_found_for_update: "A unidade não existe nesta seção e não pode ser atualizada"
+          unit_ambiguous_for_update: "Várias unidades correspondem a este identificador e não podem ser atualizadas"
           owner_document_email_conflict: "O mesmo documento do proprietário aparece com e-mails diferentes no arquivo"
           owner_email_document_conflict: "O mesmo e-mail do proprietário aparece com documentos diferentes no arquivo"
+          first_name_missing: "Falta o nome"
+          last_name_missing: "Falta o sobrenome"
+          document_number_missing: "Falta o documento"
+          phone_missing: "Falta o telefone"
+          email_invalid: "O e-mail não é válido"
+          birthdate_invalid_format: "A data de nascimento deve estar no formato DD/MM/AAAA ou DD-MM-AAAA"
+          birthdate_impossible: "A data de nascimento não é uma data real"
+          birthdate_future: "A data de nascimento não pode ser futura"
+          document_number_duplicate_in_file: "Documento duplicado no arquivo"
+          email_duplicate_in_file: "E-mail duplicado no arquivo"
+          document_number_duplicate_in_organization: "Já existe uma pessoa com este documento na organização"
+          email_duplicate_in_organization: "Já existe uma pessoa com este e-mail na organização"
         import:
           logs:
             unit_created: "Unidade %{identifier} criada"
+            person_created: "Pessoa %{name} criada"
             duplicate_skipped: "Omitida por duplicado"
+            not_authorized: "Importação não autorizada"
             skipped: "Linha omitida"
             failed: "Falha na importação"
+            requires_invitation: "Requer convite — ação pendente do gestor"
+            requires_incorporation: "Requer incorporação — ação pendente do gestor"
+            conflict: "Conflito de identidade — não aplicada"
+            invalid: "Linha inválida — rejeitada"
+            already_pending: "Já existe outro convite em andamento para esta pessoa"
+            reclassified_skipped: "O estado da linha mudou desde a importação (%{classification}); ignorada"
       property_sections:
         title: "Seções"
         created_successfully: "Seção criada com sucesso"
@@ -1077,6 +2275,8 @@ pt:
           parent_required: "A seção pai é obrigatória"
           parent_invalid: "A seção pai é inválida"
           parent_same_property: "A seção pai deve pertencer à mesma propriedade"
+          parent_same_organization: "A seção pai deve pertencer à mesma organização"
+          parent_not_operative: "Não é possível adicionar ou mover seções sob uma seção ou propriedade não operacional"
           parent_circular: "A seção pai não pode ser descendente desta seção"
           parent_must_be_root: "Apenas uma seção raiz pode ser pai (máximo um nível de aninhamento)"
           child_cannot_have_children: "Uma seção filha não pode conter outras seções, apenas unidades"
@@ -1085,10 +2285,20 @@ pt:
           container_cannot_have_units: "Uma seção com subseções não pode ter unidades; atribua unidades às seções filhas"
           section_cannot_accept_units: "Unidades só podem ser atribuídas a seções filhas ou a seções sem subseções"
           position_min: "A posição deve ser pelo menos 1"
+          status_required: "O status é obrigatório"
+        statuses:
+          active: "Ativa"
+          inactive: "Inativa"
+          archived: "Arquivada"
         section_types:
+          building: "Edifício"
           block: "Bloco"
           tower: "Torre"
           floor: "Andar"
+          stage: "Etapa"
+          sector: "Setor"
+          parking_area: "Área de estacionamento"
+          storage_area: "Área de depósitos"
           parking: "Estacionamento"
           storage: "Depósito"
           commercial: "Comercial"
@@ -1134,6 +2344,8 @@ pt:
             placeholder: "Código interno (opcional)"
           section_type:
             label: "Tipo de seção"
+          status:
+            label: "Status"
           residential_property_id:
             label: "Propriedade residencial"
             placeholder: "Selecione uma propriedade"
@@ -1148,6 +2360,7 @@ pt:
           title: "Organization"
       sidebar:
         platform: "Plataforma"
+        operations: "Operações"
         home: "Home"
         users: "Users"
         people: "Pessoas"
@@ -1156,6 +2369,11 @@ pt:
         organizations: "Organizations"
         organization_settings: "Configurações da Organização"
         settings: "Configurações"
+        operational_roles: "Funções operacionais"
+        concierge: "Portaria"
+        authorized_visits: "Visitas autorizadas"
+        visits: "Visitas"
+        manage_visits: "Gestão de visitas"
         categories: "Categorias"
         components: "Componentes"
         products: "Produtos"
@@ -1166,6 +2384,109 @@ pt:
           profile: "Profile"
           logout_success: "Sessão encerrada com sucesso"
           logout_error: "Erro ao encerrar sessão"
+      operational_roles:
+        roles:
+          tenant_admin: "Admin org."
+          content_manager: "Gestor cont."
+          property_admin: "Admin prop."
+          concierge: "Portaria"
+          cleaning_staff: "Limpeza"
+          internal_staff: "Interno"
+        index:
+          title: "Funções operacionais"
+          subtitle: "Define quem pode fazer o quê dentro do sistema."
+          summary_defined_roles: "Funções definidas"
+          summary_total_capabilities: "Permissões totais"
+          summary_active_assignments: "Atribuições ativas"
+          summary_assigned_users: "Usuários atribuídos"
+          defined_roles_heading: "Funções definidas"
+          assign_role_button: "Atribuir função"
+          table_headers:
+            role: "Função"
+            description: "Descrição"
+            scope: "Escopo"
+            active_users: "Usuários ativos"
+            status: "Status"
+            actions: ""
+          role_scope_organization: "Organização"
+          role_scope_property: "Propriedade"
+          role_status_active: "Ativo"
+          view_detail: "Ver detalhe"
+          assign_persons: "Atribuir pessoas"
+        show:
+          permissions_tab: "Permissões"
+          users_tab: "Usuários"
+          scope_tab: "Escopo"
+          permissions_heading: "Permissões"
+          users_heading: "Usuário"
+          users_heading_plural: "Usuários"
+          scope_heading: "Escopo"
+          scope_description_property: "Esta função se aplica por propriedade residencial atribuída."
+          scope_description_organization: "Esta função se aplica a toda a organização."
+          assign_persons_button: "Atribuir pessoas"
+          no_assigned_users: "Não há pessoas atribuídas a esta função."
+          table_headers:
+            person: "Pessoa"
+            user: "Usuário"
+            scope: "Escopo"
+            status: "Status"
+            from: "Início"
+            to: "Fim"
+          permission_status_allowed: "Permitido"
+          permission_status_restricted: "Restrito"
+          permission_status_denied: "Negado"
+          permission_columns:
+            permission: "Permissão"
+            description: "Descrição"
+            access: "Acesso"
+        permissions_matrix:
+          title: "Matriz de permissões"
+          subtitle: "Capacidades por função operacional e organizacional."
+          legend_allowed: "Permitido"
+          legend_denied: "Negado"
+        assignments:
+          title: "Atribuição de funções operacionais"
+          subtitle: "Atribui funções operacionais a usuários dentro de uma propriedade."
+          filters:
+            search_person: "Buscar usuário ou pessoa..."
+            all_roles: "Todas as funções"
+            all_properties: "Todas as propriedades"
+          new_assignment_button: "Atribuir função"
+          table_headers:
+            user: "Usuário"
+            person: "Pessoa vinculada"
+            role: "Função"
+            scope: "Escopo"
+            status: "Status"
+            from: "Início"
+            to: "Fim"
+            actions: ""
+          empty_message: "Não há atribuições ativas."
+          revoke_action: "Revogar atribuição"
+          revoke_confirmation_title: "Revogar atribuição"
+          revoke_confirmation_description: "Tem certeza de que deseja revogar a função {role} de {person}?"
+          revoke_cancel: "Cancelar"
+          revoke_confirm: "Revogar"
+        assignment_drawer:
+          title: "Nova atribuição"
+          description: "Atribui uma função operacional a uma pessoa em uma propriedade."
+          label_user: "Usuário / Pessoa"
+          label_user_placeholder: "Selecione uma pessoa..."
+          label_user_no_account: "Sem usuário vinculado"
+          label_operational_role: "Função operativa"
+          label_operational_role_placeholder: "Selecione uma função..."
+          label_scope: "Escopo"
+          label_property: "Propriedade"
+          label_property_placeholder: "Selecione uma propriedade..."
+          label_starts_at: "Data de início"
+          label_ends_at: "Data de término (opcional)"
+          label_status: "Status"
+          label_status_active: "Ativo"
+          label_status_inactive: "Inativo"
+          errors_heading: "Erros"
+          button_cancel: "Cancelar"
+          button_submit: "Salvar atribuição"
+          button_saving: "Salvando..."
       profile:
         title: "Perfil"
         updated_successfully: "Perfil atualizado com sucesso"
@@ -1185,9 +2506,77 @@ pt:
       unconfirmed_account: "Conta não confirmada"
       token_expired: "Token expirado"
       token_invalid: "Token inválido"
+    visits:
+      unit_not_found: "Unidade não encontrada ou inacessível"
+      no_active_relationship: "Você não tem uma relação ativa com esta unidade"
+      authorization_denied: "Você não está autorizado a registrar visitas autorizadas nesta unidade"
+      invalid_visitor: "Os dados do visitante são inválidos"
+      invalid_scheduled_at: "A data e hora da visita são inválidas"
   activerecord:
     errors:
       models:
+        residential_property:
+          attributes:
+            name:
+              taken: "Já existe uma propriedade com este nome na organização"
+              code_collision: "Essa alteração geraria um código já usado por outra propriedade. Altere o nome da propriedade."
+            code:
+              taken: "Já existe uma propriedade com este código na organização"
+            status:
+              inclusion: "não é um estado válido"
+              archive_requires_service: "o arquivamento deve ser feito pela ação de arquivar, não em uma edição comum"
+            timezone:
+              invalid_timezone: "não é um fuso horário válido"
+            organization_id:
+              immutable: "não pode ser alterado"
+            base:
+              automatic_generation_unavailable: "A geração automática de unidades não está disponível para a estrutura desta propriedade"
+              structure_regeneration_blocked_by_units: "Remova as unidades geradas antes de alterar a estrutura"
+        property_section:
+          attributes:
+            name:
+              taken: "Já existe uma seção com este nome no mesmo nível"
+            code:
+              taken: "Já existe uma seção com este código no mesmo contexto"
+            status:
+              inclusion: "não é um estado válido"
+              archive_requires_service: "o arquivamento deve ser feito pela ação de arquivar, não em uma edição comum"
+            section_type:
+              inclusion: "não é um tipo de seção válido"
+            organization_id:
+              mismatch_property: "deve coincidir com a organização da propriedade"
+            residential_property_id:
+              immutable: "não pode ser alterado"
+            parent_id:
+              move_requires_service: "alterações de pai devem ser feitas pela ação de mover, não em uma edição comum"
+            base:
+              empty_batch: "Informe pelo menos uma seção para criar"
+              insufficient_available_names: "Não há nomes disponíveis suficientes para criar %{count} seções neste nível. Tente outro prefixo ou reduza a quantidade."
+              property_not_operative: "não é possível modificar seções enquanto a propriedade não estiver ativa"
+        unit:
+          attributes:
+            status:
+              archive_requires_service: "o arquivamento deve ser feito pela ação de arquivar, não em uma edição comum"
+              transition_not_allowed: "não é uma transição de status operacional permitida"
+              reactivate_requires_archived: "a reativação requer uma unidade arquivada"
+            base:
+              property_not_operative: "não é possível modificar unidades enquanto a propriedade não estiver ativa"
+              not_deleted: "a unidade não está excluída de forma reversível"
+              already_deleted: "a unidade já está excluída de forma reversível"
+              destroy_requires_service: "a exclusão reversível deve ser feita pela ação de soft delete, não por destroy direto"
+              insufficient_available_identifiers: "Não há identificadores disponíveis suficientes para criar %{count} unidades nesta seção. Tente outro prefixo ou reduza a quantidade."
+        visit:
+          attributes:
+            residential_property:
+              incoherent_with_unit: "deve corresponder à propriedade da unidade"
+            property_section:
+              incoherent_with_unit: "deve corresponder à seção da unidade"
+            valid_until:
+              after_valid_from: "deve ser igual ou posterior ao início de validade"
+        visit_status_history:
+          attributes:
+            organization:
+              incoherent_with_visit: "deve corresponder à organização da visita"
         bulk_import:
           attributes:
             status:

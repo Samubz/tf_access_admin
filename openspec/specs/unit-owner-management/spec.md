@@ -159,24 +159,43 @@ The system SHALL record ownership create, update, and delete events in the tenan
 - **THEN** an audit entry is recorded associated with the unit
 - **AND** the unit change history sidebar includes a human-readable description
 
-### Requirement: Ownership operations enforce tenant authorization
+### Requirement: Ownership operations enforce operational authorization
 
-The system SHALL restrict all unit ownership management actions to authorized tenant admins within the same organization as the unit and person.
+The system SHALL restrict unit ownership management actions using capability-based authorization (`manage_ownerships`) scoped to the residential property of the unit, with organization isolation enforced on every action.
 
-#### Scenario: Unauthorized user denied
+#### Scenario: Tenant admin can manage ownerships
 
-- **WHEN** a user without admin rights attempts to create an ownership
+- **WHEN** a user with `tenant_admin` role in the organization attempts to create an ownership
+- **THEN** the action is authorized
+
+#### Scenario: Property admin can manage ownerships for assigned property
+
+- **WHEN** a user with active `property_admin` staff assignment on property P attempts to create an ownership for a unit in P
+- **THEN** the action is authorized
+
+#### Scenario: Property admin denied for unassigned property
+
+- **WHEN** a user with `property_admin` assignment only on property P attempts to create an ownership for a unit in property Q
+- **THEN** the system returns forbidden and does not mutate data
+
+#### Scenario: Concierge cannot manage ownerships
+
+- **WHEN** a user with only concierge assignment attempts to create an ownership
 - **THEN** the system returns forbidden and does not mutate data
 
 #### Scenario: Cross-organization access denied
 
-- **WHEN** a user attempts to manage ownerships for a unit outside their tenant
+- **WHEN** a user attempts to manage ownerships for a unit outside their organization
 - **THEN** the system returns not found or forbidden
 
 ### Requirement: Ownership restoration is out of scope
 
 The system SHALL NOT provide ownership restoration functionality in the admin interface.
 
+#### Scenario: No restore action in admin UI
+
+- **WHEN** an admin views a soft-deleted ownership
+- **THEN** no restore or undelete action is available
 ### Requirement: Ownership relationship model
 
 The system SHALL support many-to-many ownership relationships between people and units.

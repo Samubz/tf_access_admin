@@ -1,0 +1,7 @@
+<%= t("onboarding_mailer.invitation.greeting") %>
+
+<%= t("onboarding_mailer.invitation.body", organization: @organization.name) %>
+
+<%= t("onboarding_mailer.invitation.cta") %>: <%= @accept_url %>
+
+<%= t("onboarding_mailer.invitation.expiration") %>

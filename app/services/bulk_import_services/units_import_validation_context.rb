@@ -49,10 +49,39 @@ module BulkImportServices
     end
 
     def find_existing_unit(property_section_id, unit_identifier)
-      return nil if property_section_id.blank? || unit_identifier.blank?
+      return nil if unit_identifier.blank?
 
       normalized = normalize_identifier(unit_identifier)
-      @existing_units[[ property_section_id, normalized ]]
+      context = normalize_section_context(property_section_id)
+      @existing_units[[ context, normalized ]]
+    end
+
+    def find_unit_for_update(property_section_id, unit_identifier)
+      normalized = normalize_identifier(unit_identifier)
+      return nil if normalized.blank?
+
+      context = normalize_section_context(property_section_id)
+      in_section = @existing_units[[ context, normalized ]]
+      return in_section if in_section.present?
+
+      return nil unless update_only?
+
+      matches = @residential_property.units.where(normalized_identifier: normalized).to_a
+      return matches.first if matches.one?
+
+      nil
+    end
+
+    def ambiguous_unit_for_update?(property_section_id, unit_identifier)
+      return false unless update_only?
+
+      normalized = normalize_identifier(unit_identifier)
+      return false if normalized.blank?
+
+      context = normalize_section_context(property_section_id)
+      return false if @existing_units[[ context, normalized ]].present?
+
+      @residential_property.units.where(normalized_identifier: normalized).count > 1
     end
 
     def register_uniqueness_key!(key)
@@ -81,9 +110,10 @@ module BulkImportServices
     end
 
     def build_group_key(property_section_id, unit_identifier)
-      return nil if property_section_id.blank? || unit_identifier.blank?
+      return nil if unit_identifier.blank?
 
-      "unit:#{property_section_id}:#{normalize_identifier(unit_identifier)}"
+      context = normalize_section_context(property_section_id)
+      "unit:#{context}:#{normalize_identifier(unit_identifier)}"
     end
 
     def register_owner_identity!(normalized)
@@ -201,7 +231,7 @@ module BulkImportServices
 
     def load_existing_units
       Unit.where(residential_property_id: @residential_property.id)
-        .index_by { |unit| [ unit.property_section_id, unit.normalized_identifier ] }
+        .index_by { |unit| [ normalize_section_context(unit.property_section_id), unit.normalized_identifier ] }
     end
 
     def load_existing_group_percentages
@@ -225,7 +255,11 @@ module BulkImportServices
     end
 
     def normalize_identifier(identifier)
-      AlphanumericHyphenCodeValidatable.normalize_identifier(identifier)
+      Units::NormalizeIdentifier.call(identifier)&.normalized_identifier
+    end
+
+    def normalize_section_context(property_section_id)
+      property_section_id.present? ? property_section_id : :root
     end
   end
 end

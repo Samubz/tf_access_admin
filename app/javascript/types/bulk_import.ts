@@ -49,13 +49,31 @@ export type BulkImportRowNormalizedPayload = {
   owner_first_name?: string | null
   owner_last_name?: string | null
   ownership_percentage?: number | string | null
+  // Bulk user/person import fields (add-bulk-user-import)
+  first_name?: string | null
+  last_name?: string | null
+  document_number?: string | null
+  phone?: string | null
+  email?: string | null
+  birthdate?: string | null
 }
+
+export type BulkImportOnboardingClassification =
+  | 'ready_to_create_person'
+  | 'requires_invitation'
+  | 'requires_incorporation'
+  | 'review'
+  | 'conflict'
+  | 'duplicate'
+  | 'invalid'
 
 export type BulkImportRowRecord = {
   id: string
   row_number: number
   validation_status: 'pending' | 'valid' | 'warning' | 'error' | 'duplicate'
   import_status: 'pending' | 'imported' | 'skipped' | 'failed'
+  onboarding_classification: BulkImportOnboardingClassification | null
+  target_record_type: 'Person' | 'OnboardingRequest' | null
   validation_errors: BulkImportValidationIssue[]
   validation_warnings: BulkImportValidationIssue[]
   normalized_payload: BulkImportRowNormalizedPayload
@@ -69,6 +87,24 @@ export type BulkImportPreviewSummary = {
   error_rows: number
   duplicate_rows: number
   skipped_rows: number
+  pending_invitation_rows?: number
+  pending_incorporation_rows?: number
+}
+
+export type BulkImportTriggerInvitationStatus = 'triggered' | 'conflicted' | 'skipped' | 'failed'
+
+export type BulkImportTriggerInvitationsResult = {
+  counts: {
+    triggered: number
+    conflicted: number
+    skipped: number
+    failed: number
+  }
+  results: Array<{
+    row_id: string
+    status: BulkImportTriggerInvitationStatus
+    classification: BulkImportOnboardingClassification | null
+  }>
 }
 
 export type BulkImportPreviewPagination = {

@@ -1,3 +1,5 @@
+import type { PersonContextualRole } from '@/types/person_profile'
+
 export type Person = {
   id?: string
   display_name: string
@@ -15,10 +17,7 @@ export type Person = {
   user_email?: string | null
   role?: string
   tenant_role?: string
-}
-
-export type LinkableUser = {
-  id: string
-  name: string
-  email: string
+  contextual_roles?: PersonContextualRole[]
+  invitation_status?: 'linked' | 'pending' | 'not_invited'
+  pending_onboarding_request_id?: string | null
 }

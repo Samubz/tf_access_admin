@@ -3,6 +3,8 @@
 require "test_helper"
 
 class Admin::ResidentialProperties::UnitsControllerTest < ActionDispatch::IntegrationTest
+  include OperationalPolicyTestHelper
+
   setup do
     @organization = organizations(:one)
     ActsAsTenant.current_tenant = @organization
@@ -59,6 +61,27 @@ class Admin::ResidentialProperties::UnitsControllerTest < ActionDispatch::Integr
     )
 
     @unit_show_path = admin_residential_property_unit_path(@property, @unit, tab: "occupants")
+
+    @owner = create_owner_user(
+      organization: @organization,
+      email: "units-show-visits-owner@example.test",
+      unit: @unit
+    )
+
+    visitor_person = Person.create!(
+      organization: @organization,
+      display_name: "Units Show Visit Visitor",
+      person_type: PersonTypes::NATURAL,
+      status: PersonStatuses::ACTIVE
+    )
+    @visit = Visit.create!(
+      organization: @organization,
+      unit: @unit,
+      visitor_person: visitor_person,
+      scheduled_at: 1.day.from_now,
+      valid_from: 1.day.from_now,
+      status: VisitStatuses::PENDING
+    )
   end
 
   teardown do
@@ -128,6 +151,38 @@ class Admin::ResidentialProperties::UnitsControllerTest < ActionDispatch::Integr
     assert_equal I18n.t("frontend.admin.units.show.occupants.statuses.active"), row["status_label"]
   end
 
+  test "show includes scoped visits pagination and visit permissions for unit tab" do
+    sign_in_as(@owner)
+
+    inertia_get admin_residential_property_unit_path(@property, @unit, tab: "visits")
+    assert_response :success
+
+    props = inertia_props
+    assert_equal 1, props["visits"].size
+    assert_equal @visit.id, props["visits"].first["id"]
+    assert_equal 1, props.dig("visits_pagination", "total_count")
+    assert props.dig("visit_permissions", "create")
+  end
+
+  test "show returns empty visits list when unit has no visits" do
+    sign_in_as(@tenant_admin)
+
+    empty_unit = Unit.create!(
+      organization: @organization,
+      residential_property: @property,
+      identifier: "UNIT-SHOW-NO-VISITS",
+      unit_type: UnitTypes::APARTMENT,
+      status: UnitStatuses::AVAILABLE
+    )
+
+    inertia_get admin_residential_property_unit_path(@property, empty_unit, tab: "visits")
+    assert_response :success
+
+    assert_equal [], inertia_props["visits"]
+    assert_equal 0, inertia_props.dig("visits_pagination", "total_count")
+    assert inertia_props.dig("visit_permissions", "create")
+  end
+
   test "show returns empty occupancies list when unit has no active occupants" do
     sign_in_as(@tenant_admin)
 
@@ -152,7 +207,7 @@ class Admin::ResidentialProperties::UnitsControllerTest < ActionDispatch::Integr
   def sign_in_as(user)
     host! "#{@organization.subdomain}.example.com"
     post user_session_path, params: {
-      user: { email: user.email, password: "password1" }
+      user: { email: user.email, password: "Password1@" }
     }
   end
 end

@@ -105,6 +105,14 @@
             </Field>
           </VeeField>
         </FieldGroup>
+        <FieldGroup v-if="!props.defaultValues" class="mt-4">
+          <VeeField v-slot="{ value, handleChange }" name="send_invitation" type="checkbox">
+            <label class="flex cursor-pointer items-start gap-3">
+              <Checkbox :model-value="value" @update:model-value="handleChange" />
+              <span class="text-sm leading-snug">{{ t('admin.people.input.send_invitation.label') }}</span>
+            </label>
+          </VeeField>
+        </FieldGroup>
       </form>
     </CardContent>
     <CardFooter>
@@ -134,6 +142,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { DatePicker } from '@/components/ui/datepicker'
@@ -169,6 +178,7 @@ const { handleSubmit, setErrors, setValues } = useForm({
     email: '',
     phone: '',
     birthdate: '',
+    send_invitation: false,
   },
 })
 

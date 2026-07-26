@@ -4,8 +4,8 @@ module UserTestHelper
   def create_confirmed_user(email:, name: "Test User")
     User.create!(
       email: email,
-      password: "password1",
-      password_confirmation: "password1",
+      password: "Password1@",
+      password_confirmation: "Password1@",
       name: name,
       dni: SecureRandom.hex(4),
       language: Languages::ES,
@@ -16,7 +16,7 @@ module UserTestHelper
   def create_user_for_organization(organization:, email:, role:, name: "Test User")
     ActsAsTenant.with_tenant(organization) do
       user = create_confirmed_user(email: email, name: name)
-      person = user.person_for(organization)
+      person = Accounts::ProvisionTenantIdentity.call(user: user, organization: organization)
 
       case role
       when AvailableRoles::SUPER_ADMIN

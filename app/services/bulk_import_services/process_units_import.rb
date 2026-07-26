@@ -23,9 +23,9 @@ module BulkImportServices
     def self.importable_scope(bulk_import:, import_valid_rows_only:)
       validation_statuses = if import_valid_rows_only
                               STRICT_IMPORTABLE_VALIDATION_STATUSES
-                            else
+      else
                               RELAXED_IMPORTABLE_VALIDATION_STATUSES
-                            end
+      end
 
       bulk_import.rows
         .pending_import

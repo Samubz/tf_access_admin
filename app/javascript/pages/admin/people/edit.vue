@@ -8,7 +8,6 @@
       :roles="props.roles"
       :person-types="props.person_types"
       :statuses="props.statuses"
-      :linkable-users="props.linkable_users"
       :server-errors="props.errors"
       :default-values="props.person"
       :cancel-label="t('common.back')"
@@ -24,7 +23,7 @@ import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import type { PersonSchema } from '@/lib/schemas/person'
 import { ref, computed } from 'vue'
-import type { LinkableUser, Person } from '@/types/person'
+import type { Person } from '@/types/person'
 import { admin_person_path } from '@/routes'
 import Header from '@/components/admin/layout/Header.vue'
 import { getPeopleBreadcrumbs } from '@/lib/breadcrumbs/person'
@@ -37,7 +36,6 @@ const props = defineProps<{
   roles: string[]
   person_types: string[]
   statuses: string[]
-  linkable_users: LinkableUser[]
   errors?: Record<string, string[]>
 }>()
 

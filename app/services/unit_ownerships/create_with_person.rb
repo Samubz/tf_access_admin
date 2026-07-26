@@ -14,12 +14,10 @@ module UnitOwnerships
     end
 
     def call
-      reject_duplicate_person!
       created_by = Mutation.actor_person(@actor, @unit.organization)
 
       Mutation.with_unit_lock(@unit) do
-        person = build_person
-        person.save!
+        person = resolve_person!
         ensure_membership!(person)
 
         ownership = UnitOwnership.new(
@@ -37,23 +35,17 @@ module UnitOwnerships
 
     private
 
-    def reject_duplicate_person!
-      existing = FindExistingPerson.call(
+    def resolve_person!
+      existing = People::FindExisting.call(
         organization: @unit.organization,
         document_number: @person_params[:document_number],
         email: normalized_email
       )
-      return unless existing
+      return existing if existing
 
-      person = Person.new(organization: @unit.organization)
-      person.errors.add(
-        :base,
-        I18n.t(
-          "frontend.admin.unit_ownerships.validations.existing_person_match",
-          display_name: existing.display_name
-        )
-      )
-      raise ActiveRecord::RecordInvalid, person
+      person = build_person
+      person.save!
+      person
     end
 
     def build_person

@@ -214,10 +214,50 @@ npm install
 foreman start -f Procfile.dev
 ```
 
-ingresar a 
+ingresar a
 - http://demo-pro.localhost:5100/home
 
 ### To install shadcn modules
 ```bash
 npm run shadcn -- add hover-card -y
 ```
+
+## Correo local (MailHog)
+
+En desarrollo, los correos se entregan por SMTP a una instancia local de MailHog en vez de enviarse de verdad (nunca llegan a un destinatario real).
+
+```bash
+docker compose up -d mailhog
+```
+
+Luego visita `http://localhost:8025` para ver todos los correos capturados (asunto, destinatarios, contenido renderizado).
+
+Para detenerlo:
+
+```bash
+docker compose down
+```
+
+Si tu instancia de MailHog corre en otro host/puerto, sobrescribe los valores por defecto (`localhost`/`1025`) en tu `.env`:
+
+```bash
+MAILHOG_SMTP_ADDRESS=localhost
+MAILHOG_SMTP_PORT=1025
+```
+
+Ver `.env.example` para los valores de referencia.
+
+## Push notifications locales (PushHog)
+
+En desarrollo, las push notifications (FCM) se envían a un simulador local compatible con la API de Firebase (ej. PushHog) en vez de a Firebase real.
+
+Por defecto, `FCM_BASE_URL` apunta a `https://fcm.googleapis.com` (real). Para redirigir a un simulador local, sobrescribe en tu `.env`:
+
+```bash
+FCM_BASE_URL=http://localhost:8090
+FCM_PROJECT_ID=development
+```
+
+`FCM_PROJECT_ID` no es validado por el simulador local; solo es relevante con credenciales reales de Firebase (autenticación OAuth2 real queda fuera de alcance por ahora).
+
+Ver `.env.example` para los valores de referencia.

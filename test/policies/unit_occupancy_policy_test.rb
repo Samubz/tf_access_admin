@@ -101,8 +101,24 @@ class UnitOccupancyPolicyTest < ActiveSupport::TestCase
     assert policy.destroy?
   end
 
+  test "tenant admin can authorize class-level occupancy mutations" do
+    policy = UnitOccupancyPolicy.new(@tenant_admin, UnitOccupancy)
+
+    assert policy.create?
+    assert policy.update?
+    assert policy.destroy?
+  end
+
   test "non-admin user cannot create update or destroy occupancy" do
     policy = UnitOccupancyPolicy.new(@non_admin, @occupancy)
+
+    assert_not policy.create?
+    assert_not policy.update?
+    assert_not policy.destroy?
+  end
+
+  test "non-admin user cannot authorize class-level occupancy mutations" do
+    policy = UnitOccupancyPolicy.new(@non_admin, UnitOccupancy)
 
     assert_not policy.create?
     assert_not policy.update?

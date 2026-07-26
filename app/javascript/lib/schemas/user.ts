@@ -11,6 +11,7 @@ export const userValidationKeys = {
   language_required: 'admin.users.validations.language_required',
   password_lowercase: 'admin.users.validations.password_lowercase',
   password_uppercase: 'admin.users.validations.password_uppercase',
+  password_number: 'admin.users.validations.password_number',
   password_symbol: 'admin.users.validations.password_symbol',
   reset_password_token_required: 'admin.users.validations.reset_password_token_required',
   email_required: 'admin.users.validations.email_required',
@@ -20,6 +21,7 @@ export const userValidationKeys = {
 export const passwordSchema = z.string().min(8, userValidationKeys.password_min)
 .regex(/[a-z]/, { message: userValidationKeys.password_lowercase })
 .regex(/[A-Z]/, { message: userValidationKeys.password_uppercase })
+.regex(/[0-9]/, { message: userValidationKeys.password_number })
 .regex(/[$%@.\-_]/, { message: userValidationKeys.password_symbol });
 
 export const passwordConfirmationSchema = z.string().min(8, userValidationKeys.password_confirmation_min);

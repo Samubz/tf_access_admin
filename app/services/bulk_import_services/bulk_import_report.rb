@@ -4,7 +4,7 @@ require "csv"
 
 module BulkImportServices
   class BulkImportReport
-    HEADERS = %w[
+    UNIT_HEADERS = %w[
       row_number
       validation_status
       import_status
@@ -12,6 +12,18 @@ module BulkImportServices
       property_section_id
       owner_document
       owner_email
+      message
+    ].freeze
+
+    PEOPLE_HEADERS = %w[
+      row_number
+      validation_status
+      import_status
+      first_name
+      last_name
+      document_number
+      email
+      phone
       message
     ].freeze
 
@@ -29,9 +41,17 @@ module BulkImportServices
 
     private
 
+    def people_import?
+      @bulk_import.import_type == BulkImport::IMPORT_TYPES[:users]
+    end
+
+    def headers
+      people_import? ? PEOPLE_HEADERS : UNIT_HEADERS
+    end
+
     def csv_body
       CSV.generate(headers: true) do |csv|
-        csv << HEADERS
+        csv << headers
         @bulk_import.rows.ordered.find_each do |row|
           csv << report_row(row)
         end
@@ -39,6 +59,8 @@ module BulkImportServices
     end
 
     def report_row(row)
+      return people_report_row(row) if people_import?
+
       [
         row.row_number,
         row.validation_status,
@@ -47,6 +69,20 @@ module BulkImportServices
         payload_value(row, "property_section_id"),
         payload_value(row, "owner_document"),
         payload_value(row, "owner_email"),
+        report_message_for(row)
+      ]
+    end
+
+    def people_report_row(row)
+      [
+        row.row_number,
+        row.validation_status,
+        row.import_status,
+        payload_value(row, "first_name"),
+        payload_value(row, "last_name"),
+        payload_value(row, "document_number"),
+        payload_value(row, "email"),
+        payload_value(row, "phone"),
         report_message_for(row)
       ]
     end

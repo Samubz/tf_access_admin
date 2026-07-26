@@ -4,27 +4,28 @@
 #
 # Table name: bulk_import_rows
 #
-#  id                  :uuid             not null, primary key
-#  failed_at           :datetime
-#  failure_message     :text
-#  group_key           :string
-#  import_status       :string           default("pending"), not null
-#  imported_at         :datetime
-#  normalized_payload  :jsonb            not null
-#  operation           :string
-#  raw_payload         :jsonb            not null
-#  row_number          :integer          not null
-#  sheet_name          :string
-#  skipped_at          :datetime
-#  target_record_type  :string
-#  validated_at        :datetime
-#  validation_errors   :jsonb            not null
-#  validation_status   :string           default("pending"), not null
-#  validation_warnings :jsonb            not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  bulk_import_id      :uuid             not null
-#  target_record_id    :uuid
+#  id                        :uuid             not null, primary key
+#  failed_at                 :datetime
+#  failure_message           :text
+#  group_key                 :string
+#  import_status             :string           default("pending"), not null
+#  imported_at               :datetime
+#  normalized_payload        :jsonb            not null
+#  onboarding_classification :string
+#  operation                 :string
+#  raw_payload               :jsonb            not null
+#  row_number                :integer          not null
+#  sheet_name                :string
+#  skipped_at                :datetime
+#  target_record_type        :string
+#  validated_at              :datetime
+#  validation_errors         :jsonb            not null
+#  validation_status         :string           default("pending"), not null
+#  validation_warnings       :jsonb            not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  bulk_import_id            :uuid             not null
+#  target_record_id          :uuid
 #
 # Indexes
 #

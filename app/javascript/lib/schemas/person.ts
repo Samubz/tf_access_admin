@@ -15,6 +15,7 @@ export const personSchema = z
   email: z.union([z.string().email(personValidationKeys.email_invalid), z.literal('')]).optional(),
   phone: z.string().optional(),
   birthdate: z.string().optional(),
+  send_invitation: z.boolean().optional(),
 })
 
 export type PersonSchema = z.infer<typeof personSchema>

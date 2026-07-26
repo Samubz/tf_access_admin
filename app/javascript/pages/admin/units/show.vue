@@ -26,6 +26,13 @@
           :occupancies-include-inactive="props.occupancies_include_inactive"
           :errors="props.errors"
         />
+        <UnitVisitsPanel
+          v-else-if="activeTab === 'visits'"
+          :unit="props.unit"
+          :visits="props.visits ?? []"
+          :visits-pagination="props.visits_pagination"
+          :permissions="props.visit_permissions"
+        />
         <UnitPlaceholderTab
           v-else
           :title="placeholderTitle"
@@ -60,6 +67,7 @@ import UnitOccupantsPanel from '@/components/admin/unit/UnitOccupantsPanel.vue'
 import UnitOwnersPanel from '@/components/admin/unit/UnitOwnersPanel.vue'
 import UnitPageHeader from '@/components/admin/unit/UnitPageHeader.vue'
 import UnitPlaceholderTab from '@/components/admin/unit/UnitPlaceholderTab.vue'
+import UnitVisitsPanel from '@/components/admin/unit/UnitVisitsPanel.vue'
 import { getUnitShowBreadcrumbs } from '@/lib/breadcrumbs/unit'
 import type {
   OccupancyTypeOption,
@@ -71,6 +79,7 @@ import type {
   UnitOwnership,
   UnitOwnershipsPagination,
 } from '@/types/unit'
+import type { AdminVisitListItem, UnitVisitPermissions, UnitVisitsPagination } from '@/types/visit'
 import { Card, CardContent } from '@/components/ui/card'
 
 const props = withDefaults(
@@ -83,6 +92,9 @@ const props = withDefaults(
     occupancy_types?: OccupancyTypeOption[]
     occupancy_permissions?: UnitOccupancyPermissions
     occupancies_include_inactive?: boolean
+    visits?: AdminVisitListItem[]
+    visits_pagination?: UnitVisitsPagination
+    visit_permissions?: UnitVisitPermissions
     change_history: UnitChangeHistoryEntry[]
     errors?: Record<string, string[]>
   }>(),
@@ -90,6 +102,8 @@ const props = withDefaults(
     occupancies: () => [],
     occupancy_permissions: () => ({ create: false, update: false, destroy: false }),
     occupancies_include_inactive: false,
+    visits: () => [],
+    visit_permissions: () => ({ create: false }),
   },
 )
 
@@ -102,6 +116,7 @@ function resolveInitialTab() {
 
   if (tab === 'occupants' || tab === 'residents') return 'residents'
   if (tab === 'owners') return 'owners'
+  if (tab === 'visits') return 'visits'
 
   return 'owners'
 }

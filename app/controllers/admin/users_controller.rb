@@ -29,7 +29,7 @@ class Admin::UsersController < AdminController
     def create
         authorize User
 
-        if @validation_errors || !@user.save
+        if @validation_errors || !save_user_with_identity
             redirect_to new_admin_user_path, inertia: { errors: @user.errors }
         else
             redirect_to admin_users_path
@@ -100,8 +100,22 @@ class Admin::UsersController < AdminController
         org = ActsAsTenant.current_tenant
         @user.person_for(org)&.set_tenant_role(role)
       else
-        @user.pending_tenant_role = role
+        @pending_role = role
       end
+    end
+
+    def save_user_with_identity
+      User.transaction do
+        @user.save!
+        Accounts::ProvisionTenantIdentity.call(
+          user: @user,
+          organization: ActsAsTenant.current_tenant,
+          role: @pending_role
+        )
+      end
+      true
+    rescue ActiveRecord::RecordInvalid
+      false
     end
 
     def user_params

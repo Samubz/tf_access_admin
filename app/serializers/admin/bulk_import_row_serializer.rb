@@ -5,6 +5,8 @@ class Admin::BulkImportRowSerializer < ActiveModel::Serializer
              :row_number,
              :validation_status,
              :import_status,
+             :onboarding_classification,
+             :target_record_type,
              :validation_errors,
              :validation_warnings,
              :normalized_payload,

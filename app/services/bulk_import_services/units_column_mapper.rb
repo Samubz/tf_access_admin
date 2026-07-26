@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-#TODO: Translate to English and Portuguese
+
+# TODO: Translate to English and Portuguese
 module BulkImportServices
   class UnitsColumnMapper
     TARGET_FIELDS = [

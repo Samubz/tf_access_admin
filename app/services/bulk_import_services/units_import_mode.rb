@@ -14,6 +14,10 @@ module BulkImportServices
       import_mode == CreateUnitsImport::IMPORT_MODES[:update_only]
     end
 
+    def allow_placement_changes?
+      update_only?
+    end
+
     def create_only?
       import_mode == CreateUnitsImport::IMPORT_MODES[:create_only]
     end

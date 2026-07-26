@@ -215,7 +215,7 @@ class Admin::ResidentialProperties::UnitOccupanciesControllerTest < ActionDispat
 
     assert_redirected_to @unit_show_path
     assert_equal(
-      { ends_at: [ validation_key("ends_at_before_starts_at") ] },
+      inertia_field_error(UnitOccupancy, :ends_at, validation_key("ends_at_before_starts_at")),
       session[:inertia_errors]
     )
   end
@@ -265,7 +265,7 @@ class Admin::ResidentialProperties::UnitOccupanciesControllerTest < ActionDispat
 
     assert_redirected_to @unit_show_path
     assert_equal(
-      { person_id: [ validation_key("duplicate_active_person") ] },
+      inertia_field_error(UnitOccupancy, :person_id, validation_key("duplicate_active_person")),
       session[:inertia_errors]
     )
   end
@@ -293,7 +293,7 @@ class Admin::ResidentialProperties::UnitOccupanciesControllerTest < ActionDispat
 
     assert_redirected_to @unit_show_path
     assert_equal(
-      { ends_at: [ validation_key("ends_at_before_starts_at") ] },
+      inertia_field_error(UnitOccupancy, :ends_at, validation_key("ends_at_before_starts_at")),
       session[:inertia_errors]
     )
   end
@@ -439,7 +439,7 @@ class Admin::ResidentialProperties::UnitOccupanciesControllerTest < ActionDispat
   def sign_in_as(user)
     host! "#{@organization.subdomain}.example.com"
     post user_session_path, params: {
-      user: { email: user.email, password: "password1" }
+      user: { email: user.email, password: "Password1@" }
     }
   end
 end

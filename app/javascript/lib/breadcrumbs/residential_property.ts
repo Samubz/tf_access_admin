@@ -14,3 +14,15 @@ export function getResidentialPropertiesBreadcrumbs(t: ReturnType<typeof useI18n
     },
   ]
 }
+
+export function getResidentialPropertyDetailBreadcrumbs(
+  t: ReturnType<typeof useI18n>['t'],
+  propertyName: string,
+): BreadcrumbItem[] {
+  return [
+    ...getResidentialPropertiesBreadcrumbs(t),
+    {
+      label: propertyName,
+    },
+  ]
+}

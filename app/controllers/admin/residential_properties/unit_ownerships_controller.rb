@@ -89,10 +89,6 @@ class Admin::ResidentialProperties::UnitOwnershipsController < AdminController
     admin_residential_property_unit_path(@residential_property, @unit, tab: "owners")
   end
 
-  def serialize_inertia_errors(record)
-    record.errors.to_hash.transform_values { |messages| Array(messages) }
-  end
-
   def set_residential_property
     @residential_property = policy_scope(ResidentialProperty).find(params[:residential_property_id])
   rescue ActiveRecord::RecordNotFound
@@ -105,7 +101,7 @@ class Admin::ResidentialProperties::UnitOwnershipsController < AdminController
       .where(residential_property: @residential_property)
       .find(params[:unit_id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to admin_residential_property_structure_path(@residential_property),
+    redirect_to admin_residential_properties_path,
                 inertia: { errors: [ I18n.t("frontend.admin.units.not_found") ] }
   end
 

@@ -1,6 +1,19 @@
 /** Mirrors BulkImportServices::UnitsColumnMapper::TARGET_FIELDS required flags */
 export const BULK_IMPORT_REQUIRED_TARGETS = ['unit_identifier', 'unit_type'] as const
 
+/** Mirrors BulkImportServices::PeopleColumnMapper::TARGET_FIELDS required flags */
+export const BULK_PEOPLE_IMPORT_REQUIRED_TARGETS = [
+  'first_name',
+  'last_name',
+  'document_number',
+  'phone',
+  'email',
+  'birthdate',
+] as const
+
+/** Mirrors BulkImportServices::PeopleImportMode::IMPORT_MODES */
+export const BULK_PEOPLE_IMPORT_MODES = ['create_skip_duplicates', 'create_only'] as const
+
 export const BULK_IMPORT_IMPORT_MODES = [
   'create_skip_duplicates',
   'create_only',

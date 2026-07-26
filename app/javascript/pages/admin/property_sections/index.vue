@@ -27,24 +27,11 @@
         <ListItem
           v-if="row.residential_property_id"
           as="link"
-          :href="admin_residential_property_structure_path(row.residential_property_id as string)"
+          :href="admin_property_setup_wizard_path(row.residential_property_id as string)"
         >
           <span class="flex items-center gap-2">
             <PencilIcon class="w-4 h-4" />
             {{ t('admin.property_sections.index.actions.manage_structure') }}
-          </span>
-        </ListItem>
-        <ListItem
-          as="confirm"
-          :onClick="() => deleteSection(row.id as string)"
-          :confirmTitle="t('admin.property_sections.index.actions.delete')"
-          :confirmDescription="
-            t('admin.property_sections.index.actions.delete_description', { name: row.name })
-          "
-        >
-          <span class="flex items-center gap-2">
-            <TrashIcon class="w-4 h-4" />
-            {{ t('common.actions.delete') }}
           </span>
         </ListItem>
       </template>
@@ -72,12 +59,11 @@ import { useTable } from '@/lib/composables/useTable'
 import { useI18n } from 'vue-i18n'
 import type { ColumnDef } from '@/types/table'
 import { Button } from '@/components/ui/button'
-import { PlusIcon, SearchIcon, PencilIcon, TrashIcon } from 'lucide-vue-next'
+import { SearchIcon, PencilIcon } from 'lucide-vue-next'
 import { Input } from '@/components/ui/input'
 import {
   admin_residential_properties_path,
-  admin_residential_property_structure_path,
-  admin_property_section_path,
+  admin_property_setup_wizard_path,
 } from '@/routes'
 import ListItem from '@/components/custom/list/ListItem.vue'
 import Header from '@/components/admin/layout/Header.vue'
@@ -165,17 +151,6 @@ const columns: ColumnDef<PropertySection, unknown>[] = [
     cell: ({ row }) => h('span', row.original.position ?? '—'),
   },
 ]
-
-const deleteSection = (id: string) => {
-  router.delete(admin_property_section_path(id), {
-    onSuccess: () => {
-      toast.success(t('admin.property_sections.index.actions.delete_success'))
-    },
-    onError: () => {
-      toast.error(t('admin.property_sections.index.actions.delete_error'))
-    },
-  })
-}
 
 const onSearchClear = (e: Event) => {
   const target = e.target as HTMLInputElement

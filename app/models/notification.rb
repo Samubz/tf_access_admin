@@ -44,9 +44,15 @@
 class Notification < ApplicationRecord
   include NotificationChannels
   include NotificationTypes
+  include NotificationStatuses
   include TenantScopedAssociations
 
   acts_as_tenant :organization
+
+  # Preserves delivery attempt history (status/last_error/sent_at/attempts_count)
+  # across manual resends instead of overwriting it — see
+  # openspec/changes/add-fcm-push-notifications/design.md Decision 7.
+  audited only: %i[status last_error sent_at attempts_count]
 
   belongs_to :organization
   belongs_to :residential_property, optional: true
@@ -56,6 +62,7 @@ class Notification < ApplicationRecord
 
   validates :notification_type, presence: true, inclusion: { in: NotificationTypes::ALL }
   validates :channel, presence: true, inclusion: { in: NotificationChannels::ALL }
+  validates :status, presence: true, inclusion: { in: NotificationStatuses::ALL }
 
   validates_same_tenant :residential_property, :unit, :recipient_person, :notifiable
 end

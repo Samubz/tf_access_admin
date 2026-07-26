@@ -1,0 +1,11 @@
+<h1><%= t("onboarding_mailer.invitation.greeting") %></h1>
+
+<p><%= t("onboarding_mailer.invitation.body", organization: @organization.name) %></p>
+
+<p>
+  <a href="<%= @accept_url %>" target="_blank" rel="noopener">
+    <%= t("onboarding_mailer.invitation.cta") %>
+  </a>
+</p>
+
+<p><%= t("onboarding_mailer.invitation.expiration") %></p>
