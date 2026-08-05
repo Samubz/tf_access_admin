@@ -2554,6 +2554,7 @@ es:
       account_deactivated: "Cuenta desactivada"
       token_expired: "Token expirado"
       token_invalid: "Token inválido"
+      password_update_failed: "No se pudo actualizar la contraseña"
     visits:
       unit_not_found: "Unidad no encontrada o no accesible"
       no_active_relationship: "No tienes una relación activa con esta unidad"

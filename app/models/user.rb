@@ -18,6 +18,7 @@
 #  last_active_at         :datetime
 #  metadata               :jsonb            not null
 #  name                   :string
+#  password_changed_at    :datetime
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
@@ -70,6 +71,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
+
+  # Powers JwtDenylist#jwt_revoked? — any JWT issued before this timestamp is
+  # treated as revoked, so a password change invalidates tokens on every
+  # device without having to enumerate or denylist each one individually.
+  after_update :track_password_change, if: :saved_change_to_encrypted_password?
 
   def self.find_for_authentication(conditions)
     conditions = conditions&.dup || {}
@@ -178,5 +184,9 @@ class User < ApplicationRecord
     return if password.match?(PASSWORD_COMPLEXITY)
 
     errors.add(:password, "admin.users.validations.password_complexity")
+  end
+
+  def track_password_change
+    update_column(:password_changed_at, Time.current)
   end
 end

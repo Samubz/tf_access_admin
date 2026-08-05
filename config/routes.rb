@@ -34,6 +34,7 @@ Rails.application.routes.draw do
         namespace :auth do
           post :login, to: "sessions#create"
           delete :logout, to: "sessions#destroy"
+          patch :password, to: "passwords#update"
         end
 
         get :me, to: "me#show"

@@ -2563,6 +2563,7 @@ en:
       account_deactivated: "Account deactivated"
       token_expired: "Token expired"
       token_invalid: "Token invalid"
+      password_update_failed: "Unable to update password"
     visits:
       unit_not_found: "Unit not found or not accessible"
       no_active_relationship: "You do not have an active relationship with this unit"
