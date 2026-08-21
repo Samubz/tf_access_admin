@@ -38,6 +38,13 @@ Rails.application.routes.draw do
         end
 
         get :me, to: "me#show"
+        get "organization/:id", to: "organizations#show", as: :organization
+        get "organization/:organization_id/residential_property/:id",
+          to: "organizations/residential_properties#show",
+          as: :organization_residential_property
+        get "residential_property/:id/unit/:unit_id/visit",
+          to: "residential_properties/units/visits#index",
+          as: :residential_property_unit_visits
       end
 
       # namespace :public do

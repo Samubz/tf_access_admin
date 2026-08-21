@@ -6,7 +6,8 @@ class Api::V1::Mobile::MeController < Api::V1::Mobile::BaseController
       data: {
         email: current_user.email,
         name: current_user.name,
-        dni: current_user.dni
+        dni: current_user.dni,
+        organizations: Mobile::Me::OrganizationsSummary.call(current_user)
       }
     }, status: :ok
   end
