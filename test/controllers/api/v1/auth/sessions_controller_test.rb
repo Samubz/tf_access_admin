@@ -30,4 +30,12 @@ class Api::V1::Auth::SessionsControllerTest < ActionDispatch::IntegrationTest
     body = response.parsed_body
     assert_equal body.dig("data", "token"), response.headers["Authorization"].delete_prefix("Bearer ")
   end
+
+  test "api login rejects a deactivated account" do
+    @user.update!(deactivated_at: Time.current)
+
+    post api_v1_auth_login_path, params: { email: @user.email, password: "Password1@" }
+
+    assert_response :unauthorized
+  end
 end

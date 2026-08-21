@@ -30,6 +30,23 @@ Rails.application.routes.draw do
         delete :logout, to: "sessions#destroy"
       end
 
+      namespace :mobile do
+        namespace :auth do
+          post :login, to: "sessions#create"
+          delete :logout, to: "sessions#destroy"
+          patch :password, to: "passwords#update"
+        end
+
+        get :me, to: "me#show"
+        get "organization/:id", to: "organizations#show", as: :organization
+        get "organization/:organization_id/residential_property/:id",
+          to: "organizations/residential_properties#show",
+          as: :organization_residential_property
+        get "residential_property/:id/unit/:unit_id/visit",
+          to: "residential_properties/units/visits#index",
+          as: :residential_property_unit_visits
+      end
+
       # namespace :public do
       #   resources :organizations, only: [:index]
       # end
@@ -47,6 +64,10 @@ Rails.application.routes.draw do
       end
     end
   end
+  # Unmatched API paths must render JSON 404 without going through the HTML
+  # errors catch-all below, whose ApplicationController ancestry enforces
+  # CSRF protection and turns non-GET requests into a 422 instead of a 404.
+  match "/api/*path", to: "api/errors#not_found", via: :all
 
   get "admin/home/index"
   # Onboarding invitation acceptance by single-use token (holder-facing).

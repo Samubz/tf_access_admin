@@ -3,6 +3,10 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+
+  # config just for dokploy configuracion, remove in the future
+  config.action_dispatch.tld_length = 2 if ENV["DOKPLOY_HOST"] == "true"
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 

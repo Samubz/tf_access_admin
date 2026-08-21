@@ -16,6 +16,7 @@
 #  last_active_at         :datetime
 #  metadata               :jsonb            not null
 #  name                   :string
+#  password_changed_at    :datetime
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string

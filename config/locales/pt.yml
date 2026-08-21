@@ -2504,8 +2504,11 @@ pt:
       token_dispatch_failed: "Erro ao enviar o token"
       invalid_credentials: "Credenciais inválidas"
       unconfirmed_account: "Conta não confirmada"
+      account_deactivated: "Conta desativada"
       token_expired: "Token expirado"
       token_invalid: "Token inválido"
+      password_update_failed: "Não foi possível atualizar a senha"
+      invalid_day: "O parâmetro day não é uma data válida (formato esperado: YYYY-MM-DD)"
     visits:
       unit_not_found: "Unidade não encontrada ou inacessível"
       no_active_relationship: "Você não tem uma relação ativa com esta unidade"

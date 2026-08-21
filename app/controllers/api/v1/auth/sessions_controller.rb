@@ -30,6 +30,10 @@ class Api::V1::Auth::SessionsController < Api::V1::BaseController
       return render json: { error: I18n.t("api.errors.unconfirmed_account") }, status: :unauthorized
     end
 
+    if user.deactivated_at.present?
+      return render json: { error: I18n.t("api.errors.account_deactivated") }, status: :unauthorized
+    end
+
     Current.organization = organization
     ActsAsTenant.with_tenant(organization) do
       sign_in(user, store: false)

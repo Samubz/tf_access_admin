@@ -13,7 +13,13 @@
 # issued for the API login flow, so replace the list instead of appending.
 Rails.application.config.after_initialize do
   Warden::JWTAuth.configure do |config|
-    config.dispatch_requests = [ [ "POST", %r{\A/api/v1/auth/login(\.json)?\z} ] ]
-    config.revocation_requests = [ [ "DELETE", %r{\A/api/v1/auth/logout(\.json)?\z} ] ]
+    config.dispatch_requests = [
+      [ "POST", %r{\A/api/v1/auth/login(\.json)?\z} ],
+      [ "POST", %r{\A/api/v1/mobile/auth/login(\.json)?\z} ]
+    ]
+    config.revocation_requests = [
+      [ "DELETE", %r{\A/api/v1/auth/logout(\.json)?\z} ],
+      [ "DELETE", %r{\A/api/v1/mobile/auth/logout(\.json)?\z} ]
+    ]
   end
 end
