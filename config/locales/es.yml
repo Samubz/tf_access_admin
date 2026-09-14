@@ -2553,6 +2553,7 @@ es:
       unconfirmed_account: "Cuenta no confirmada"
       token_expired: "Token expirado"
       token_invalid: "Token inválido"
+      invalid_day: "El parámetro day debe tener formato YYYY-MM-DD"
     visits:
       unit_not_found: "Unidad no encontrada o no accesible"
       no_active_relationship: "No tienes una relación activa con esta unidad"

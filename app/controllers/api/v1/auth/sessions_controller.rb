@@ -63,12 +63,7 @@ class Api::V1::Auth::SessionsController < Api::V1::BaseController
   # Any confirmed member may log in: organizational roles win, otherwise the user
   # is a resident (owner/occupant) of the organization.
   def api_role_for(user, organization)
-    return AvailableRoles::SUPER_ADMIN if user.super_admin?
-
-    tenant_role = ActsAsTenant.with_tenant(organization) { user.tenant_role }
-    return tenant_role if tenant_role.in?(AvailableRoles::TENANT_ROLE_PRIORITY)
-
-    "resident"
+    Api::RoleResolver.call(user, organization)
   end
 
   def ensure_destroy_tenant_access!

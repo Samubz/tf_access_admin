@@ -82,6 +82,16 @@ class Unit < ApplicationRecord
   has_many :authorized_residents
   has_many :visits
 
+  # Units where +person+ holds an active, currently-valid occupancy or ownership
+  # in +organization+. Relationship validity is delegated to
+  # Authorization::ActiveRelationships (single source of truth).
+  scope :with_active_relationship_for, ->(person, organization) {
+    occupancies = Authorization::ActiveRelationships.active_occupancies_for(person, organization)
+    ownerships  = Authorization::ActiveRelationships.active_ownerships_for(person, organization)
+
+    where(id: occupancies.select(:unit_id)).or(where(id: ownerships.select(:unit_id)))
+  }
+
   # §1.1 minimal contract: presence of the identity/placement/type/status fields.
   validates :identifier, presence: true
   validates_alphanumeric_hyphen_code :identifier, allow_whitespace: true

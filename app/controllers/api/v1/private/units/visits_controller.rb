@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+# GET  /api/v1/private/units/:unit_id/visits?day=YYYY-MM-DD
 # POST /api/v1/private/units/:unit_id/visits
 #
-# Private authenticated endpoint for resident visit registration.
+# Private authenticated endpoints for resident visit listing and registration.
+# +index+ returns the unit's visits whose scheduled_at falls on +day+ in the
+# property's time zone; +day+ missing or invalid → 422.
 # Distinct from the administrative Inertia visit flow.
 #
 # This endpoint creates visits exclusively in `authorized` status.
@@ -22,6 +25,18 @@
 class Api::V1::Private::Units::VisitsController < Api::V1::Private::BaseController
   before_action :load_unit
   before_action :authorize_resident!
+
+  def index
+    day = parse_day
+    return render json: { error: I18n.t("api.errors.invalid_day") }, status: :unprocessable_entity if day.nil?
+
+    visits = @unit.visits
+                  .where(scheduled_at: day_range(day))
+                  .includes(:visitor_person)
+                  .order(:scheduled_at)
+
+    render_collection(visits, serializer: Api::Private::VisitSummarySerializer)
+  end
 
   def create
     visit = Residents::CreateAuthorizedVisit.call(
@@ -59,6 +74,22 @@ class Api::V1::Private::Units::VisitsController < Api::V1::Private::BaseControll
 
     render json: { error: I18n.t("api.visits.#{@visit_context.denial_reason}") },
            status: :forbidden
+  end
+
+  DAY_FORMAT = /\A\d{4}-\d{2}-\d{2}\z/
+
+  def parse_day
+    raw = params[:day].to_s
+    return nil unless raw.match?(DAY_FORMAT)
+
+    Date.strptime(raw, "%Y-%m-%d")
+  rescue Date::Error
+    nil
+  end
+
+  def day_range(day)
+    zone = ActiveSupport::TimeZone[@unit.residential_property.timezone.to_s] || Time.zone
+    zone.local(day.year, day.month, day.day).all_day
   end
 
   def visit_params

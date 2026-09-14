@@ -9,12 +9,12 @@
 
 ## 2. Endpoints privados y serializers (D2)
 
-- [ ] 2.1 Inspeccionar `Units::VisitsController` y `Private::BaseController`; crear `Api::V1::Private::ProfilesController` (`show`, `update`) en rutas `get/patch "me"`. Adjunto `has_one_attached :avatar` en `User`. Serializer `Api::Private::ProfileSerializer`.
-- [ ] 2.2 `Api::V1::Private::UnitsController#index` + `Api::Private::UnitSerializer`. Query vía scope `Unit.with_active_relationship_for(person)` (nuevo, reutilizable en 2.3).
-- [ ] 2.3 `Api::V1::Private::OrganizationsController#show` y `Organizations::ResidentialPropertiesController#show` con `Api::Private::ResidentialPropertySerializer`; 404 si `:id != Current.organization.id`.
-- [ ] 2.4 `Units::VisitsController#index` con `day` (parse estricto, 422) y `Api::Private::VisitSummarySerializer`.
-- [ ] 2.5 Rutas en `config/routes.rb` bajo `namespace :private`.
-- [ ] 2.6 Tests de controlador por endpoint: feliz, 401, 403 sin relación, 404 tenant cruzado, 422 day inválido.
+- [x] 2.1 Inspeccionar `Units::VisitsController` y `Private::BaseController`; crear `Api::V1::Private::ProfilesController` (`show`, `update`) en rutas `get/patch "me"`. Adjunto `has_one_attached :avatar` en `User`. Serializer `Api::Private::ProfileSerializer`.
+- [x] 2.2 `Api::V1::Private::UnitsController#index` + `Api::Private::UnitSerializer`. Query vía scope `Unit.with_active_relationship_for(person)` (nuevo, reutilizable en 2.3).
+- [x] 2.3 `Api::V1::Private::OrganizationsController#show` y `Organizations::ResidentialPropertiesController#show` con `Api::Private::ResidentialPropertySerializer`; 404 si `:id != Current.organization.id`.
+- [x] 2.4 `Units::VisitsController#index` con `day` (parse estricto, 422) y `Api::Private::VisitSummarySerializer`.
+- [x] 2.5 Rutas en `config/routes.rb` bajo `namespace :private`.
+- [x] 2.6 Tests de controlador por endpoint: feliz, 401, 403 sin relación, 404 tenant cruzado, 422 day inválido.
 
 ## 3. Correo del visitante e identidad (D3)
 

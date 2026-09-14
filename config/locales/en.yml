@@ -2562,6 +2562,7 @@ en:
       unconfirmed_account: "Account not confirmed"
       token_expired: "Token expired"
       token_invalid: "Token invalid"
+      invalid_day: "The day parameter must be a valid YYYY-MM-DD date"
     visits:
       unit_not_found: "Unit not found or not accessible"
       no_active_relationship: "You do not have an active relationship with this unit"
