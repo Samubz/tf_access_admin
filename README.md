@@ -247,6 +247,19 @@ MAILHOG_SMTP_PORT=1025
 
 Ver `.env.example` para los valores de referencia.
 
+### Expo Push
+
+Los tokens con formato `ExponentPushToken[...]` (app móvil con Expo) se envían al Expo Push Service en vez de FCM. La URL base se configura con `EXPO_PUSH_BASE_URL` (por defecto `https://exp.host`; en desarrollo puede apuntar a un simulador local, ej. `http://localhost:8091`).
+
+Si la cuenta de Expo tiene "Enhanced Push Security" activado, agrega el access token a las credenciales de Rails del entorno (`bin/rails credentials:edit --environment <env>`):
+
+```yaml
+expo:
+  access_token: <token generado en expo.dev>
+```
+
+Si no está definido, las peticiones se envían sin `Authorization`.
+
 ## Push notifications locales (PushHog)
 
 En desarrollo, las push notifications (FCM) se envían a un simulador local compatible con la API de Firebase (ej. PushHog) en vez de a Firebase real.
@@ -261,3 +274,16 @@ FCM_PROJECT_ID=development
 `FCM_PROJECT_ID` no es validado por el simulador local; solo es relevante con credenciales reales de Firebase (autenticación OAuth2 real queda fuera de alcance por ahora).
 
 Ver `.env.example` para los valores de referencia.
+
+### Expo Push
+
+Los tokens con formato `ExponentPushToken[...]` (app móvil con Expo) se envían al Expo Push Service en vez de FCM. La URL base se configura con `EXPO_PUSH_BASE_URL` (por defecto `https://exp.host`; en desarrollo puede apuntar a un simulador local, ej. `http://localhost:8091`).
+
+Si la cuenta de Expo tiene "Enhanced Push Security" activado, agrega el access token a las credenciales de Rails del entorno (`bin/rails credentials:edit --environment <env>`):
+
+```yaml
+expo:
+  access_token: <token generado en expo.dev>
+```
+
+Si no está definido, las peticiones se envían sin `Authorization`.

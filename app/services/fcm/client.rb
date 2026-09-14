@@ -17,7 +17,7 @@ module Fcm
   # that bookkeeping and leave the Notification/Visit#notification_status
   # rollup in a stale state (see design.md Decision 4/5/7).
   class Client
-    Result = Struct.new(:success?, :error_message, keyword_init: true)
+    Result = Notifications::PushResult
 
     def initialize(
       base_url: ENV.fetch("FCM_BASE_URL", "https://fcm.googleapis.com"),
@@ -40,13 +40,27 @@ module Fcm
       if response.is_a?(Net::HTTPSuccess)
         Result.new(success?: true, error_message: nil)
       else
-        Result.new(success?: false, error_message: "FCM responded with #{response.code}: #{response.body}")
+        Result.new(
+          success?: false,
+          error_message: "FCM responded with #{response.code}: #{response.body}",
+          error_code: error_code_from(response.body)
+        )
       end
     rescue StandardError => e
       Result.new(success?: false, error_message: e.message)
     end
 
     private
+
+    # FCM's UNREGISTERED error means the token is stale; map it onto the
+    # transport-neutral code so the job invalidates the device token.
+    def error_code_from(body)
+      details = JSON.parse(body).dig("error", "details") || []
+      fcm_error = details.find { |detail| detail.is_a?(Hash) && detail["errorCode"].present? }&.dig("errorCode")
+      fcm_error == "UNREGISTERED" ? Result::DEVICE_NOT_REGISTERED : nil
+    rescue JSON::ParserError
+      nil
+    end
 
     def build_request(uri, token:, title:, body:, data:)
       request = Net::HTTP::Post.new(uri)

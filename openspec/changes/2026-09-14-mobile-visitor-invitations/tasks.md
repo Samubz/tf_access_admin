@@ -49,11 +49,11 @@
 
 ## 7. Expo Push (D7)
 
-- [ ] 7.1 `ExpoPush::Client` (Net::HTTP, `EXPO_PUSH_BASE_URL`, credenciales `expo.access_token`), `Result` con `error_code`.
-- [ ] 7.2 `Notifications::PushTransport.for(device_token)`.
-- [ ] 7.3 `DeliverPushNotificationJob`: usar selector; `DeviceNotRegistered` → failed + destroy token.
-- [ ] 7.4 `.env.example`: `EXPO_PUSH_BASE_URL=http://localhost:8091`. Documentar credencial `expo.access_token` en README de despliegue.
-- [ ] 7.5 Tests con WebMock: ok, DeviceNotRegistered, red caída, selección de transporte.
+- [x] 7.1 `ExpoPush::Client` (Net::HTTP, `EXPO_PUSH_BASE_URL`, credenciales `expo.access_token`), `Result` con `error_code`.
+- [x] 7.2 `Notifications::PushTransport.for(device_token)`.
+- [x] 7.3 `DeliverPushNotificationJob`: usar selector; `DeviceNotRegistered` → failed + destroy token.
+- [x] 7.4 `.env.example`: `EXPO_PUSH_BASE_URL=http://localhost:8091`. Documentar credencial `expo.access_token` en README de despliegue.
+- [x] 7.5 Tests con WebMock: ok, DeviceNotRegistered, red caída, selección de transporte.
 
 ## 8. Cierre
 
