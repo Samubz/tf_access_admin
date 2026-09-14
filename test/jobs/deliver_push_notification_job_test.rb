@@ -210,6 +210,67 @@ class DeliverPushNotificationJobTest < ActiveSupport::TestCase
     assert_equal NotificationStatuses::SENT, other_notification.reload.status
   end
 
+  test "an Expo token is delivered through exp.host and not through FCM" do
+    DeviceToken.create!(user: @resident_user, token: "ExponentPushToken[abc]", platform: "ios")
+    stub_request(:post, "https://exp.host/--/api/v2/push/send")
+      .to_return(status: 200, body: { data: { status: "ok" } }.to_json)
+    stub_request(:post, %r{fcm\.googleapis\.com})
+
+    DeliverPushNotificationJob.perform_now(@notification.id)
+
+    assert_requested(:post, "https://exp.host/--/api/v2/push/send") do |request|
+      JSON.parse(request.body)["to"] == "ExponentPushToken[abc]"
+    end
+    assert_not_requested(:post, %r{fcm\.googleapis\.com})
+    @notification.reload
+    assert_equal NotificationStatuses::SENT, @notification.status
+    assert_equal 1, @notification.attempts_count
+    assert_equal Visit::NotificationStatuses::DELIVERED, @visit.reload.notification_status
+  end
+
+  test "DeviceNotRegistered marks the notification failed and destroys the device token" do
+    device_token = DeviceToken.create!(user: @resident_user, token: "ExponentPushToken[gone]", platform: "ios")
+    stub_request(:post, "https://exp.host/--/api/v2/push/send").to_return(
+      status: 200,
+      body: { data: { status: "error", message: "not registered", details: { error: "DeviceNotRegistered" } } }.to_json
+    )
+
+    DeliverPushNotificationJob.perform_now(@notification.id)
+
+    @notification.reload
+    assert_equal NotificationStatuses::FAILED, @notification.status
+    assert_match(/not registered/, @notification.last_error)
+    assert_equal 1, @notification.attempts_count
+    assert_nil DeviceToken.find_by(id: device_token.id)
+    assert_nil @resident_user.reload.device_token
+    assert_equal Visit::NotificationStatuses::FAILED, @visit.reload.notification_status
+  end
+
+  test "an unreachable Expo service marks the notification failed without raising" do
+    DeviceToken.create!(user: @resident_user, token: "ExponentPushToken[abc]", platform: "ios")
+    stub_request(:post, "https://exp.host/--/api/v2/push/send").to_raise(Errno::ECONNREFUSED)
+
+    assert_nothing_raised { DeliverPushNotificationJob.perform_now(@notification.id) }
+
+    @notification.reload
+    assert_equal NotificationStatuses::FAILED, @notification.status
+    assert @notification.last_error.present?
+    assert_not_nil DeviceToken.find_by(user: @resident_user)
+    assert_equal Visit::NotificationStatuses::FAILED, @visit.reload.notification_status
+  end
+
+  test "an Expo HTTP 500 marks the notification failed" do
+    DeviceToken.create!(user: @resident_user, token: "ExponentPushToken[abc]", platform: "ios")
+    stub_request(:post, "https://exp.host/--/api/v2/push/send").to_return(status: 500, body: "boom")
+
+    DeliverPushNotificationJob.perform_now(@notification.id)
+
+    @notification.reload
+    assert_equal NotificationStatuses::FAILED, @notification.status
+    assert_match(/500/, @notification.last_error)
+    assert_equal Visit::NotificationStatuses::FAILED, @visit.reload.notification_status
+  end
+
   private
 
   def other_scoped

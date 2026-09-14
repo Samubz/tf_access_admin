@@ -38,7 +38,7 @@ class DeliverPushNotificationJob < ApplicationJob
     end
 
     payload = Notifications::VisitRequestPushPayload.build(notification)
-    result = Fcm::Client.new.send_notification(
+    result = Notifications::PushTransport.for(device_token.token).send_notification(
       token: device_token.token,
       title: payload[:title],
       body: payload[:body],
@@ -55,6 +55,10 @@ class DeliverPushNotificationJob < ApplicationJob
       notification.last_error = result.error_message
     end
     notification.save!
+
+    # The transport told us the device is gone: drop the token so no further
+    # deliveries target it (spec: "Unregistered device tokens are invalidated").
+    device_token.destroy! if result.device_not_registered?
   end
 
   # Because this project only uses open-source Sidekiq (no Batch API), each

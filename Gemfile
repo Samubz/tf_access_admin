@@ -111,3 +111,5 @@ gem "aasm"
 gem "audited"
 gem "roo"
 gem "activerecord-import"
+
+gem "webmock", "~> 3.26", group: :test
