@@ -2512,6 +2512,7 @@ pt:
       authorization_denied: "Você não está autorizado a registrar visitas autorizadas nesta unidade"
       invalid_visitor: "Os dados do visitante são inválidos"
       invalid_scheduled_at: "A data e hora da visita são inválidas"
+      identity_conflict: "Os dados do visitante conflitam com uma pessoa já registrada (documento e e-mail não coincidem)"
   activerecord:
     errors:
       models:

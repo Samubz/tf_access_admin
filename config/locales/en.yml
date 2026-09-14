@@ -2568,6 +2568,7 @@ en:
       authorization_denied: "You are not authorized to create authorized visits for this unit"
       invalid_visitor: "Visitor data is invalid"
       invalid_scheduled_at: "Visit date/time is invalid"
+      identity_conflict: "Visitor data conflicts with an existing person (document and email do not match)"
   activerecord:
     errors:
       models:
