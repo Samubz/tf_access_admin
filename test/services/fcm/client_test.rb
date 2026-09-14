@@ -54,6 +54,18 @@ module Fcm
       end
     end
 
+    test "an UNREGISTERED error is mapped to the DeviceNotRegistered error code" do
+      body = { error: { code: 404, status: "NOT_FOUND", details: [ { "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError", errorCode: "UNREGISTERED" } ] } }.to_json
+      with_fake_server(status_line: "404 Not Found", body: body) do |base_url, _captured|
+        client = Client.new(base_url: base_url, project_id: "test-project")
+
+        result = client.send_notification(token: "t", title: "T", body: "B")
+
+        refute result.success?
+        assert_equal "DeviceNotRegistered", result.error_code
+      end
+    end
+
     test "a connection error returns a failed result without raising" do
       unreachable_server = TCPServer.new("127.0.0.1", 0)
       port = unreachable_server.addr[1]

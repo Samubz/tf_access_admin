@@ -65,13 +65,15 @@ class OnboardingRequest < ApplicationRecord
   RELATIONSHIP_OWNERSHIP       = "ownership"
   RELATIONSHIP_OCCUPANCY       = "occupancy"
   RELATIONSHIP_STAFF           = "staff"
+  RELATIONSHIP_VISITOR         = "visitor"
 
   RELATIONSHIPS = [
     RELATIONSHIP_MEMBERSHIP,
     RELATIONSHIP_PROPERTY_ACCESS,
     RELATIONSHIP_OWNERSHIP,
     RELATIONSHIP_OCCUPANCY,
-    RELATIONSHIP_STAFF
+    RELATIONSHIP_STAFF,
+    RELATIONSHIP_VISITOR
   ].freeze
 
   STATUS_PENDING  = "pending"
@@ -100,10 +102,15 @@ class OnboardingRequest < ApplicationRecord
   validates :requested_relationship, presence: true, inclusion: { in: RELATIONSHIPS }
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :expires_at, presence: true
+  validates :unit_id, :residential_property_id, absence: true, if: :visitor?
 
   validates_same_tenant :residential_property, :unit, :person, :requested_by_person
 
   scope :pending, -> { where(status: STATUS_PENDING) }
+
+  def visitor?
+    requested_relationship == RELATIONSHIP_VISITOR
+  end
 
   include AASM
 

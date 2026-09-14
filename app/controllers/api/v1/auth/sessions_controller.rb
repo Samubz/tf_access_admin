@@ -21,11 +21,6 @@ class Api::V1::Auth::SessionsController < Api::V1::BaseController
       return render json: { error: I18n.t("api.errors.invalid_credentials") }, status: :unauthorized
     end
 
-    person = ActsAsTenant.without_tenant { user.person_for(organization) }
-    unless user.super_admin? || person&.has_role?(AvailableRoles::TENANT_ADMIN, organization)
-      return render json: { error: I18n.t("api.errors.forbidden") }, status: :forbidden
-    end
-
     if user.respond_to?(:confirmed?) && !user.confirmed?
       return render json: { error: I18n.t("api.errors.unconfirmed_account") }, status: :unauthorized
     end
@@ -51,7 +46,7 @@ class Api::V1::Auth::SessionsController < Api::V1::BaseController
           id: user.id,
           email: user.email,
           name: user.name,
-          role: ActsAsTenant.with_tenant(organization) { user.tenant_role || user.role }
+          role: api_role_for(user, organization)
         }
       }
     }, status: :ok
@@ -63,6 +58,13 @@ class Api::V1::Auth::SessionsController < Api::V1::BaseController
   end
 
   private
+
+  # Membership in the tenant is already guaranteed by User.find_for_authentication.
+  # Any confirmed member may log in: organizational roles win, otherwise the user
+  # is a resident (owner/occupant) of the organization.
+  def api_role_for(user, organization)
+    Api::RoleResolver.call(user, organization)
+  end
 
   def ensure_destroy_tenant_access!
     return if current_user.super_admin?

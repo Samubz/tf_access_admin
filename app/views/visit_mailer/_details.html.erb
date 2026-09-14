@@ -1,0 +1,7 @@
+<p><%= t("visit_mailer.invitation.intro", host: @host_name, property: @property&.name, organization: @organization.name) %></p>
+
+<ul>
+  <li><strong><%= t("visit_mailer.invitation.property") %>:</strong> <%= @property&.name %></li>
+  <li><strong><%= t("visit_mailer.invitation.unit") %>:</strong> <%= @unit&.identifier %></li>
+  <li><strong><%= t("visit_mailer.invitation.scheduled_at") %>:</strong> <%= @scheduled_at %></li>
+</ul>

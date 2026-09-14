@@ -6,6 +6,15 @@ module People
       new(**kwargs).call
     end
 
+    # Looks up a Person by the blind index of the normalized email, scoped to
+    # the organization (D3). Never crosses organizations.
+    def self.by_email(organization:, email:)
+      digest = Person.email_digest(email)
+      return nil if digest.blank?
+
+      Person.where(organization_id: organization.id).find_by(email_digest: digest)
+    end
+
     def initialize(organization:, document_number: nil, email: nil)
       @organization = organization
       @document_number = document_number

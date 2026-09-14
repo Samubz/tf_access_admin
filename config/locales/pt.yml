@@ -38,6 +38,28 @@ pt:
       body: "%{organization} convidou você. Confirme seu acesso com o link abaixo."
       cta: "Aceitar convite"
       expiration: "Este link é de uso único e expira em 14 dias."
+  visit_mailer:
+    invitation:
+      subject: "Convite para %{property}"
+      greeting: "Olá"
+      intro: "%{host} convidou você para visitar %{property} em nome de %{organization}."
+      property: "Propriedade"
+      unit: "Unidade"
+      scheduled_at: "Data e hora"
+      app_note: "Baixe o app para ver seus convites."
+    invitation_with_account:
+      subject: "Convite para %{property}"
+      create_account: "Crie sua conta para ver seu convite no app"
+      cta: "Criar minha conta"
+      expiration: "Este link é de uso único e expira em 14 dias."
+  notifications:
+    visit_invitation:
+      title: "Novo convite"
+      body: "Você foi convidado para %{property} em %{date}"
+  time:
+    formats:
+      long: "%d/%m/%Y %H:%M"
+      short: "%d/%m/%Y %H:%M"
   frontend:
     name: "Admin Base"
     description: "bem-vindo de volta"
@@ -112,6 +134,7 @@ pt:
       client: "Client"
       content_manager: "Content Manager"
       seller: "Vendedor"
+      visitor: "Visitante"
     currencies:
       CLP: "CLP"
       USD: "USD"
@@ -2506,12 +2529,14 @@ pt:
       unconfirmed_account: "Conta não confirmada"
       token_expired: "Token expirado"
       token_invalid: "Token inválido"
+      invalid_day: "O parâmetro day deve ter o formato YYYY-MM-DD"
     visits:
       unit_not_found: "Unidade não encontrada ou inacessível"
       no_active_relationship: "Você não tem uma relação ativa com esta unidade"
       authorization_denied: "Você não está autorizado a registrar visitas autorizadas nesta unidade"
       invalid_visitor: "Os dados do visitante são inválidos"
       invalid_scheduled_at: "A data e hora da visita são inválidas"
+      identity_conflict: "Os dados do visitante conflitam com uma pessoa já registrada (documento e e-mail não coincidem)"
   activerecord:
     errors:
       models:

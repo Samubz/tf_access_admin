@@ -38,6 +38,28 @@ es:
       body: "%{organization} te ha invitado. Confirma tu acceso con el siguiente enlace."
       cta: "Aceptar invitación"
       expiration: "Este enlace es de un solo uso y caduca en 14 días."
+  visit_mailer:
+    invitation:
+      subject: "Invitación a %{property}"
+      greeting: "Hola"
+      intro: "%{host} te invitó a visitar %{property} en nombre de %{organization}."
+      property: "Propiedad"
+      unit: "Unidad"
+      scheduled_at: "Fecha y hora"
+      app_note: "Descarga la app para ver tus invitaciones."
+    invitation_with_account:
+      subject: "Invitación a %{property}"
+      create_account: "Creá tu cuenta para ver tu invitación en la app"
+      cta: "Crear mi cuenta"
+      expiration: "Este enlace es de un solo uso y caduca en 14 días."
+  notifications:
+    visit_invitation:
+      title: "Nueva invitación"
+      body: "Te invitaron a %{property} el %{date}"
+  time:
+    formats:
+      long: "%d/%m/%Y %H:%M"
+      short: "%d/%m/%Y %H:%M"
   frontend:
     name: "Admin Base"
     description: "bienvenido nuevamente"
@@ -117,6 +139,7 @@ es:
       client: "Cliente"
       content_manager: "Gestor de Contenido"
       seller: "Vendedor"
+      visitor: "Visitante"
     no_role: "Sin rol"
     currencies:
       CLP: "CLP"
@@ -2553,12 +2576,14 @@ es:
       unconfirmed_account: "Cuenta no confirmada"
       token_expired: "Token expirado"
       token_invalid: "Token inválido"
+      invalid_day: "El parámetro day debe tener formato YYYY-MM-DD"
     visits:
       unit_not_found: "Unidad no encontrada o no accesible"
       no_active_relationship: "No tienes una relación activa con esta unidad"
       authorization_denied: "No estás autorizado para registrar visitas autorizadas en esta unidad"
       invalid_visitor: "Los datos del visitante son inválidos"
       invalid_scheduled_at: "La fecha y hora de la visita no son válidas"
+      identity_conflict: "Los datos del visitante no coinciden con una persona ya registrada (documento y correo distintos)"
   activerecord:
     errors:
       models:

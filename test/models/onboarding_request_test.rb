@@ -128,6 +128,30 @@ class OnboardingRequestTest < ActiveSupport::TestCase
     end
   end
 
+  test "visitor relationship is valid without unit or property" do
+    request = build_request(requested_relationship: OnboardingRequest::RELATIONSHIP_VISITOR)
+
+    assert request.valid?, request.errors.full_messages.join(", ")
+  end
+
+  test "visitor relationship rejects unit scope" do
+    property = ResidentialProperty.create!(
+      organization: @organization, name: "Visitor Prop", property_type: PropertyTypes::BUILDING,
+      status: "active", country: "Chile", timezone: "America/Santiago"
+    )
+    unit = Unit.create!(organization: @organization, residential_property: property, identifier: "V-101",
+                        unit_type: UnitTypes::APARTMENT, status: UnitStatuses::AVAILABLE)
+
+    request = build_request(requested_relationship: OnboardingRequest::RELATIONSHIP_VISITOR, unit: unit)
+    refute request.valid?
+    assert request.errors[:unit_id].any?
+
+    request = build_request(requested_relationship: OnboardingRequest::RELATIONSHIP_VISITOR,
+                            residential_property: property)
+    refute request.valid?
+    assert request.errors[:residential_property_id].any?
+  end
+
   private
 
   def build_request(**overrides)

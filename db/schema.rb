@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_17_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_14_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -726,6 +726,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_17_000001) do
     t.string "document_number_digest"
     t.string "document_type"
     t.text "email_ciphertext"
+    t.string "email_digest"
     t.string "first_name"
     t.string "last_name"
     t.jsonb "metadata", default: {}, null: false
@@ -739,6 +740,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_17_000001) do
     t.index ["metadata"], name: "index_people_on_metadata", using: :gin
     t.index ["organization_id", "display_name"], name: "index_people_on_organization_id_and_display_name"
     t.index ["organization_id", "document_type", "document_number_digest"], name: "idx_people_unique_document_per_org_when_present", unique: true, where: "((document_number_digest IS NOT NULL) AND (deleted_at IS NULL))"
+    t.index ["organization_id", "email_digest"], name: "idx_people_unique_email_per_org_when_present", unique: true, where: "((email_digest IS NOT NULL) AND (deleted_at IS NULL))"
     t.index ["organization_id", "status"], name: "index_people_on_organization_id_and_status"
     t.index ["organization_id", "user_id"], name: "idx_people_unique_user_per_org_when_present", unique: true, where: "((user_id IS NOT NULL) AND (deleted_at IS NULL))"
     t.index ["organization_id", "user_id"], name: "index_people_on_organization_id_and_user_id"

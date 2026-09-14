@@ -49,6 +49,14 @@ class VisitPolicy < ApplicationPolicy
       unit_context_visit_access?
   end
 
+  # Own invitation (D5): the visit's visitor_person is the current user.
+  # Independent from show?, which stays administrative/unit-contextual.
+  def show_own?
+    return false unless same_organization?
+
+    allowed?(:view_own_visits) && record.visitor_person&.user_id == user.id
+  end
+
   # Contextual detail for owners/residents on their active units.
   def contextual_detail?
     return false unless same_organization?
@@ -191,6 +199,22 @@ class VisitPolicy < ApplicationPolicy
       return scope.none if clauses.empty?
 
       clauses.reduce { |relation, clause| relation.or(clause) }
+    end
+  end
+
+  # D5: visits in the organization where the user is the visitor_person.
+  class OwnScope < ApplicationPolicy::Scope
+    include PolicyScopeAuthorization
+
+    def resolve
+      return scope.none unless user.present?
+
+      resolver = authorization_resolver
+      return scope.none unless resolver&.allowed?(:view_own_visits)
+
+      organization_scoped
+        .joins(:visitor_person)
+        .where(people: { user_id: user.id })
     end
   end
 

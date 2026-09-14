@@ -48,6 +48,10 @@ module Residents
           actor:            @actor,
           requested_status: VisitStatuses::AUTHORIZED
         )
+      end.tap do |visit|
+        # Outside the transaction (D4): the visitor notification never rolls
+        # back nor fails the creation; errors land in visit.metadata.
+        Visits::NotifyVisitor.call(visit: visit, actor: @actor)
       end
     end
   end

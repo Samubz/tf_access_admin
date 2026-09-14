@@ -165,6 +165,29 @@ module Accounts
       assert_equal OrganizationMembership::STATUS_ACTIVE, person.organization_membership.status
     end
 
+    test "accepting a visitor invitation creates a confirmed account with an active visitor membership" do
+      result = InvitePerson.call(
+        organization: @organization,
+        email: "visitor-invite@example.test",
+        first_name: "Visi",
+        last_name: "Tor",
+        document_number: "71.717.171-7",
+        requested_relationship: OnboardingRequest::RELATIONSHIP_VISITOR
+      )
+
+      AcceptInvitation.call(token: result.token, organization: @organization, password: "Password1@")
+
+      person = result.person.reload
+      user = person.user
+      assert user.present?
+      assert user.confirmed?
+      assert_equal OrganizationMembership::STATUS_ACTIVE, person.organization_membership.status
+      assert person.has_role?(AvailableRoles::VISITOR, @organization)
+      refute person.has_role?(AvailableRoles::CLIENT)
+      assert user.member_of_tenant?(@organization)
+      assert_equal AvailableRoles::VISITOR, ActsAsTenant.with_tenant(@organization) { user.tenant_role }
+    end
+
     private
 
     def create_person!(display_name:, document_number: nil)

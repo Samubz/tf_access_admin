@@ -11,6 +11,8 @@ require "test_helper"
 class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::IntegrationTest
   include OperationalPolicyTestHelper
   include Devise::Test::IntegrationHelpers
+  include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   setup do
     @organization    = organizations(:one)
@@ -95,7 +97,7 @@ class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::Integratio
     @visitor_payload = {
       visit: {
         scheduled_at: 2.hours.from_now.iso8601,
-        visitor: { name: "Test Visitor", document: "DOC-#{SecureRandom.hex(4)}", phone: "+56912345678" }
+        visitor: { name: "Test Visitor", email: "test-visitor@example.test", document: "DOC-#{SecureRandom.hex(4)}", phone: "+56912345678" }
       }
     }
   end
@@ -128,6 +130,20 @@ class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::Integratio
 
   test "user without unit relationship is denied (6.3)" do
     post_visit(user: @stranger, unit: @unit)
+
+    assert_response :forbidden
+  end
+
+  # ─── D5 visitor role cannot create visits ─────────────────────────────────────
+
+  test "visitor member is denied (D5)" do
+    visitor = create_user_for_organization(
+      organization: @organization,
+      email: "resident-api-visitor@example.test",
+      role: AvailableRoles::VISITOR
+    )
+
+    post_visit(user: visitor, unit: @unit)
 
     assert_response :forbidden
   end
@@ -324,16 +340,129 @@ class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::Integratio
     assert_equal person_count,  Person.where(organization_id: @organization.id).count, "Person was not rolled back"
   end
 
+  # ─── 3.x Visitor email as identity (D3) ──────────────────────────────────────
+
+  test "existing visitor Person is reused by email case-insensitively (3.5)" do
+    existing = build_visitor_person(email: "ana@example.com", name: "Ana")
+    existing.save!
+
+    assert_no_difference "Person.count" do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Ana", email: "Ana@Example.com" })
+    end
+    assert_response :created
+    assert_equal existing.id, Visit.last.visitor_person_id
+  end
+
+  test "new visitor Person is created with name, email, phone and document (3.5)" do
+    doc = "DOC-FULL-#{SecureRandom.hex(4)}"
+    assert_difference "Person.count", 1 do
+      post_visit(user: @resident, unit: @unit,
+                 visitor: { name: "Full Visitor", email: "Full@Example.com", phone: "+56922222222", document: doc })
+    end
+    assert_response :created
+
+    person = Visit.last.visitor_person
+    assert_equal @organization.id, person.organization_id
+    assert_equal "Full Visitor", person.display_name
+    assert_equal "full@example.com", person.contact_email
+    assert_equal "+56922222222", person.contact_phone
+    assert_equal Person.document_digest(doc), person.document_number_digest
+  end
+
+  test "same email in another organization creates a separate Person (3.5)" do
+    ActsAsTenant.with_tenant(@other_org) do
+      build_visitor_person(email: "shared@example.com", name: "Other Org", organization: @other_org).save!
+    end
+
+    assert_difference "Person.where(organization_id: @organization.id).count", 1 do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Shared", email: "shared@example.com" })
+    end
+    assert_response :created
+  end
+
+  test "conflicting document and email returns 422 and persists nothing (3.5)" do
+    doc = "DOC-CONFLICT-#{SecureRandom.hex(4)}"
+    build_visitor_person(email: "x@example.com", name: "X", document: doc).save!
+
+    assert_no_difference [ "Person.count", "Visit.count", "VisitStatusHistory.count" ] do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Y", email: "y@example.com", document: doc })
+    end
+    assert_response :unprocessable_entity
+    assert_equal I18n.t("api.visits.identity_conflict"), JSON.parse(response.body)["error"]
+  end
+
+  test "missing visitor email returns 422 and persists nothing (3.5)" do
+    assert_no_difference [ "Person.count", "Visit.count" ] do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "No Email", document: "DOC-NOEMAIL" })
+    end
+    assert_response :unprocessable_entity
+    assert_equal I18n.t("api.visits.invalid_visitor"), JSON.parse(response.body)["error"]
+  end
+
+  test "malformed visitor email returns 422 and persists nothing (3.5)" do
+    assert_no_difference [ "Person.count", "Visit.count" ] do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Bad Email", email: "not-an-email" })
+    end
+    assert_response :unprocessable_entity
+    assert_equal I18n.t("api.visits.invalid_visitor"), JSON.parse(response.body)["error"]
+  end
+
+  test "missing visitor name returns 422 (3.5)" do
+    assert_no_difference "Person.count" do
+      post_visit(user: @resident, unit: @unit, visitor: { email: "noname@example.com" })
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "visitor without document or phone is accepted (3.5)" do
+    assert_difference "Person.count", 1 do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Minimal", email: "minimal@example.com" })
+    end
+    assert_response :created
+  end
+
+  # D4 — visitor without account: onboarding request + invitation email, outside the transaction.
+  test "creating a visit for a new visitor email issues a visitor onboarding request and enqueues the email" do
+    email = "brand-new-visitor@example.test"
+    assert_nil User.find_by(email: email)
+
+    assert_enqueued_emails 1 do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Brand New", email: email })
+    end
+
+    assert_response :created
+    visit = Visit.find(JSON.parse(response.body).dig("data", "id"))
+    assert_equal VisitStatuses::AUTHORIZED, visit.status
+    request = OnboardingRequest.find_by!(person: visit.visitor_person)
+    assert_equal OnboardingRequest::RELATIONSHIP_VISITOR, request.requested_relationship
+    assert_equal OnboardingRequest::STATUS_PENDING, request.status
+    mail_job = enqueued_jobs.find { |j| j["job_class"] == "ActionMailer::MailDeliveryJob" }
+    assert_equal %w[VisitMailer invitation_with_account], mail_job["arguments"].first(2)
+  end
+
   private
 
-  def post_visit(user:, unit:, visitor_doc: nil)
+  def build_visitor_person(name:, email: nil, document: nil, organization: @organization)
+    person = Person.new(
+      organization: organization,
+      display_name: name,
+      person_type: PersonTypes::NATURAL,
+      status: PersonStatuses::ACTIVE
+    )
+    person.contact_email = email if email
+    person.document_number = document if document
+    person
+  end
+
+  def post_visit(user:, unit:, visitor_doc: nil, visitor: nil)
     doc = visitor_doc || "DOC-#{SecureRandom.hex(4)}"
-    payload = {
-      visit: {
-        scheduled_at: 2.hours.from_now.iso8601,
-        visitor: { name: "Test Visitor #{doc}", document: doc, phone: "+56912345678" }
-      }
+    visitor ||= {
+      name: "Test Visitor #{doc}",
+      email: "visitor-#{doc.downcase}@example.test",
+      document: doc,
+      phone: "+56912345678"
     }
+    payload = { visit: { scheduled_at: 2.hours.from_now.iso8601, visitor: visitor } }
 
     host! "#{@organization.subdomain}.example.com"
     sign_in user

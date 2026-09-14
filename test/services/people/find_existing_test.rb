@@ -125,6 +125,21 @@ module People
       assert_equal user_person, result
     end
 
+    test "by_email finds person by email digest case-insensitively within organization" do
+      person = Person.new(
+        organization: @organization,
+        display_name: "Digest Email",
+        person_type: PersonTypes::NATURAL,
+        status: PersonStatuses::ACTIVE
+      )
+      person.contact_email = "digest@example.test"
+      person.save!
+
+      assert_equal person, FindExisting.by_email(organization: @organization, email: " DIGEST@Example.test ")
+      assert_nil FindExisting.by_email(organization: @other_organization, email: "digest@example.test")
+      assert_nil FindExisting.by_email(organization: @organization, email: "")
+    end
+
     test "returns nil when no match exists" do
       result = FindExisting.call(
         organization: @organization,

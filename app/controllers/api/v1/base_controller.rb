@@ -29,18 +29,20 @@ class Api::V1::BaseController < ActionController::API
     }
   end
 
-  def render_collection(collection, serializer:)
+  def render_collection(collection, serializer:, **options)
     payload = ActiveModelSerializers::SerializableResource.new(
       collection,
-      each_serializer: serializer
+      each_serializer: serializer,
+      **options
     ).as_json
     render json: { data: payload }, status: :ok
   end
 
-  def render_resource(resource, serializer:)
+  def render_resource(resource, serializer:, **options)
     payload = ActiveModelSerializers::SerializableResource.new(
       resource,
-      serializer: serializer
+      serializer: serializer,
+      **options
     ).as_json
     render json: { data: payload }, status: :ok
   end

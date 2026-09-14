@@ -38,9 +38,24 @@ Rails.application.routes.draw do
         # Resident private API — unit-scoped, authenticated, separate from admin/Inertia flows.
         # POST /api/v1/private/units/:unit_id/visits creates an authorized visit.
         # A pending-visit flow requires a separate contract.
-        resources :units, only: [] do
-          resources :visits, only: [ :create ], module: :units
+        # Authenticated profile of the current user (mobile-private-api "Profile endpoint").
+        get "me", to: "profiles#show"
+        patch "me", to: "profiles#update"
+
+        # GET /units lists units with an active occupancy/ownership for the current person.
+        # GET /units/:unit_id/visits?day=YYYY-MM-DD lists that day's visits (property time zone).
+        resources :units, only: [ :index ] do
+          resources :visits, only: [ :index, :create ], module: :units
         end
+
+        # Organization detail restricted to the current tenant and the resident's relationships.
+        get "organization/:id", to: "organizations#show", as: :organization
+        get "organization/:id/residential_property/:property_id",
+            to: "organizations/residential_properties#show",
+            as: :organization_residential_property
+
+        # GET /invitations lists the current user's own upcoming visits as visitor (D2).
+        get "invitations", to: "invitations#index"
 
         # Singular resource: a User has at most one registered device token.
         resource :device_token, only: %i[create destroy]

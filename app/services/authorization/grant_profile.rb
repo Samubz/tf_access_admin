@@ -26,6 +26,7 @@ module Authorization
       apply_staff_assignments
       apply_ownerships
       apply_occupancies
+      apply_visitor_grants
 
       @loaded = true
       self
@@ -76,6 +77,22 @@ module Authorization
         grant_organization_capabilities(Capabilities::CONTENT_MANAGER)
         @organization_wide = true
       end
+
+      if visitor?
+        grant_organization_capabilities(StaffRoleMapper.organization_role_capabilities_for(StaffRoleMapper::VISITOR))
+      end
+    end
+
+    # D5: anyone who is the visitor_person of a visit in the organization can
+    # read their own invitations, regardless of other relationships.
+    def apply_visitor_grants
+      return unless member_of_organization?
+
+      person = person_in_organization
+      return unless person
+      return unless Visit.where(organization_id: organization.id, visitor_person_id: person.id).exists?
+
+      grant_organization_capabilities([ Capabilities::VIEW_OWN_VISITS ])
     end
 
     def apply_staff_assignments
@@ -149,6 +166,11 @@ module Authorization
     def tenant_admin?
       person = person_in_organization
       person.present? && person.has_role?(AvailableRoles::TENANT_ADMIN, organization)
+    end
+
+    def visitor?
+      person = person_in_organization
+      person.present? && person.has_role?(AvailableRoles::VISITOR, organization)
     end
 
     def content_manager?

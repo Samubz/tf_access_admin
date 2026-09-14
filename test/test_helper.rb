@@ -1,6 +1,11 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require "webmock/minitest"
+
+# Block real HTTP in tests; the existing Fcm::Client tests use a local fake TCP
+# server, hence localhost stays allowed.
+WebMock.disable_net_connect!(allow_localhost: true)
 
 Dir[Rails.root.join("test/support/**/*.rb")].each { |f| require f }
 
