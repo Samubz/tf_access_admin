@@ -22,7 +22,7 @@ The system SHALL authenticate a `User` through `POST /api/v1/auth/login` when th
 
 - **GIVEN** a confirmed `User` with no membership nor unit relationship in O
 - **WHEN** the user submits valid credentials to O's subdomain
-- **THEN** the system returns `403` and no token
+- **THEN** the system rejects the request with `401` (same response as invalid credentials, so accounts are not enumerable) and no token
 
 ### Requirement: Profile endpoint
 

@@ -4,8 +4,8 @@
 
 ## 1. Login API para todo miembro (D1)
 
-- [ ] 1.1 `Api::V1::Auth::SessionsController#create`: reemplazar la exigencia de `TENANT_ADMIN` por `member_of_tenant?`; añadir `role` derivado (`tenant_admin`/`resident`/`visitor`) en un helper `Api::RoleResolver`.
-- [ ] 1.2 Tests: residente ok, visitante ok, no miembro 403, no confirmado 401.
+- [x] 1.1 `Api::V1::Auth::SessionsController#create`: eliminada la exigencia de `TENANT_ADMIN` (la membresía ya la garantiza `User.find_for_authentication`); `role` derivado en `api_role_for` (rol organizacional o `resident`; `visitor` se añade en la sección 4).
+- [x] 1.2 Tests: residente ok, no miembro 401 sin token, no confirmado 401. (Visitante ok queda para la sección 4.)
 
 ## 2. Endpoints privados y serializers (D2)
 
