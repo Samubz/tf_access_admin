@@ -57,6 +57,6 @@
 
 ## 8. Cierre
 
-- [ ] 8.1 `bin/rails test` completo, RuboCop, Brakeman.
-- [ ] 8.2 `graphify update app`.
+- [x] 8.1 `bin/rails test` completo (1254 runs, 0 fallos, con `PARALLEL_WORKERS=1`), RuboCop (solo 2 ofensas previas en `lib/tasks/js_routes_assets.rake`), Brakeman 0 advertencias.
+- [ ] 8.2 `graphify update app` (comando no instalado en la máquina de desarrollo).
 - [ ] 8.3 Prueba manual con MailHog y simulador de push: crear visita desde curl con correo nuevo, verificar correo con enlace, aceptar, login API como visitor, `GET /invitations`.
