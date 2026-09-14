@@ -26,12 +26,12 @@
 
 ## 4. Relación y rol `visitor` (D5)
 
-- [ ] 4.1 `OnboardingRequest::RequestedRelationships` += `visitor`; validación sin unidad/propiedad. Migración solo si el enum está en BD (verificar; si es constante Ruby, no hay migración).
-- [ ] 4.2 `Memberships::AcceptOnboarding`: rama `visitor` → membresía activa rol `visitor`.
-- [ ] 4.3 `AvailableRoles::VISITOR`, `Authorization::Capabilities::VIEW_OWN_VISITS`, `StaffRoleMapper` `visitor → [view_own_visits]`, `Resolver` otorga `view_own_visits` a `visitor_person` de visitas de la org.
-- [ ] 4.4 `VisitPolicy#show_own?` y scope `VisitPolicy::OwnScope` (por `visitor_person.user_id`).
-- [ ] 4.5 i18n `roles.visitor` en es/en/pt.
-- [ ] 4.6 Tests: aceptación crea membresía visitor y permite login API; resolver matriz visitor; visitor 403 en create visits.
+- [x] 4.1 `OnboardingRequest::RequestedRelationships` += `visitor`; validación sin unidad/propiedad. Migración solo si el enum está en BD (verificar; si es constante Ruby, no hay migración).
+- [x] 4.2 `Memberships::AcceptOnboarding`: rama `visitor` → membresía activa rol `visitor`.
+- [x] 4.3 `AvailableRoles::VISITOR`, `Authorization::Capabilities::VIEW_OWN_VISITS`, `StaffRoleMapper` `visitor → [view_own_visits]`, `Resolver` otorga `view_own_visits` a `visitor_person` de visitas de la org.
+- [x] 4.4 `VisitPolicy#show_own?` y scope `VisitPolicy::OwnScope` (por `visitor_person.user_id`).
+- [x] 4.5 i18n `roles.visitor` en es/en/pt.
+- [x] 4.6 Tests: aceptación crea membresía visitor y permite login API; resolver matriz visitor; visitor 403 en create visits.
 
 ## 5. Endpoint de invitaciones (D2)
 

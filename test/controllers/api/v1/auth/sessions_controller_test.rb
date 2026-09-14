@@ -34,6 +34,20 @@ class Api::V1::Auth::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "tenant_admin", body.dig("data", "user", "role")
   end
 
+  test "visitor member logs in with role visitor" do
+    visitor = create_user_for_organization(
+      organization: @organization,
+      email: "api-visitor@example.com",
+      role: AvailableRoles::VISITOR
+    )
+
+    post api_v1_auth_login_path, params: { email: visitor.email, password: "Password1@" }
+
+    assert_response :ok
+    assert response.parsed_body.dig("data", "token").present?
+    assert_equal "visitor", response.parsed_body.dig("data", "user", "role")
+  end
+
   test "resident without organizational role logs in with role resident" do
     resident = create_user_for_organization(
       organization: @organization,

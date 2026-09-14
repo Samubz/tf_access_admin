@@ -147,9 +147,9 @@ class VisitPolicyTest < ActiveSupport::TestCase
 
   # Builds an additional visit on +unit+ (host is @owner, eligible on @unit_p)
   # with an explicit status, for scope/state assertions.
-  def create_visit_on(unit, status:, checked_out_at: nil)
+  def create_visit_on(unit, status:, checked_out_at: nil, visitor: nil)
     ActsAsTenant.with_tenant(@organization) do
-      visitor = Person.create!(
+      visitor ||= Person.create!(
         organization: @organization,
         display_name: "Visitor #{SecureRandom.hex(4)}",
         person_type: PersonTypes::NATURAL,
@@ -166,6 +166,37 @@ class VisitPolicyTest < ActiveSupport::TestCase
         checked_out_at: checked_out_at
       )
     end
+  end
+
+  # ─── visitor (D5): show_own? / OwnScope ─────────────────────────────────────
+
+  test "visitor can show_own? only the visit where they are the visitor_person" do
+    visitor = create_user_for_organization(
+      organization: @organization,
+      email: "visit-policy-visitor@example.test",
+      role: AvailableRoles::VISITOR
+    )
+    own_visit = create_visit_on(@unit_p, status: VisitStatuses::PENDING, visitor: visitor.person_for(@organization))
+
+    assert VisitPolicy.new(visitor, own_visit).show_own?
+    refute VisitPolicy.new(visitor, @visit_p).show_own?
+    refute VisitPolicy.new(visitor, own_visit).show?
+    refute VisitPolicy.new(visitor, own_visit).create?
+    refute VisitPolicy.new(@client, own_visit).show_own?
+  end
+
+  test "OwnScope returns only visits whose visitor_person belongs to the user" do
+    visitor = create_user_for_organization(
+      organization: @organization,
+      email: "visit-policy-visitor-scope@example.test",
+      role: AvailableRoles::VISITOR
+    )
+    own_visit = create_visit_on(@unit_p, status: VisitStatuses::PENDING, visitor: visitor.person_for(@organization))
+
+    resolved = VisitPolicy::OwnScope.new(visitor, Visit.all).resolve
+
+    assert_equal [ own_visit.id ], resolved.pluck(:id)
+    assert_empty VisitPolicy::OwnScope.new(@client, Visit.all).resolve
   end
 
   # ─── tenant_admin (organization-wide) ───────────────────────────────────────

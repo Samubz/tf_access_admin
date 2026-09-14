@@ -24,6 +24,8 @@ module Authorization
     VIEW_MINIMAL_ACCESS_CONTROL_DATA = :view_minimal_access_control_data
     VIEW_OWN_UNIT_CONTEXT = :view_own_unit_context
     MANAGE_STAFF_ASSIGNMENTS = :manage_staff_assignments
+    # Visitor (D5): read the visits where the user is the visitor_person.
+    VIEW_OWN_VISITS = :view_own_visits
     # Global identity-conflict resolution. Deliberately super-admin-only by
     # default (see ORGANIZATION_ADMIN below); a property/organization manager
     # must NOT resolve global identity conflicts.
@@ -52,6 +54,7 @@ module Authorization
       VIEW_MINIMAL_ACCESS_CONTROL_DATA,
       VIEW_OWN_UNIT_CONTEXT,
       MANAGE_STAFF_ASSIGNMENTS,
+      VIEW_OWN_VISITS,
       RESOLVE_IDENTITY_CONFLICTS
     ].freeze
 
@@ -59,6 +62,10 @@ module Authorization
     # identity-conflict resolution, which stays super-admin-only and delegable
     # (granted explicitly in +GrantProfile+).
     ORGANIZATION_ADMIN = (ALL - [ RESOLVE_IDENTITY_CONFLICTS ]).freeze
+
+    VISITOR = [
+      VIEW_OWN_VISITS
+    ].freeze
 
     CONTENT_MANAGER = [
       MANAGE_PROPERTIES,
@@ -118,7 +125,8 @@ module Authorization
       cleaning_staff: CLEANING_STAFF,
       internal_staff: INTERNAL_STAFF,
       owner: OWNER,
-      resident: RESIDENT
+      resident: RESIDENT,
+      visitor: VISITOR
     }.freeze
 
     module_function

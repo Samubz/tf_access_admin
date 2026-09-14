@@ -132,6 +132,20 @@ class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::Integratio
     assert_response :forbidden
   end
 
+  # ─── D5 visitor role cannot create visits ─────────────────────────────────────
+
+  test "visitor member is denied (D5)" do
+    visitor = create_user_for_organization(
+      organization: @organization,
+      email: "resident-api-visitor@example.test",
+      role: AvailableRoles::VISITOR
+    )
+
+    post_visit(user: visitor, unit: @unit)
+
+    assert_response :forbidden
+  end
+
   # ─── 6.4 Inactive, future, expired or deleted occupancy is rejected ──────────
 
   test "inactive occupancy is denied (6.4)" do

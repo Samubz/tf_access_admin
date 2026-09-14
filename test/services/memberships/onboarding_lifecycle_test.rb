@@ -123,6 +123,25 @@ module Memberships
       assert StaffAssignment.find_by(person_id: person.id).confirmed?
     end
 
+    # --- Visitor onboarding (D5) --------------------------------------------
+
+    test "accepting a visitor request activates membership with the visitor role" do
+      person = create_person!(display_name: "Visitor Accept")
+      request = OnboardingRequest.create!(
+        organization: @organization, person: person,
+        requested_relationship: OnboardingRequest::RELATIONSHIP_VISITOR,
+        requested_by_person: @actor, expires_at: 7.days.from_now
+      )
+
+      AcceptOnboarding.call(onboarding_request: request)
+
+      assert request.reload.accepted?
+      assert_equal OrganizationMembership::STATUS_ACTIVE, person.organization_membership.status
+      assert person.has_role?(AvailableRoles::VISITOR, @organization)
+      refute person.has_role?(AvailableRoles::CLIENT)
+      assert_empty StaffAssignment.where(person_id: person.id)
+    end
+
     test "rejecting an operational request deactivates the pending role" do
       person = create_person!(display_name: "Op Reject")
       request = RequestOnboarding.call(
