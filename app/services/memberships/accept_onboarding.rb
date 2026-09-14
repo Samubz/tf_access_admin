@@ -24,6 +24,8 @@ module Memberships
 
         if operational?
           confirm_operational_roles
+        elsif @request.visitor?
+          grant_visitor_role
         else
           grant_client_role
         end
@@ -55,6 +57,13 @@ module Memberships
     def grant_client_role
       person = @request.person
       person.add_role(AvailableRoles::CLIENT) unless person.has_role?(AvailableRoles::CLIENT)
+    end
+
+    # Visitor (D5): organization-scoped role with no unit/property access.
+    def grant_visitor_role
+      person = @request.person
+      organization = @request.organization
+      person.add_role(AvailableRoles::VISITOR, organization) unless person.has_role?(AvailableRoles::VISITOR, organization)
     end
 
     def confirm_operational_roles

@@ -117,6 +117,7 @@ en:
       client: "Client"
       content_manager: "Content Manager"
       seller: "Seller"
+      visitor: "Visitor"
     currencies:
       CLP: "CLP"
       USD: "USD"

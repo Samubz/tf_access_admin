@@ -3,6 +3,8 @@
 require "test_helper"
 
 class AuthorizationResolverTest < ActiveSupport::TestCase
+  include OperationalPolicyTestHelper
+
   setup do
     @organization = organizations(:one)
     @other_organization = organizations(:two)
@@ -269,7 +271,64 @@ class AuthorizationResolverTest < ActiveSupport::TestCase
     refute resolver.allowed?(:not_a_real_capability)
   end
 
+  # ─── visitor (D5) ───────────────────────────────────────────────────────────
+
+  test "visitor effective capabilities are exactly view_own_visits" do
+    user = create_user_for_organization(
+      organization: @organization,
+      email: "visitor-resolver@example.test",
+      role: AvailableRoles::VISITOR
+    )
+    create_visit_for(user.person_for(@organization), @unit_a)
+
+    resolver = build_resolver(user, unit: @unit_a, record: @unit_a)
+
+    assert_equal [ :view_own_visits ], effective_capabilities(resolver)
+    refute resolver.allowed?(:create_visits)
+    refute resolver.allowed?(:view_visits)
+    assert_empty resolver.accessible_property_ids
+  end
+
+  test "resident invited to another unit keeps unit capabilities and gains view_own_visits" do
+    user = create_resident_user(
+      organization: @organization,
+      email: "resident-invited-elsewhere@example.test",
+      unit: @unit_a
+    )
+    create_visit_for(user.person_for(@organization), @unit_b)
+
+    resolver = build_resolver(user)
+    assert resolver.allowed?(:view_own_visits)
+    assert resolver.with_context(unit: @unit_a).allowed?(:create_visits)
+    refute resolver.with_context(unit: @unit_b).allowed?(:create_visits)
+  end
+
+  test "member without visits and without visitor role has no view_own_visits" do
+    user = create_user_for_organization(
+      organization: @organization,
+      email: "client-no-visits@example.test",
+      role: AvailableRoles::CLIENT
+    )
+
+    refute build_resolver(user).allowed?(:view_own_visits)
+  end
+
   private
+
+  def effective_capabilities(resolver)
+    Authorization::Capabilities::ALL.select { |capability| resolver.allowed?(capability) }
+  end
+
+  def create_visit_for(visitor_person, unit)
+    Visit.create!(
+      organization: @organization,
+      unit: unit,
+      visitor_person: visitor_person,
+      scheduled_at: 1.day.from_now,
+      valid_from: 1.day.from_now,
+      status: VisitStatuses::PENDING
+    )
+  end
 
   def build_resolver(user, property: nil, unit: nil, record: nil)
     Authorization::Resolver.new(

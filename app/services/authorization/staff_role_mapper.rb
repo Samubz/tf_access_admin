@@ -6,6 +6,8 @@ module Authorization
     CONCIERGE = "concierge"
     CLEANING_STAFF = "cleaning_staff"
     INTERNAL_STAFF = "internal_staff"
+    # Organization-level (non property-scoped) role, see AvailableRoles::VISITOR.
+    VISITOR = AvailableRoles::VISITOR
 
     PROPERTY_SCOPED_ROLES = [
       PROPERTY_ADMIN,
@@ -28,7 +30,15 @@ module Authorization
       StaffTypes::INTERNAL_STAFF => INTERNAL_STAFF
     }.freeze
 
+    ORGANIZATION_ROLE_CAPABILITIES = {
+      VISITOR => Capabilities::VISITOR
+    }.freeze
+
     module_function
+
+    def organization_role_capabilities_for(role)
+      ORGANIZATION_ROLE_CAPABILITIES.fetch(role, [])
+    end
 
     def operational_role_for(staff_type)
       STAFF_TYPE_TO_ROLE[staff_type]

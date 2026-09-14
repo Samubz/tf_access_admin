@@ -112,6 +112,7 @@ pt:
       client: "Client"
       content_manager: "Content Manager"
       seller: "Vendedor"
+      visitor: "Visitante"
     currencies:
       CLP: "CLP"
       USD: "USD"
