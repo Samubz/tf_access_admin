@@ -1,0 +1,15 @@
+<h1><%= t("visit_mailer.invitation.greeting") %></h1>
+
+<%= render "details" %>
+
+<p><%= t("visit_mailer.invitation_with_account.create_account") %></p>
+
+<p>
+  <a href="<%= @accept_url %>" target="_blank" rel="noopener">
+    <%= t("visit_mailer.invitation_with_account.cta") %>
+  </a>
+</p>
+
+<p><%= t("visit_mailer.invitation_with_account.expiration") %></p>
+
+<p><%= t("visit_mailer.invitation.app_note") %></p>

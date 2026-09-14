@@ -35,17 +35,17 @@
 
 ## 5. Endpoint de invitaciones (D2)
 
-- [ ] 5.1 `Api::V1::Private::InvitationsController#index` + `Api::Private::InvitationSerializer` (`access_code: nil`).
-- [ ] 5.2 Tests: solo propias, solo futuras/hoy, excluye canceladas, sin PII de terceros.
+- [x] 5.1 `Api::V1::Private::InvitationsController#index` + `Api::Private::InvitationSerializer` (`access_code: nil`).
+- [x] 5.2 Tests: solo propias, solo futuras/hoy, excluye canceladas, sin PII de terceros.
 
 ## 6. Notificación al visitante y correos (D4, D6)
 
-- [ ] 6.1 `NotificationTypes` += `visit_invitation`; `Notifications::VisitInvitationPushPayload`.
-- [ ] 6.2 `VisitMailer#invitation` e `#invitation_with_account` + vistas html/text + i18n `visit_mailer.*` es/en/pt. Mirror de `OnboardingMailer`.
-- [ ] 6.3 `Accounts::InvitePerson.call_for_person` acepta `requested_relationship: :visitor`.
-- [ ] 6.4 `Visits::NotifyVisitor` con las tres ramas, manejo de `AlreadyInvited`, captura de errores a `visit.metadata`.
-- [ ] 6.5 Cablear en `Residents::CreateAuthorizedVisit` fuera de la transacción.
-- [ ] 6.6 Tests: tres ramas, `AlreadyInvited` sin token nuevo, error no bloquea, mailer sin PII y con/sin enlace, locale.
+- [x] 6.1 `NotificationTypes` += `visit_invitation`; `Notifications::VisitInvitationPushPayload`.
+- [x] 6.2 `VisitMailer#invitation` e `#invitation_with_account` + vistas html/text + i18n `visit_mailer.*` es/en/pt. Mirror de `OnboardingMailer`.
+- [x] 6.3 `Accounts::InvitePerson.call_for_person` acepta `requested_relationship: :visitor`.
+- [x] 6.4 `Visits::NotifyVisitor` con las tres ramas, manejo de `AlreadyInvited`, captura de errores a `visit.metadata`.
+- [x] 6.5 Cablear en `Residents::CreateAuthorizedVisit` fuera de la transacción.
+- [x] 6.6 Tests: tres ramas, `AlreadyInvited` sin token nuevo, error no bloquea, mailer sin PII y con/sin enlace, locale.
 
 ## 7. Expo Push (D7)
 

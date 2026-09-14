@@ -37,7 +37,7 @@ class DeliverPushNotificationJob < ApplicationJob
       return
     end
 
-    payload = Notifications::VisitRequestPushPayload.build(notification)
+    payload = payload_builder_for(notification).build(notification)
     result = Notifications::PushTransport.for(device_token.token).send_notification(
       token: device_token.token,
       title: payload[:title],
@@ -61,6 +61,16 @@ class DeliverPushNotificationJob < ApplicationJob
     device_token.destroy! if result.device_not_registered?
   end
 
+  # visit_invitation pushes target the visitor (D4); every other type keeps the
+  # resident-facing visit request payload.
+  def payload_builder_for(notification)
+    if notification.notification_type == NotificationTypes::VISIT_INVITATION
+      Notifications::VisitInvitationPushPayload
+    else
+      Notifications::VisitRequestPushPayload
+    end
+  end
+
   # Because this project only uses open-source Sidekiq (no Batch API), each
   # job re-evaluates the visit's sibling notifications on completion, under a
   # row lock, so only one of several concurrently-finishing jobs performs the
@@ -68,6 +78,8 @@ class DeliverPushNotificationJob < ApplicationJob
   def update_visit_notification_status!(notification)
     visit = notification.notifiable
     return unless visit.is_a?(Visit)
+    # The visit's aggregate status only tracks resident visit_request pushes.
+    return unless notification.notification_type == NotificationTypes::VISIT_REQUEST
 
     Visit.transaction do
       locked_visit = Visit.lock.find(visit.id)

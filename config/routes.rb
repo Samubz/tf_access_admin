@@ -54,6 +54,9 @@ Rails.application.routes.draw do
             to: "organizations/residential_properties#show",
             as: :organization_residential_property
 
+        # GET /invitations lists the current user's own upcoming visits as visitor (D2).
+        get "invitations", to: "invitations#index"
+
         # Singular resource: a User has at most one registered device token.
         resource :device_token, only: %i[create destroy]
       end

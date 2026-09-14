@@ -11,6 +11,8 @@ require "test_helper"
 class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::IntegrationTest
   include OperationalPolicyTestHelper
   include Devise::Test::IntegrationHelpers
+  include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   setup do
     @organization    = organizations(:one)
@@ -417,6 +419,25 @@ class Api::V1::Private::Units::VisitsControllerTest < ActionDispatch::Integratio
       post_visit(user: @resident, unit: @unit, visitor: { name: "Minimal", email: "minimal@example.com" })
     end
     assert_response :created
+  end
+
+  # D4 — visitor without account: onboarding request + invitation email, outside the transaction.
+  test "creating a visit for a new visitor email issues a visitor onboarding request and enqueues the email" do
+    email = "brand-new-visitor@example.test"
+    assert_nil User.find_by(email: email)
+
+    assert_enqueued_emails 1 do
+      post_visit(user: @resident, unit: @unit, visitor: { name: "Brand New", email: email })
+    end
+
+    assert_response :created
+    visit = Visit.find(JSON.parse(response.body).dig("data", "id"))
+    assert_equal VisitStatuses::AUTHORIZED, visit.status
+    request = OnboardingRequest.find_by!(person: visit.visitor_person)
+    assert_equal OnboardingRequest::RELATIONSHIP_VISITOR, request.requested_relationship
+    assert_equal OnboardingRequest::STATUS_PENDING, request.status
+    mail_job = enqueued_jobs.find { |j| j["job_class"] == "ActionMailer::MailDeliveryJob" }
+    assert_equal %w[VisitMailer invitation_with_account], mail_job["arguments"].first(2)
   end
 
   private

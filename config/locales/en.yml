@@ -38,6 +38,24 @@ en:
       body: "%{organization} has invited you. Confirm your access with the link below."
       cta: "Accept invitation"
       expiration: "This link is single-use and expires in 14 days."
+  visit_mailer:
+    invitation:
+      subject: "Invitation to %{property}"
+      greeting: "Hello"
+      intro: "%{host} invited you to visit %{property} on behalf of %{organization}."
+      property: "Property"
+      unit: "Unit"
+      scheduled_at: "Date and time"
+      app_note: "Download the app to see your invitations."
+    invitation_with_account:
+      subject: "Invitation to %{property}"
+      create_account: "Create your account to see your invitation in the app"
+      cta: "Create my account"
+      expiration: "This link is single-use and expires in 14 days."
+  notifications:
+    visit_invitation:
+      title: "New invitation"
+      body: "You were invited to %{property} on %{date}"
   frontend:
     name: "Admin Base"
     description: "welcome again"

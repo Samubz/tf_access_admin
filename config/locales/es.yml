@@ -38,6 +38,28 @@ es:
       body: "%{organization} te ha invitado. Confirma tu acceso con el siguiente enlace."
       cta: "Aceptar invitación"
       expiration: "Este enlace es de un solo uso y caduca en 14 días."
+  visit_mailer:
+    invitation:
+      subject: "Invitación a %{property}"
+      greeting: "Hola"
+      intro: "%{host} te invitó a visitar %{property} en nombre de %{organization}."
+      property: "Propiedad"
+      unit: "Unidad"
+      scheduled_at: "Fecha y hora"
+      app_note: "Descarga la app para ver tus invitaciones."
+    invitation_with_account:
+      subject: "Invitación a %{property}"
+      create_account: "Creá tu cuenta para ver tu invitación en la app"
+      cta: "Crear mi cuenta"
+      expiration: "Este enlace es de un solo uso y caduca en 14 días."
+  notifications:
+    visit_invitation:
+      title: "Nueva invitación"
+      body: "Te invitaron a %{property} el %{date}"
+  time:
+    formats:
+      long: "%d/%m/%Y %H:%M"
+      short: "%d/%m/%Y %H:%M"
   frontend:
     name: "Admin Base"
     description: "bienvenido nuevamente"
