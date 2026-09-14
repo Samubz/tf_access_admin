@@ -18,11 +18,11 @@
 
 ## 3. Correo del visitante e identidad (D3)
 
-- [ ] 3.1 Migración: `people.email_digest` (string) + índice único parcial `(organization_id, email_digest) WHERE email_digest IS NOT NULL`; backfill por lotes con `find_each`.
-- [ ] 3.2 `Person`: callback que mantiene `email_digest` desde el correo normalizado; `People::FindExisting.by_email(organization:, email:)`.
-- [ ] 3.3 `Visits::ResolveVisitorPerson`: orden documento → correo → crear; error de conflicto `Visits::ResolveVisitorPerson::IdentityConflict`.
-- [ ] 3.4 `Residents::ResolveVisitorPerson` y `Units::VisitsController#create`: permitir `email`, exigir `name` y `email` válido (formato), 422 i18n en conflicto.
-- [ ] 3.5 Tests: reutiliza por correo (case-insensitive), crea, no cruza organización, conflicto 422, email inválido 422.
+- [x] 3.1 Migración: `people.email_digest` (string) + índice único parcial `(organization_id, email_digest) WHERE email_digest IS NOT NULL`; backfill por lotes con `find_each`.
+- [x] 3.2 `Person`: callback que mantiene `email_digest` desde el correo normalizado; `People::FindExisting.by_email(organization:, email:)`.
+- [x] 3.3 `Visits::ResolveVisitorPerson`: orden documento → correo → crear; error de conflicto `Visits::ResolveVisitorPerson::IdentityConflict`.
+- [x] 3.4 `Residents::ResolveVisitorPerson` y `Units::VisitsController#create`: permitir `email`, exigir `name` y `email` válido (formato), 422 i18n en conflicto.
+- [x] 3.5 Tests: reutiliza por correo (case-insensitive), crea, no cruza organización, conflicto 422, email inválido 422.
 
 ## 4. Relación y rol `visitor` (D5)
 

@@ -12,6 +12,7 @@
 #  document_number_digest     :string
 #  document_type              :string
 #  email_ciphertext           :text
+#  email_digest               :string
 #  first_name                 :string
 #  last_name                  :string
 #  metadata                   :jsonb            not null
@@ -78,6 +79,7 @@ class Person < ApplicationRecord
   before_validation :assign_display_name
   before_validation :sync_document_attributes
   before_validation :sync_contact_attributes
+  before_validation :sync_email_digest
   before_validation :assign_person_type
   before_validation :assign_default_status
   before_validation :assign_default_document_type
@@ -174,6 +176,19 @@ class Person < ApplicationRecord
 
   def self.document_digest(document_number)
     BulkImportServices::UnitsImportValidationContext.document_digest(document_number)
+  end
+
+  # Blind index of the normalized (downcased, stripped) email. Same pattern as
+  # +document_digest+; used by People::FindExisting.by_email.
+  def self.email_digest(email)
+    normalized = email.to_s.downcase.strip
+    return nil if normalized.blank?
+
+    Digest::SHA256.hexdigest(normalized)
+  end
+
+  def sync_email_digest
+    self.email_digest = self.class.email_digest(contact_email)
   end
 
   def document_unique_within_organization

@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 module Visits
+  # Resolves the visitor Person for a visit: by id, or from params in this
+  # order — document (if provided) → normalized email → create (D3).
+  # Persons are never merged: a document match whose stored email differs from
+  # the submitted one raises IdentityConflict.
   class ResolveVisitorPerson
+    class IdentityConflict < StandardError; end
+
     def self.call(**kwargs)
       new(**kwargs).call
     end
@@ -23,11 +29,7 @@ module Visits
     private
 
     def resolve_from_params!
-      existing = People::FindExisting.call(
-        organization: @organization,
-        document_number: @person_params[:document_number],
-        email: normalized_email
-      )
+      existing = find_by_document || find_by_email
       return existing if existing
 
       person = build_person
@@ -36,6 +38,25 @@ module Visits
         ensure_membership!(person)
       end
       person
+    end
+
+    def find_by_document
+      digest = Person.document_digest(@person_params[:document_number])
+      return nil if digest.blank?
+
+      person = Person.where(organization_id: @organization.id).find_by(document_number_digest: digest)
+      return nil unless person
+
+      stored_email = person.contact_email.to_s.downcase.strip.presence
+      if stored_email.present? && normalized_email.present? && stored_email != normalized_email
+        raise IdentityConflict, "document matches a person with a different email"
+      end
+
+      person
+    end
+
+    def find_by_email
+      People::FindExisting.by_email(organization: @organization, email: normalized_email)
     end
 
     def build_person

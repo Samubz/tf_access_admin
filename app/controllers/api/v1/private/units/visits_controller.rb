@@ -14,9 +14,11 @@
 #
 # Accepted payload (client-supplied):
 #   unit_id       – path param; resolved tenant-safely from current organization
-#   visitor.name  – visitor full name
-#   visitor.document – visitor identity document
-#   visitor.phone – visitor phone number
+#   visitor.name     – visitor full name (required)
+#   visitor.email    – visitor email (required, valid format; identity key
+#                      within the organization — see D3)
+#   visitor.document – visitor identity document (optional)
+#   visitor.phone    – visitor phone number (optional)
 #   scheduled_at  – ISO 8601 datetime
 #
 # NOT accepted from client (resolved in backend):
@@ -25,6 +27,7 @@
 class Api::V1::Private::Units::VisitsController < Api::V1::Private::BaseController
   before_action :load_unit
   before_action :authorize_resident!
+  before_action :validate_visitor!, only: :create
 
   def index
     day = parse_day
@@ -47,6 +50,8 @@ class Api::V1::Private::Units::VisitsController < Api::V1::Private::BaseControll
     )
 
     render json: { data: { id: visit.id, status: visit.status } }, status: :created
+  rescue Visits::ResolveVisitorPerson::IdentityConflict
+    render json: { error: I18n.t("api.visits.identity_conflict") }, status: :unprocessable_entity
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.record.errors.full_messages.to_sentence }, status: :unprocessable_entity
   end
@@ -92,10 +97,21 @@ class Api::V1::Private::Units::VisitsController < Api::V1::Private::BaseControll
     zone.local(day.year, day.month, day.day).all_day
   end
 
+  # D3 — name and email are required; email must be well-formed.
+  # document and phone are optional.
+  def validate_visitor!
+    visitor = visit_params[:visitor].to_h
+    name    = visitor[:name].to_s.strip
+    email   = visitor[:email].to_s.strip
+    return if name.present? && email.match?(URI::MailTo::EMAIL_REGEXP)
+
+    render json: { error: I18n.t("api.visits.invalid_visitor") }, status: :unprocessable_entity
+  end
+
   def visit_params
     params.require(:visit).permit(
       :scheduled_at,
-      visitor: %i[name document phone]
+      visitor: %i[name email document phone]
     )
   end
 end
