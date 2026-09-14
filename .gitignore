@@ -52,5 +52,5 @@ skills-lock.json
 
 app/graphify-out/*
 /graphify-out
-# Local gems installed by bundler (bundle config path vendor/bundle)
-/vendor/bundle
+# Vendored dependencies (local bundler gems); production installs its own
+/vendor
