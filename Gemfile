@@ -113,3 +113,6 @@ gem "roo"
 gem "activerecord-import"
 
 gem "webmock", "~> 3.26", group: :test
+
+# json 3.x changes JSON.parse and breaks ActiveSupport 8.1; 2.21.2 fixes CVE-2026-71847.
+gem "json", "~> 2.21", ">= 2.21.2"
